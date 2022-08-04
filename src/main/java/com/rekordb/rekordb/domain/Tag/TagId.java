@@ -1,5 +1,6 @@
 package com.rekordb.rekordb.domain.Tag;
 
+import com.aventrix.jnanoid.jnanoid.NanoIdUtils;
 import lombok.*;
 
 import javax.persistence.Column;
@@ -13,10 +14,10 @@ import java.io.Serializable;
 @Getter
 public class TagId implements Serializable {
 
-    private Long tagId;
+    private String tagId;
 
-    public static TagId of(Long tagId){
-        return new TagId((tagId));
+    public static TagId newTagId(){
+        return new TagId(NanoIdUtils.randomNanoId());
     }
 
 }

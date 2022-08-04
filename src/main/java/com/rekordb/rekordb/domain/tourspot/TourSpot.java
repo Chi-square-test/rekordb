@@ -27,18 +27,16 @@ public class TourSpot {
 
 
     @ElementCollection
-    @CollectionTable(name = "imgs",joinColumns = @JoinColumn(name = "spotId"))
+    @CollectionTable(name = "images",joinColumns = @JoinColumn(name = "spotId"))
     private List<String> images = new ArrayList<>();
-
-    @ElementCollection
-    @CollectionTable(name = "tags",joinColumns = @JoinColumn(name = "spotId"))
-    private List<String> tags = new ArrayList<>();
 
     private int readCount;
 
     private int typeId;
 
     private String googlePlaceId;
+
+    private int rating;
 
     private int likeCount;
 
@@ -55,11 +53,16 @@ public class TourSpot {
         this.readCount = readCount;
         this.category =cat;
         this.likeCount=0;
+        this.rating=0;
     }
 
     public void changeImgList(List<String> imgs){
         images.clear();
         images.addAll(imgs);
+    }
+
+    public void updateRating(int rate){ //리뷰가 업데이트될때마다 해당 서비스에서 전체 리뷰수와 평점 수 바탕으로 구하는 로직을 사용해 이 메서드 호출
+        this.rating = rate;
     }
 
 

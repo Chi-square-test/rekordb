@@ -1,5 +1,6 @@
 package com.rekordb.rekordb.domain.tourspot;
 
+import com.aventrix.jnanoid.jnanoid.NanoIdUtils;
 import lombok.*;
 
 import javax.persistence.Column;
@@ -19,5 +20,6 @@ public class SpotId implements Serializable {
     public static SpotId of(String id){
         return new SpotId(id);
     }
+
 
 }

@@ -1,4 +1,4 @@
-package com.rekordb.rekordb.domain.Tag;
+package com.rekordb.rekordb.tag;
 
 import lombok.*;
 
@@ -19,6 +19,9 @@ public class Tag {
 
     @NonNull
     private String tagName;
+
+    @NonNull
+    private String EngTagName;
 
     private String tagCategory;
 

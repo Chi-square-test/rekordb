@@ -1,7 +1,7 @@
-package com.rekordb.rekordb.domain.route;
+package com.rekordb.rekordb.route;
 
 import com.aventrix.jnanoid.jnanoid.NanoIdUtils;
-import com.rekordb.rekordb.domain.Tag.TagId;
+import com.rekordb.rekordb.tag.TagId;
 import lombok.*;
 
 import javax.persistence.Embeddable;

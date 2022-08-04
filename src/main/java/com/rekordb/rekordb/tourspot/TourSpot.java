@@ -1,4 +1,4 @@
-package com.rekordb.rekordb.domain.tourspot;
+package com.rekordb.rekordb.tourspot;
 
 import lombok.*;
 import org.springframework.util.Assert;
@@ -19,8 +19,13 @@ public class TourSpot {
 
     private String title;
 
+    private String EngTitle;
+
     @Embedded
     private Address address;
+
+    @Embedded
+    private EngAddress engAddress;
 
     @Embedded
     private SpotCategory spotCategory;

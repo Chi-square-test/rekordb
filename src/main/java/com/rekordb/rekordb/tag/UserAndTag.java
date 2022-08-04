@@ -1,8 +1,6 @@
-package com.rekordb.rekordb.domain.Tag;
+package com.rekordb.rekordb.tag;
 
-import com.rekordb.rekordb.domain.tourspot.SpotId;
-import com.rekordb.rekordb.domain.tourspot.TourSpot;
-import com.rekordb.rekordb.domain.user.UserId;
+import com.rekordb.rekordb.user.UserEmail;
 import lombok.*;
 
 import javax.persistence.*;
@@ -11,8 +9,8 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Table(name = "tour_tag")
-public class TourAndTag {
+@Table(name = "user_tag")
+public class UserAndTag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -24,6 +22,7 @@ public class TourAndTag {
 
     @Embedded
     @NonNull
-    private SpotId spotId;
+    private UserEmail userEmail;
+
 
 }

@@ -1,4 +1,4 @@
-package com.rekordb.rekordb.domain.route;
+package com.rekordb.rekordb.route;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

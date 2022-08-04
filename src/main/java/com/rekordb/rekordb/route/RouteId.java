@@ -1,23 +1,21 @@
-package com.rekordb.rekordb.domain.Tag;
+package com.rekordb.rekordb.route;
 
 import com.aventrix.jnanoid.jnanoid.NanoIdUtils;
+import com.rekordb.rekordb.tag.TagId;
 import lombok.*;
 
-import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import java.io.Serializable;
 
 @Embeddable
 @EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class TagId implements Serializable {
+public class RouteId {
 
     private String id;
 
-    public static TagId newTagId(){
+    public static TagId newRouteId(){
         return new TagId(NanoIdUtils.randomNanoId());
     }
-
 }

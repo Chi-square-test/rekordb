@@ -1,4 +1,4 @@
-package com.rekordb.rekordb.domain.tourspot;
+package com.rekordb.rekordb.tourspot;
 
 import lombok.*;
 

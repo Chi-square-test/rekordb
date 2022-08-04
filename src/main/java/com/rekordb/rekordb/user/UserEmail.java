@@ -1,4 +1,4 @@
-package com.rekordb.rekordb.domain.user;
+package com.rekordb.rekordb.user;
 
 import lombok.*;
 
@@ -11,13 +11,13 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class UserId implements Serializable {
+public class UserEmail implements Serializable {
 
-    @Column(name = "userId")
-    private String id;
+    @Column(name = "email")
+    private String email;
 
-    public static UserId of(String id){
-        return new UserId(id);
+    public static UserEmail of(String id){
+        return new UserEmail(id);
     }
 
 

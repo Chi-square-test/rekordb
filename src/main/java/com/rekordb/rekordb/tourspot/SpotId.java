@@ -1,6 +1,5 @@
-package com.rekordb.rekordb.domain.tourspot;
+package com.rekordb.rekordb.tourspot;
 
-import com.aventrix.jnanoid.jnanoid.NanoIdUtils;
 import lombok.*;
 
 import javax.persistence.Column;

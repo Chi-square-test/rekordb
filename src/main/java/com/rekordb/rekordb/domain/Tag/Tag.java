@@ -1,9 +1,6 @@
 package com.rekordb.rekordb.domain.Tag;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -20,6 +17,9 @@ public class Tag {
     @EmbeddedId
     private TagId tagId;
 
+    @NonNull
     private String tagName;
+
+    private String tagCategory;
 
 }

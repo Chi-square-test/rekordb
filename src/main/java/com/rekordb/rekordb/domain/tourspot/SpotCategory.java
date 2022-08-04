@@ -11,7 +11,7 @@ import javax.persistence.Embeddable;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Category {
+public class SpotCategory {
     private String cat1;
     private String cat2;
     private String cat3;

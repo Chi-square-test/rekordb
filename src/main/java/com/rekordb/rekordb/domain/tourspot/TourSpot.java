@@ -23,7 +23,7 @@ public class TourSpot {
     private Address address;
 
     @Embedded
-    private Category category;
+    private SpotCategory spotCategory;
 
 
     @ElementCollection
@@ -41,7 +41,7 @@ public class TourSpot {
     private int likeCount;
 
     @Builder
-    public TourSpot(SpotId spotId, String title, Address addr, Category cat, int typeid, int readCount){
+    public TourSpot(SpotId spotId, String title, Address addr, SpotCategory cat, int typeid, int readCount){
         Assert.notNull(spotId,"장소 id가 존재하지 않습니다.");
         Assert.notNull(addr,"장소 주소가 존재하지 않습니다. ");
         Assert.hasText(title,"장소 이름이 존재하지 않습니다.");
@@ -51,7 +51,7 @@ public class TourSpot {
         this.address = addr;
         this.typeId = typeid;
         this.readCount = readCount;
-        this.category =cat;
+        this.spotCategory =cat;
         this.likeCount=0;
         this.rating=0;
     }

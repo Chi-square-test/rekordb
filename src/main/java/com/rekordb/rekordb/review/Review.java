@@ -17,8 +17,8 @@ import java.time.LocalDateTime;
 public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Long id;
+    @Column(name = "idx", nullable = false)
+    private Long idx;
 
     @Embedded
     private UserEmail userEmail;

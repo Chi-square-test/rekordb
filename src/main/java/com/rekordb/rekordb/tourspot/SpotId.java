@@ -13,7 +13,7 @@ import java.io.Serializable;
 @Getter
 public class SpotId implements Serializable {
 
-    @Column(name = "spotId")
+    @Column(name = "spot_Id")
     private String id;
 
     public static SpotId of(String id){

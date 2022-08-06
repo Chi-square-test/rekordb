@@ -19,7 +19,7 @@ public class TourSpot {
 
     private String title;
 
-    private String EngTitle;
+    private String engTitle;
 
     @Embedded
     private Address address;
@@ -46,7 +46,7 @@ public class TourSpot {
     private int likeCount;
 
     @Builder
-    public TourSpot(SpotId spotId, String title, Address addr, SpotCategory cat, int typeid, int readCount){
+    public TourSpot(SpotId spotId, String title, Address addr, SpotCategory cat,List<String> imgs, int typeid, int readCount){
         Assert.notNull(spotId,"장소 id가 존재하지 않습니다.");
         Assert.notNull(addr,"장소 주소가 존재하지 않습니다. ");
         Assert.hasText(title,"장소 이름이 존재하지 않습니다.");
@@ -59,6 +59,7 @@ public class TourSpot {
         this.spotCategory =cat;
         this.likeCount=0;
         this.rating=0;
+        this.images = imgs;
     }
 
     public void changeImgList(List<String> imgs){

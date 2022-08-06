@@ -19,15 +19,17 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	compileOnly 'org.projectlombok:lombok'
-	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
-	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa:2.7.2'
+	implementation 'org.springframework.boot:spring-boot-starter-web:2.7.2'
+	compileOnly 'org.projectlombok:lombok:1.18.24'
+	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client:3.0.6'
+	annotationProcessor 'org.projectlombok:lombok:1.18.24'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test:2.7.2'
 	compileOnly 'com.aventrix.jnanoid:jnanoid:2.0.0'
-	compileOnly 'org.springframework.boot:spring-boot-starter-data-mongodb:2.7.2'
-
+	compileOnly 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive:2.7.2'
+	compileOnly 'org.springframework.boot:spring-boot-configuration-processor:2.7.2'
+	annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+	implementation 'org.apache.httpcomponents:httpclient:4.5.13'
 }
 
 tasks.named('test') {

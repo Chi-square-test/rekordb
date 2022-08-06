@@ -22,7 +22,7 @@ public class TourSpotController {
     @GetMapping("/updatedb")
     public ResponseEntity<ResponseDTO<String>> updateDatabase(){
         try {
-            tourAPIService.getTourAPIData();
+            //tourAPIService.getTourAPIData(); 일회성 기능이므로 일단 봉인
             ResponseDTO<String> res = ResponseDTO.<String>builder().data(Collections.singletonList("테스트")).build();
             return ResponseEntity.ok().body(res);
         } catch (NullPointerException e){

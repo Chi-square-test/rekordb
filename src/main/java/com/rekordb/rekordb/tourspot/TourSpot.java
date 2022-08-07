@@ -41,7 +41,7 @@ public class TourSpot {
 
     private String googlePlaceId;
 
-    private int rating;
+    private double rating;
 
     private int likeCount;
 
@@ -67,7 +67,11 @@ public class TourSpot {
         images.addAll(imgs);
     }
 
-    public void updateRating(int rate){ //리뷰가 업데이트될때마다 해당 서비스에서 전체 리뷰수와 평점 수 바탕으로 구하는 로직을 사용해 이 메서드 호출
+    public void setGooglePlaceId(String id){
+        this.googlePlaceId =id;
+    }
+
+    public void updateRating(double rate){ //리뷰가 업데이트될때마다 해당 서비스에서 전체 리뷰수와 평점 수 바탕으로 구하는 로직을 사용해 이 메서드 호출
         this.rating = rate;
     }
 

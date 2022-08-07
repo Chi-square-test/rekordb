@@ -1,7 +1,7 @@
 package com.rekordb.rekordb.tourspot;
 
 import com.rekordb.rekordb.ResponseDTO;
-import com.rekordb.rekordb.tourspot.ApiRest.TourAPIService;
+import com.rekordb.rekordb.tourspot.ApiRequest.ExternalAPIService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +16,7 @@ import java.util.Collections;
 @RequestMapping("/tourspot")
 @RequiredArgsConstructor
 public class TourSpotController {
-    private final TourAPIService tourAPIService;
+    private final ExternalAPIService externalAPIService;
     private final TourSpotService tourSpotService;
 
     @GetMapping("/updatedb")
@@ -29,7 +29,17 @@ public class TourSpotController {
             log.error("서버와 통신이 제대로 이루어지지 않았습니다."+ e.getMessage());
             return ResponseEntity.badRequest().body(null);
         }
+    }
 
-
+    @GetMapping("/findgoogleplaceid")
+    public ResponseEntity<ResponseDTO<String>> findgoogleid(){
+        try {
+            externalAPIService.findPlaceId();
+            ResponseDTO<String> res = ResponseDTO.<String>builder().data(Collections.singletonList("테스트")).build();
+            return ResponseEntity.ok().body(res);
+        } catch (NullPointerException e){
+            log.error("서버와 통신이 제대로 이루어지지 않았습니다."+ e.getMessage());
+            return ResponseEntity.badRequest().body(null);
+        }
     }
 }

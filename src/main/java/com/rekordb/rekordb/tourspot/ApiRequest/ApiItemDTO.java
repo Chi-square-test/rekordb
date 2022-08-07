@@ -1,4 +1,4 @@
-package com.rekordb.rekordb.tourspot.dto;
+package com.rekordb.rekordb.tourspot.ApiRequest;
 
 import com.rekordb.rekordb.tourspot.Address;
 import com.rekordb.rekordb.tourspot.SpotCategory;
@@ -10,8 +10,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 @Builder

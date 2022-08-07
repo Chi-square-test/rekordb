@@ -1,4 +1,4 @@
-package com.rekordb.rekordb.tourspot.ApiRest;
+package com.rekordb.rekordb.tourspot.ApiRequest;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

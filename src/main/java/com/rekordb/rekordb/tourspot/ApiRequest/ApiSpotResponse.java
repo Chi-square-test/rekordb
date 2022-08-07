@@ -1,8 +1,7 @@
-package com.rekordb.rekordb.tourspot.dto;
+package com.rekordb.rekordb.tourspot.ApiRequest;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;

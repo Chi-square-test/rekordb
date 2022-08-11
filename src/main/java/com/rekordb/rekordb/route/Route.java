@@ -1,7 +1,7 @@
 package com.rekordb.rekordb.route;
 
 import com.rekordb.rekordb.tourspot.SpotId;
-import com.rekordb.rekordb.user.UserEmail;
+import com.rekordb.rekordb.user.UserOauthId;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,7 +22,7 @@ public class Route {
     private RouteId routeId;
 
     @Embedded
-    private UserEmail userEmail;
+    private UserOauthId userOauthId;
 
     private List<SpotId> spotList;
 

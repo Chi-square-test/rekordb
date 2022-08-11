@@ -1,7 +1,7 @@
 package com.rekordb.rekordb.review;
 
 import com.rekordb.rekordb.tourspot.SpotId;
-import com.rekordb.rekordb.user.UserEmail;
+import com.rekordb.rekordb.user.UserOauthId;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,7 +21,7 @@ public class Review {
     private Long idx;
 
     @Embedded
-    private UserEmail userEmail;
+    private UserOauthId userOauthId;
 
     @Embedded
     private SpotId spotId;

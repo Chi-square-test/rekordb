@@ -4,6 +4,7 @@ import lombok.*;
 import org.springframework.util.Assert;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,11 +47,7 @@ public class TourSpot {
     private int likeCount;
 
     @Builder
-    public TourSpot(SpotId spotId, String title, Address addr, SpotCategory cat,List<String> imgs, int typeid, int readCount){
-        Assert.notNull(spotId,"장소 id가 존재하지 않습니다.");
-        Assert.notNull(addr,"장소 주소가 존재하지 않습니다. ");
-        Assert.hasText(title,"장소 이름이 존재하지 않습니다.");
-        Assert.notNull(cat,"장소 카테고리가 존재하지 않습니다. ");
+    public TourSpot(@NotNull SpotId spotId,  @NotNull String title, @NotNull Address addr, @NotNull SpotCategory cat, List<String> imgs, int typeid, int readCount){
         this.spotId = spotId;
         this.title = title;
         this.address = addr;

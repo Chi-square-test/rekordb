@@ -1,6 +1,6 @@
 package com.rekordb.rekordb.tag;
 
-import com.rekordb.rekordb.user.UserEmail;
+import com.rekordb.rekordb.user.UserOauthId;
 import lombok.*;
 
 import javax.persistence.*;
@@ -22,7 +22,7 @@ public class UserAndTag {
 
     @Embedded
     @NonNull
-    private UserEmail userEmail;
+    private UserOauthId userOauthId;
 
 
 }

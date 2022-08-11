@@ -11,13 +11,13 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class UserEmail implements Serializable {
+public class UserOauthId implements Serializable {
 
-    @Column(name = "email")
-    private String email;
+    @Column(name = "OauthId")
+    private String oauthId;
 
-    public static UserEmail of(String id){
-        return new UserEmail(id);
+    public static UserOauthId of(String id){
+        return new UserOauthId(id);
     }
 
 

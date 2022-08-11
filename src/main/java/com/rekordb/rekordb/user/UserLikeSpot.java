@@ -20,7 +20,7 @@ public class UserLikeSpot {
     private Long id;
 
     @Embedded
-    private UserEmail userEmail;
+    private UserOauthId userOauthId;
 
     @Embedded
     private SpotId spotId;

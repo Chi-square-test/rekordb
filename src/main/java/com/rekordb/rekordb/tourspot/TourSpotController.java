@@ -34,7 +34,19 @@ public class TourSpotController {
     @GetMapping("/findgoogleplaceid")
     public ResponseEntity<ResponseDTO<String>> findgoogleid(){
         try {
-            externalAPIService.findPlaceId();
+            //externalAPIService.findPlaceId();
+            ResponseDTO<String> res = ResponseDTO.<String>builder().data(Collections.singletonList("테스트")).build();
+            return ResponseEntity.ok().body(res);
+        } catch (NullPointerException e){
+            log.error("서버와 통신이 제대로 이루어지지 않았습니다."+ e.getMessage());
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    @GetMapping("/getggreviews")
+    public ResponseEntity<ResponseDTO<String>> getgooglereviews(){
+        try {
+            externalAPIService.findReview();
             ResponseDTO<String> res = ResponseDTO.<String>builder().data(Collections.singletonList("테스트")).build();
             return ResponseEntity.ok().body(res);
         } catch (NullPointerException e){

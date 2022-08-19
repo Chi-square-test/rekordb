@@ -1,5 +1,7 @@
 package com.rekordb.rekordb.tourspot.ApiRequest;
 
+import com.rekordb.rekordb.review.Review;
+import com.rekordb.rekordb.review.query.ReviewRepository;
 import com.rekordb.rekordb.tourspot.TourSpot;
 import com.rekordb.rekordb.tourspot.query.TourSpotRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,10 +13,11 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.ssl.SSLContexts;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -38,7 +41,10 @@ import java.util.stream.Collectors;
 @EnableConfigurationProperties(value = ApiKeysProperties.class)
 public class ExternalAPIService {
 
-    private final TourSpotRepository repository;
+    private final TourSpotRepository tourSpotRepository;
+
+    private final ReviewRepository reviewRepository;
+
     private final ApiKeysProperties apiKeys;
     private static final String TOUR_URI = "https://apis.data.go.kr/B551011/KorService";
     private static final String GOOGLE_URI = "https://maps.googleapis.com/maps/api/place";
@@ -65,14 +71,14 @@ public class ExternalAPIService {
         ApiSpotResponse response = restTemplate.getForObject(java.net.URI.create(url),ApiSpotResponse.class);
         List<ApiItemDTO> dtos = response.getItems();
         List<TourSpot> spots = dtos.stream().map(ApiItemDTO::apiConvertEntity).collect(Collectors.toList());
-        repository.saveAll(spots);
+        tourSpotRepository.saveAll(spots);
     }
 
     public void findPlaceId() throws NullPointerException{
         restTemplate= new RestTemplate();
         for (int i = 3; i < 119; i++) {
             PageRequest pageRequest = PageRequest.of(i,100);
-            List<TourSpot> spots = repository.findAll(pageRequest).toList();
+            List<TourSpot> spots = tourSpotRepository.findAll(pageRequest).toList();
             List<TourSpot> updateSpots = new ArrayList<>();
             for (TourSpot s: spots) {
                 String title = s.getTitle();
@@ -91,7 +97,40 @@ public class ExternalAPIService {
                     updateSpots.add(s);
                 }
             }
-            repository.saveAll(updateSpots);
+            tourSpotRepository.saveAll(updateSpots);
+            log.info(i+"번째 페이지 저장 완료");
+        }
+    }
+
+    public void findReview() throws NullPointerException{
+        restTemplate= new RestTemplate();
+        for (int i = 0; i <1; i++) {
+            PageRequest pageRequest = PageRequest.of(i,1);
+            List<TourSpot> spots = tourSpotRepository.findAllByGooglePlaceIdIsNotNull(pageRequest);
+            List<Review> googleReviews = new ArrayList<>();
+            for (TourSpot s: spots) {
+                String placeId = s.getGooglePlaceId();
+                UriComponents builder = UriComponentsBuilder.fromHttpUrl(GOOGLE_URI)
+                        .path("/details")
+                        .path("/json")
+                        .queryParam("place_id",placeId)
+                        .queryParam("fields","reviews")
+                        .queryParam("key",apiKeys.getGoogleKey())
+                        .build();
+                HttpHeaders headers = new HttpHeaders();
+                headers.set("Accept-Language","ko-kr");
+                ResponseEntity<String> dto = restTemplate.exchange(builder.toUri(), HttpMethod.GET,new HttpEntity<>(headers),String.class);
+
+                //ResponseEntity<GoogleReviewDTO> dto = restTemplate.exchange(builder.toUri(), HttpMethod.GET,new HttpEntity<>(headers),GoogleReviewDTO.class);
+                log.info(dto.getBody().toString());
+//                if(dto.getBody().result.reviews!=null){
+//                    for (GoogleReviewDTO.review rev: dto.getBody().result.reviews) {
+//                        googleReviews.add(Review.googleReviewToDB(rev,s.getSpotId()));
+//                    }
+//                }
+
+            }
+            reviewRepository.saveAll(googleReviews);
             log.info(i+"번째 페이지 저장 완료");
         }
     }

@@ -1,6 +1,6 @@
 package com.rekordb.rekordb.security.OAuth;
 
-import com.rekordb.rekordb.user.ProviderType;
+import com.rekordb.rekordb.user.domain.ProviderType;
 
 import java.util.Map;
 
@@ -10,6 +10,7 @@ public class OAuthUserInfoFactory {
             case GOOGLE -> new GoogleOAuthUserInfo(attributes);
             case NAVER -> new NaverOAuthUserInfo(attributes);
             case KAKAO-> new KakaoOAuthUserInfo(attributes);
+            case REKOR -> null;
         };
     }
 }

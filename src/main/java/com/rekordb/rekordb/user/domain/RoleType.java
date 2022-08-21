@@ -1,4 +1,4 @@
-package com.rekordb.rekordb.user;
+package com.rekordb.rekordb.user.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

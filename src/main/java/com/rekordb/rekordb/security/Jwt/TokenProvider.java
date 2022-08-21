@@ -1,6 +1,7 @@
 package com.rekordb.rekordb.security.Jwt;
 
 import com.rekordb.rekordb.security.Exception.TokenValidFailedException;
+import com.rekordb.rekordb.user.domain.UserId;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +12,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
 import java.security.Key;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
@@ -22,16 +25,22 @@ public class TokenProvider {
     private final Key key;
     private static final String AUTHORITIES_KEY = "role";
 
+    private static final long ACCESS_EXPIRE_MINUTES = 1;
+    private static final long REFRESH_EXPIRE_DAYS = 14;
+
     public TokenProvider(String secret) {
+
         this.key = Keys.hmacShaKeyFor(secret.getBytes());
     }
 
-    public AuthToken createAuthToken(String id, Date expiry) {
-        return new AuthToken(id, expiry, key);
+    public AuthToken createRefreshToken(UserId userId) {
+        Date expiryDate = Date.from(Instant.now().plus(REFRESH_EXPIRE_DAYS, ChronoUnit.DAYS));
+        return new AuthToken(userId.getUserId(),expiryDate , key);
     }
 
-    public AuthToken createAuthToken(String id, String role, Date expiry) {
-        return new AuthToken(id, role, expiry, key);
+    public AuthToken createAccessToken(UserId userId, String role) {
+        Date expiryDate = Date.from(Instant.now().plus(ACCESS_EXPIRE_MINUTES, ChronoUnit.MINUTES));
+        return new AuthToken(userId.getUserId(), role, expiryDate, key);
     }
 
     public AuthToken convertAuthToken(String token) {
@@ -40,7 +49,7 @@ public class TokenProvider {
 
     public Authentication getAuthentication(AuthToken authToken) {
 
-        if(authToken.validate()) {
+        try {
 
             Claims claims = authToken.getTokenClaims();
             Collection<? extends GrantedAuthority> authorities =
@@ -52,7 +61,7 @@ public class TokenProvider {
             User principal = new User(claims.getSubject(), "", authorities);
 
             return new UsernamePasswordAuthenticationToken(principal, authToken, authorities);
-        } else {
+        } catch (Exception e ){
             throw new TokenValidFailedException();
         }
     }

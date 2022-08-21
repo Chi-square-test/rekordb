@@ -1,7 +1,8 @@
 package com.rekordb.rekordb.route;
 
 import com.rekordb.rekordb.tourspot.SpotId;
-import com.rekordb.rekordb.user.UserOauthId;
+import com.rekordb.rekordb.user.domain.UserId;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,14 +16,14 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Document(collation = "route")
+@Document(collection = "route")
 public class Route {
 
     @EmbeddedId
     private RouteId routeId;
 
     @Embedded
-    private UserOauthId userOauthId;
+    private UserId userId;
 
     private List<SpotId> spotList;
 

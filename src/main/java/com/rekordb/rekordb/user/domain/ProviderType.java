@@ -1,4 +1,4 @@
-package com.rekordb.rekordb.user;
+package com.rekordb.rekordb.user.domain;
 
 import lombok.Getter;
 
@@ -6,5 +6,6 @@ import lombok.Getter;
 public enum ProviderType {
     GOOGLE,
     NAVER,
-    KAKAO
+    KAKAO,
+    REKOR
 }

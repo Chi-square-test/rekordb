@@ -1,6 +1,6 @@
 package com.rekordb.rekordb.tag;
 
-import com.rekordb.rekordb.user.UserOauthId;
+import com.rekordb.rekordb.user.domain.UserId;
 import lombok.*;
 
 import javax.persistence.*;
@@ -22,7 +22,7 @@ public class UserAndTag {
 
     @Embedded
     @NonNull
-    private UserOauthId userOauthId;
+    private UserId userId;
 
 
 }

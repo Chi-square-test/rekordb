@@ -44,32 +44,17 @@ public class AuthToken {
                 .compact();
     }
 
-    public boolean validate() {
-        return this.getTokenClaims().isEmpty();
-    }
 
     public Claims getTokenClaims() {
-        try {
-            return Jwts.parserBuilder()
-                    .setSigningKey(key)
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody();
-        } catch (SecurityException e) {
-            log.info("Invalid JWT signature.");
-        } catch (MalformedJwtException e) {
-            log.info("Invalid JWT token.");
-        } catch (ExpiredJwtException e) {
-            log.info("Expired JWT token.");
-        } catch (UnsupportedJwtException e) {
-            log.info("Unsupported JWT token.");
-        } catch (IllegalArgumentException e) {
-            log.info("JWT token compact of handler are invalid.");
-        }
-        return null;
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+
     }
 
-    public Claims getExpiredTokenClaims() {
+    public boolean getExpiredTokenClaims() {
         try {
             Jwts.parserBuilder()
                     .setSigningKey(key)
@@ -77,10 +62,12 @@ public class AuthToken {
                     .parseClaimsJws(token)
                     .getBody();
         } catch (ExpiredJwtException e) {
-            log.info("Expired JWT token.");
-            return e.getClaims();
+            log.info("만료된 토큰이 맞음");
+            return true;
         }
-        return null;
+        return false;
     }
+
+
 
 }

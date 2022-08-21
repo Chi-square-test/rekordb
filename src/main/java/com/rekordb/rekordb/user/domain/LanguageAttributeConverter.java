@@ -1,4 +1,6 @@
-package com.rekordb.rekordb.user;
+package com.rekordb.rekordb.user.domain;
+
+import com.rekordb.rekordb.user.domain.Language;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;

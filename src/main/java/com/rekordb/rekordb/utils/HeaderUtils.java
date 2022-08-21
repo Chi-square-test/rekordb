@@ -1,7 +1,10 @@
 package com.rekordb.rekordb.utils;
 
+import lombok.extern.slf4j.Slf4j;
+
 import javax.servlet.http.HttpServletRequest;
 
+@Slf4j
 public class HeaderUtils {
     private static final String HEADER_AUTHORIZATION = "Authorization";
     private static final String TOKEN_PREFIX = "Bearer ";

@@ -1,11 +1,14 @@
 package com.rekordb.rekordb.security.query;
 
-import com.rekordb.rekordb.security.Jwt.URefreshToken;
-import com.rekordb.rekordb.user.UserOauthId;
+import com.rekordb.rekordb.security.Jwt.RefreshToken;
+import com.rekordb.rekordb.user.domain.UserId;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface RefreshTokenRepository extends JpaRepository<URefreshToken,Long> {
-    URefreshToken findByOauthId(UserOauthId id);
-    URefreshToken findByOauthIdAndToken(UserOauthId id, String refreshToken);
+import java.util.Optional;
 
+public interface RefreshTokenRepository extends JpaRepository<RefreshToken,UserId> {
+
+    Optional<RefreshToken> findByRefreshToken(String refresh);
+    Optional<RefreshToken> findByAccessToken(String refresh);
+    Optional<RefreshToken> findByUserIdAndRefreshTokenAndAccessToken(UserId userId,String refresh, String access);
 }

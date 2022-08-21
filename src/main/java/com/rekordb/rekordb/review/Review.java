@@ -2,7 +2,7 @@ package com.rekordb.rekordb.review;
 
 import com.rekordb.rekordb.tourspot.ApiRequest.GoogleReviewDTO;
 import com.rekordb.rekordb.tourspot.SpotId;
-import com.rekordb.rekordb.user.UserOauthId;
+import com.rekordb.rekordb.user.domain.UserId;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,7 +25,7 @@ public class Review {
     private Long idx;
 
     @Embedded
-    private UserOauthId userOauthId;
+    private UserId userId;
 
     @Embedded
     private SpotId spotId;
@@ -47,7 +47,7 @@ public class Review {
                 .time(LocalDateTime.ofEpochSecond(dto.getTime()*1000,0, ZoneOffset.of("+9")))
                 .rating(dto.getRating())
                 .text(dto.getText())
-                .userOauthId(UserOauthId.of("Google User"))
+                .userId(UserId.of("Google User"))
                 .userName("Google User")
                 .build();
 

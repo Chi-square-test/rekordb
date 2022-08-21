@@ -1,6 +1,7 @@
-package com.rekordb.rekordb.user;
+package com.rekordb.rekordb.user.domain;
 
 import com.rekordb.rekordb.tourspot.SpotId;
+import com.rekordb.rekordb.user.domain.UserId;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,7 +21,7 @@ public class UserLikeSpot {
     private Long id;
 
     @Embedded
-    private UserOauthId userOauthId;
+    private UserId userId;
 
     @Embedded
     private SpotId spotId;

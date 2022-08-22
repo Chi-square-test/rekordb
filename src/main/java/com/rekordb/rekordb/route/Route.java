@@ -1,6 +1,6 @@
 package com.rekordb.rekordb.route;
 
-import com.rekordb.rekordb.tourspot.SpotId;
+import com.rekordb.rekordb.tourspot.domain.SpotId;
 import com.rekordb.rekordb.user.domain.UserId;
 
 import lombok.AccessLevel;

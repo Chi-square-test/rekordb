@@ -1,7 +1,10 @@
-package com.rekordb.rekordb.tourspot;
+package com.rekordb.rekordb.tourspot.domain;
 
+import com.rekordb.rekordb.tourspot.domain.Address;
+import com.rekordb.rekordb.tourspot.domain.EngAddress;
+import com.rekordb.rekordb.tourspot.domain.SpotCategory;
+import com.rekordb.rekordb.tourspot.domain.SpotId;
 import lombok.*;
-import org.springframework.util.Assert;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

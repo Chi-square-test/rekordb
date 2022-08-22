@@ -1,9 +1,9 @@
 package com.rekordb.rekordb.tourspot.ApiRequest;
 
-import com.rekordb.rekordb.tourspot.Address;
-import com.rekordb.rekordb.tourspot.SpotCategory;
-import com.rekordb.rekordb.tourspot.SpotId;
-import com.rekordb.rekordb.tourspot.TourSpot;
+import com.rekordb.rekordb.tourspot.domain.Address;
+import com.rekordb.rekordb.tourspot.domain.SpotCategory;
+import com.rekordb.rekordb.tourspot.domain.SpotId;
+import com.rekordb.rekordb.tourspot.domain.TourSpot;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

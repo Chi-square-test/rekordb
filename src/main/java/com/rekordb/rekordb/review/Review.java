@@ -1,7 +1,7 @@
 package com.rekordb.rekordb.review;
 
 import com.rekordb.rekordb.tourspot.ApiRequest.GoogleReviewDTO;
-import com.rekordb.rekordb.tourspot.SpotId;
+import com.rekordb.rekordb.tourspot.domain.SpotId;
 import com.rekordb.rekordb.user.domain.UserId;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

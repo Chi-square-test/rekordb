@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 
 public class GoogleReviewDTO {
-    ArrayList < Object > html_attributions = new ArrayList < Object > ();
+    ArrayList < Object > html_attributions = new ArrayList<> ();
     Result result;
     String status;
     @ToString

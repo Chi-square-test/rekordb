@@ -1,6 +1,6 @@
 package com.rekordb.rekordb.tag;
 
-import com.rekordb.rekordb.tourspot.SpotId;
+import com.rekordb.rekordb.tourspot.domain.SpotId;
 import lombok.*;
 
 import javax.persistence.*;

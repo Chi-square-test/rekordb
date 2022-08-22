@@ -2,7 +2,7 @@ package com.rekordb.rekordb.tourspot.ApiRequest;
 
 import com.rekordb.rekordb.review.Review;
 import com.rekordb.rekordb.review.query.ReviewRepository;
-import com.rekordb.rekordb.tourspot.TourSpot;
+import com.rekordb.rekordb.tourspot.domain.TourSpot;
 import com.rekordb.rekordb.tourspot.query.TourSpotRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

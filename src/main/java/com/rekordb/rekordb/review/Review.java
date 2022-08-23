@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Builder
@@ -39,6 +41,10 @@ public class Review {
     private int rating;
 
     private String text;
+
+    @ElementCollection
+    @CollectionTable(name = "reviewImages",joinColumns = @JoinColumn(name = "idx"))
+    private List<String> reviewImages = new ArrayList<>();
 
     public static Review googleReviewToDB(GoogleReviewDTO.review dto,SpotId spotId){
         return Review.builder()

@@ -7,10 +7,7 @@ import com.rekordb.rekordb.security.query.RefreshTokenRepository;
 import com.rekordb.rekordb.user.Execption.DuplicateUserInfoException;
 import com.rekordb.rekordb.user.Execption.NeedLoginException;
 import com.rekordb.rekordb.user.Execption.WrongLoginException;
-import com.rekordb.rekordb.user.domain.Password;
-import com.rekordb.rekordb.user.domain.PhoneNumber;
-import com.rekordb.rekordb.user.domain.User;
-import com.rekordb.rekordb.user.domain.UserId;
+import com.rekordb.rekordb.user.domain.*;
 import com.rekordb.rekordb.user.dto.RekorLoginDTO;
 import com.rekordb.rekordb.user.dto.RekorSignUpDTO;
 import com.rekordb.rekordb.user.dto.TokenSet;
@@ -78,8 +75,18 @@ public class UserService {
         }
     }
 
+    private AuthToken makeAccessToken(User user) {
+        if(user.getRoleType().equals(RoleType.ADMIN)) {
+            log.warn("관리자용 토근이 생성되어짐.");
+            return tokenProvider.createDevToken(user.getUserId(), user.getRoleType().getName());
+        }
+        else
+            return tokenProvider.createAccessToken(user.getUserId(),user.getRoleType().getName());
+
+    }
+
     private TokenSet makeNewAllToken(User user){
-        AuthToken accessToken = tokenProvider.createAccessToken(user.getUserId(),user.getRoleType().getName());
+        AuthToken accessToken = makeAccessToken(user);
         AuthToken refreshToken = tokenProvider.createRefreshToken(user.getUserId());
         RefreshToken rt = new RefreshToken(user.getUserId(),refreshToken.getToken(), accessToken.getToken());
         refreshTokenRepository.save(rt);

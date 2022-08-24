@@ -28,6 +28,8 @@ public class TokenProvider {
     private static final long ACCESS_EXPIRE_MINUTES = 30;
     private static final long REFRESH_EXPIRE_DAYS = 14;
 
+    private static final long ADMIN_EXPIRE_DAYS = 30;
+
     public TokenProvider(String secret) {
 
         this.key = Keys.hmacShaKeyFor(secret.getBytes());
@@ -40,6 +42,11 @@ public class TokenProvider {
 
     public AuthToken createAccessToken(UserId userId, String role) {
         Date expiryDate = Date.from(Instant.now().plus(ACCESS_EXPIRE_MINUTES, ChronoUnit.MINUTES));
+        return new AuthToken(userId.getUserId(), role, expiryDate, key);
+    }
+
+    public AuthToken createDevToken(UserId userId, String role) {
+        Date expiryDate = Date.from(Instant.now().plus(ADMIN_EXPIRE_DAYS, ChronoUnit.DAYS));
         return new AuthToken(userId.getUserId(), role, expiryDate, key);
     }
 

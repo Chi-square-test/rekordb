@@ -11,7 +11,8 @@ public enum RekorCategory {
     POP("K-POP"),
     DRAMA("K-DRAMA"),
     FESTIVAL("K-FESTIVAL"),
-    LEISURE("K-LEISURE");
+    LEISURE("K-LEISURE"),
+    OTHER("OTHER");
 
     private String KName;
 

@@ -34,6 +34,7 @@ public class TourSpot {
     @Embedded
     private SpotCategory spotCategory;
 
+    @Convert(converter = RekorCategoryAttributeConverter.class)
     private RekorCategory rekorCategory;
 
 

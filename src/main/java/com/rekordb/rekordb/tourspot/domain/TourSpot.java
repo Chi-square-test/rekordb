@@ -34,6 +34,8 @@ public class TourSpot {
     @Embedded
     private SpotCategory spotCategory;
 
+    private RekorCategory rekorCategory;
+
 
     @ElementCollection
     @CollectionTable(name = "images",joinColumns = @JoinColumn(name = "spotId"))

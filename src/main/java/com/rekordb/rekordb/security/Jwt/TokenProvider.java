@@ -25,7 +25,7 @@ public class TokenProvider {
     private final Key key;
     private static final String AUTHORITIES_KEY = "role";
 
-    private static final long ACCESS_EXPIRE_MINUTES = 1;
+    private static final long ACCESS_EXPIRE_MINUTES = 15;
     private static final long REFRESH_EXPIRE_DAYS = 14;
 
     public TokenProvider(String secret) {

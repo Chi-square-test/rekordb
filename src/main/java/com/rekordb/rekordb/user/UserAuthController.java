@@ -42,6 +42,38 @@ public class UserAuthController {
 
     }
 
+    @GetMapping("/signup/validation/phone/{phone}")
+    public ResponseEntity<ResponseDTO<?>> validPhone(@PathVariable("phone") String phone){
+        try {
+            userService.validatePhone(phone);
+            ResponseDTO<Object> res = ResponseDTO.builder()
+                    .status(ApiStatus.SUCCESS)
+                    .build();
+            return ResponseEntity.ok().body(res);
+        }catch (DuplicateUserInfoException e){
+            ResponseDTO<Object> responseDTO = ResponseDTO.builder()
+                    .status(ApiStatus.FAIL)
+                    .build();
+            return  ResponseEntity.ok().body(responseDTO);
+        }
+    }
+
+    @GetMapping("/signup/validation/nickname/{name}")
+    public ResponseEntity<ResponseDTO<?>> validName(@PathVariable("name") String name){
+        try {
+            userService.validateName(name);
+            ResponseDTO<Object> res = ResponseDTO.builder()
+                    .status(ApiStatus.SUCCESS)
+                    .build();
+            return ResponseEntity.ok().body(res);
+        }catch (DuplicateUserInfoException e){
+            ResponseDTO<Object> responseDTO = ResponseDTO.builder()
+                    .status(ApiStatus.FAIL)
+                    .build();
+            return  ResponseEntity.ok().body(responseDTO);
+        }
+    }
+
     @PostMapping("/login")
     public ResponseEntity<ResponseDTO<?>> signUp(@RequestBody RekorLoginDTO dto){
         try {

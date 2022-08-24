@@ -30,7 +30,7 @@ public class TokenExceptionFilter extends OncePerRequestFilter {
         ResponseDTO<Object> dto = ResponseDTO.builder().status(ApiStatus.EXPIRE).error(ex.getMessage()).build();
 
         String json = new ObjectMapper().writeValueAsString(dto);
-        res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        res.setStatus(status.value());
         res.getWriter().write(json);
     }
 }

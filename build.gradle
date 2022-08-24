@@ -29,7 +29,7 @@ dependencies {
 	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client:3.0.6'
 	annotationProcessor 'org.projectlombok:lombok:1.18.24'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test:2.7.3'
-	compileOnly 'com.aventrix.jnanoid:jnanoid:2.0.0'
+	implementation 'com.aventrix.jnanoid:jnanoid:2.0.0'
 	compileOnly 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive:2.7.3'
 	compileOnly 'org.springframework.boot:spring-boot-configuration-processor:2.7.3'
 	annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")

@@ -24,7 +24,7 @@ public class TourSpotDBController {
     @GetMapping("/updatedb")
     public ResponseEntity<ResponseDTO<String>> updateDatabase(){
         try {
-            //tourAPIService.getTourAPIData(); 일회성 기능이므로 일단 봉인
+            //externalAPIService.getTourAPIData();
             ResponseDTO<String> res = ResponseDTO.<String>builder().status(ApiStatus.SUCCESS).data(Collections.singletonList("테스트")).build();
             return ResponseEntity.ok().body(res);
         } catch (NullPointerException e){

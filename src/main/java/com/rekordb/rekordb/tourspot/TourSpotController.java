@@ -17,7 +17,7 @@ import java.util.Collections;
 @RequestMapping("/api/tourspot")
 @RequiredArgsConstructor
 public class TourSpotController {
-    private final ExternalAPIService externalAPIService;
+    private final TourSpotService tourSpotService;
 
     @GetMapping
     public ResponseEntity<ResponseDTO<String>> ping(){

@@ -2,6 +2,7 @@ package com.rekordb.rekordb.tourspot.ApiRequest;
 
 import com.rekordb.rekordb.review.Review;
 import com.rekordb.rekordb.review.query.ReviewRepository;
+import com.rekordb.rekordb.tourspot.domain.RekorCategory;
 import com.rekordb.rekordb.tourspot.domain.TourSpot;
 import com.rekordb.rekordb.tourspot.query.TourSpotRepository;
 import lombok.RequiredArgsConstructor;
@@ -65,7 +66,7 @@ public class ExternalAPIService {
                 .queryParam("MobileOS","ETC")
                 .queryParam("MobileApp","ReKor")
                 .queryParam("serviceKey",apiKeys.getTourKey())
-                .queryParam("contentTypeId",12)
+                .queryParam("cat3","A05020100")
                 .build();
         String url = URLDecoder.decode(builder.toUri().toString(), StandardCharsets.UTF_8);
         ApiSpotResponse response = restTemplate.getForObject(java.net.URI.create(url),ApiSpotResponse.class);
@@ -76,9 +77,9 @@ public class ExternalAPIService {
 
     public void findPlaceId() throws NullPointerException{
         restTemplate= new RestTemplate();
-        for (int i = 3; i < 119; i++) {
+        for (int i = 1; i < 70; i++) {
             PageRequest pageRequest = PageRequest.of(i,100);
-            List<TourSpot> spots = tourSpotRepository.findAll(pageRequest).toList();
+            List<TourSpot> spots = tourSpotRepository.findByRekorCategory(RekorCategory.FOOD,pageRequest);
             List<TourSpot> updateSpots = new ArrayList<>();
             for (TourSpot s: spots) {
                 String title = s.getTitle();
@@ -87,7 +88,6 @@ public class ExternalAPIService {
                         .path("/json")
                         .queryParam("input",title)
                         .queryParam("inputtype","textquery")
-                        .queryParam("fields","formatted_address,name,rating,place_id")
                         .queryParam("key",apiKeys.getGoogleKey())
                         .build();
                 GooglePlaceIdDTO dto = restTemplate.getForObject(builder.toUri(),GooglePlaceIdDTO.class);

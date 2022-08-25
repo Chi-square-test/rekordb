@@ -1,5 +1,6 @@
 package com.rekordb.rekordb.tourspot.query;
 
+import com.rekordb.rekordb.tourspot.domain.RekorCategory;
 import com.rekordb.rekordb.tourspot.domain.SpotId;
 import com.rekordb.rekordb.tourspot.domain.TourSpot;
 import org.springframework.data.domain.PageRequest;
@@ -10,5 +11,6 @@ import java.util.List;
 public interface TourSpotRepository extends JpaRepository<TourSpot, SpotId> {
 
     List<TourSpot> findAllByGooglePlaceIdIsNotNull(PageRequest pageRequest);
+    List<TourSpot> findByRekorCategory(RekorCategory rekorCategory,PageRequest pageRequest);
 
 }

@@ -53,7 +53,7 @@ public class TourSpot {
     private int likeCount;
 
     @Builder
-    public TourSpot(@NotNull SpotId spotId,  @NotNull String title, @NotNull Address addr, @NotNull SpotCategory cat, List<String> imgs, int typeid, int readCount){
+    public TourSpot(@NotNull SpotId spotId,  @NotNull String title, @NotNull Address addr, @NotNull SpotCategory cat, List<String> imgs, int typeid, int readCount, RekorCategory rekorCategory){
         this.spotId = spotId;
         this.title = title;
         this.address = addr;
@@ -63,6 +63,7 @@ public class TourSpot {
         this.likeCount=0;
         this.rating=0;
         this.images = imgs;
+        this.rekorCategory = rekorCategory;
     }
 
     public void changeImgList(List<String> imgs){

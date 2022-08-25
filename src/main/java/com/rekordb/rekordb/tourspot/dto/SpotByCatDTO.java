@@ -24,9 +24,6 @@ public class SpotByCatDTO {
     @Convert(converter = RekorCategoryAttributeConverter.class)
     private RekorCategory rekorCategory;
 
-
-    @ElementCollection
-    @CollectionTable(name = "images",joinColumns = @JoinColumn(name = "spotId"))
     private List<String> images = new ArrayList<>();
 
     private double rating;

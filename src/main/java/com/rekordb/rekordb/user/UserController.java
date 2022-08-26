@@ -71,6 +71,7 @@ public class UserController {
     @PostMapping("/join")
     public ResponseEntity<ResponseDTO<?>> joinData(@AuthenticationPrincipal User user, @RequestBody RekorJoinInformDTO dto){
         try {
+            log.info(user.getUsername() + " 상세정보 입력");
             userService.signUpFromRekor(user.getUsername(),dto);
             ResponseDTO<Object> res = ResponseDTO.builder()
                     .status(ApiStatus.SUCCESS)

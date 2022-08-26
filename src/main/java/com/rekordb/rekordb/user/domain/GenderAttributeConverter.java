@@ -18,6 +18,7 @@ public class GenderAttributeConverter implements AttributeConverter<Gender, Inte
 
     @Override
     public Gender convertToEntityAttribute(Integer dbData) {
+        if(dbData == null) return null;
         if(dbData==0) return Gender.Female;
         else return Gender.Male;
     }

@@ -18,6 +18,7 @@ public class LanguageAttributeConverter implements AttributeConverter<Language, 
 
     @Override
     public Language convertToEntityAttribute(Integer dbData) {
+        if(dbData == null) return null;
         if(dbData==0) return Language.한국어;
         else return Language.English;
     }

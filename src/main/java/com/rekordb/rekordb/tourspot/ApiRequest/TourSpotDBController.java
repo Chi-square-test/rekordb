@@ -56,4 +56,16 @@ public class TourSpotDBController {
             return ResponseEntity.badRequest().body(null);
         }
     }
+
+    @GetMapping("/dbmigration")
+    public ResponseEntity<ResponseDTO<String>> dbchange(){
+        try {
+            externalAPIService.toMongo();
+            ResponseDTO<String> res = ResponseDTO.<String>builder().status(ApiStatus.SUCCESS).data(Collections.singletonList("테스트")).build();
+            return ResponseEntity.ok().body(res);
+        } catch (NullPointerException e){
+            log.error("서버와 통신이 제대로 이루어지지 않았습니다."+ e.getMessage());
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
 }

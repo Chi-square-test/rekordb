@@ -14,7 +14,7 @@ import javax.persistence.Embeddable;
 public class FolderId {
     private String id;
 
-    public static TagId newFolderId(){
-        return new TagId(NanoIdUtils.randomNanoId());
+    public static FolderId newFolderId(){
+        return new FolderId(NanoIdUtils.randomNanoId());
     }
 }

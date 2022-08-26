@@ -17,7 +17,7 @@ public class RouteId {
     @Column(name = "route_id")
     private String id;
 
-    public static TagId newRouteId(){
-        return new TagId(NanoIdUtils.randomNanoId());
+    public static RouteId newRouteId(){
+        return new RouteId(NanoIdUtils.randomNanoId());
     }
 }

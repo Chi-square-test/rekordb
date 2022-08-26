@@ -1,25 +1,21 @@
 package com.rekordb.rekordb.tourspot.domain;
 
-import com.rekordb.rekordb.tourspot.domain.Address;
-import com.rekordb.rekordb.tourspot.domain.EngAddress;
-import com.rekordb.rekordb.tourspot.domain.SpotCategory;
-import com.rekordb.rekordb.tourspot.domain.SpotId;
+import com.rekordb.rekordb.tag.Tag;
 import lombok.*;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-@Deprecated(since = "Use instead TourSpotDocument")
-@Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Table(name = "tourSpot")
-public class TourSpot {
+@Document(collection = "TourSpot")
+public class TourSpotDocument {
 
-    @EmbeddedId
+    @Id
     private SpotId spotId;
 
     private String title;
@@ -35,12 +31,8 @@ public class TourSpot {
     @Embedded
     private SpotCategory spotCategory;
 
-    @Convert(converter = RekorCategoryAttributeConverter.class)
     private RekorCategory rekorCategory;
 
-
-    @ElementCollection
-    @CollectionTable(name = "images",joinColumns = @JoinColumn(name = "spotId"))
     private List<String> images = new ArrayList<>();
 
     private int readCount;
@@ -53,19 +45,28 @@ public class TourSpot {
 
     private int likeCount;
 
-    @Builder
-    public TourSpot(@NotNull SpotId spotId,  @NotNull String title, @NotNull Address addr, @NotNull SpotCategory cat, List<String> imgs, int typeid, int readCount, RekorCategory rekorCategory){
-        this.spotId = spotId;
-        this.title = title;
-        this.address = addr;
-        this.typeId = typeid;
-        this.readCount = readCount;
-        this.spotCategory =cat;
-        this.likeCount=0;
-        this.rating=0;
-        this.images = imgs;
-        this.rekorCategory = rekorCategory;
+    private List<Tag> tagList;
+
+
+    public TourSpotDocument(TourSpot spot){
+        this.spotId = spot.getSpotId();
+        this.title = spot.getTitle();
+        this.address = spot.getAddress();
+        this.tagList = new ArrayList<>();
+        this.typeId = spot.getTypeId();
+        this.readCount =spot.getReadCount();
+        this.spotCategory =spot.getSpotCategory();
+        this.likeCount=spot.getLikeCount();
+        this.rating=spot.getRating();
+        this.images =spot.getImages();
+        this.rekorCategory = spot.getRekorCategory();
     }
+
+    public void setTagList(List<Tag> tags){
+        this.tagList = tags;
+    }
+
+
 
     public void changeImgList(List<String> imgs){
         images.clear();
@@ -88,7 +89,4 @@ public class TourSpot {
     public void minusLikeCount(){
         --this.likeCount;
     }
-
-
-
 }

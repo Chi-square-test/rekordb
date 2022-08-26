@@ -1,20 +1,22 @@
 package com.rekordb.rekordb.tag;
 
 import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
 
-@Entity
+
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Table(name = "tag")
+@Document(collection = "tag")
 public class Tag {
 
-    @EmbeddedId
+    @Id
     private TagId tagId;
 
     @NonNull

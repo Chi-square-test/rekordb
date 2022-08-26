@@ -4,6 +4,8 @@ import com.rekordb.rekordb.review.Review;
 import com.rekordb.rekordb.review.query.ReviewRepository;
 import com.rekordb.rekordb.tourspot.domain.RekorCategory;
 import com.rekordb.rekordb.tourspot.domain.TourSpot;
+import com.rekordb.rekordb.tourspot.domain.TourSpotDocument;
+import com.rekordb.rekordb.tourspot.query.TourSpotDouumentRepository;
 import com.rekordb.rekordb.tourspot.query.TourSpotRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,6 +47,8 @@ public class ExternalAPIService {
     private final TourSpotRepository tourSpotRepository;
 
     private final ReviewRepository reviewRepository;
+
+    private final TourSpotDouumentRepository tourSpotDouumentRepository;
 
     private final ApiKeysProperties apiKeys;
     private static final String TOUR_URI = "https://apis.data.go.kr/B551011/KorService";
@@ -134,6 +138,13 @@ public class ExternalAPIService {
             log.info(i+"번째 페이지 저장 완료");
         }
     }
+
+    public void toMongo() {
+        List<TourSpot> spotEntitys = tourSpotRepository.findAll();
+        List<TourSpotDocument> spotDocuments = spotEntitys.stream().map(TourSpotDocument::new).collect(Collectors.toList());
+        tourSpotDouumentRepository.saveAll(spotDocuments);
+    }
+
 
 
 

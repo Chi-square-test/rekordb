@@ -7,6 +7,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.Embedded;
@@ -19,7 +20,7 @@ import java.util.List;
 @Document(collection = "route")
 public class Route {
 
-    @EmbeddedId
+    @Id
     private RouteId routeId;
 
     @Embedded

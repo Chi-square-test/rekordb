@@ -14,6 +14,7 @@ import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+@ToString
 @Entity
 @Getter
 @NoArgsConstructor

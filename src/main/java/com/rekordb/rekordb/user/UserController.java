@@ -25,8 +25,8 @@ public class UserController {
     private final TagService tagService;
 
     @GetMapping("/join/validation")
-    public ResponseEntity<ResponseDTO<?>> checkJoined(@AuthenticationPrincipal String userId){
-        ApiStatus status = userService.isUserJoined(userId) ?  ApiStatus.SUCCESS : ApiStatus.FAIL;
+    public ResponseEntity<ResponseDTO<?>> checkJoined(@AuthenticationPrincipal User user){
+        ApiStatus status = userService.isUserJoined(user.getUsername()) ?  ApiStatus.SUCCESS : ApiStatus.FAIL;
         ResponseDTO<Object> res = ResponseDTO.builder()
                 .status(status)
                 .build();
@@ -50,18 +50,18 @@ public class UserController {
     }
 
     @GetMapping("/tag")
-    public ResponseEntity<ResponseDTO<?>> getAllTag(@AuthenticationPrincipal String userId, @RequestBody List<String> tagList){
+    public ResponseEntity<ResponseDTO<?>> getAllTag(@AuthenticationPrincipal User user, @RequestBody List<String> tagList){
         ResponseDTO<Tag> res = ResponseDTO.<Tag>builder()
                 .status(ApiStatus.SUCCESS)
-                .data(tagService.getUserTag(userId))
+                .data(tagService.getUserTag(user.getUsername()))
                 .build();
         return ResponseEntity.ok().body(res);
     }
 
 
     @PostMapping("/tag")
-    public ResponseEntity<ResponseDTO<?>> saveUserTag(@AuthenticationPrincipal String userId, @RequestBody List<String> tagList){
-        tagService.saveUserTag(userId,tagList);
+    public ResponseEntity<ResponseDTO<?>> saveUserTag(@AuthenticationPrincipal User user, @RequestBody List<String> tagList){
+        tagService.saveUserTag(user.getUsername(),tagList);
         ResponseDTO<Object> res = ResponseDTO.builder()
                 .status(ApiStatus.SUCCESS)
                 .build();
@@ -71,7 +71,6 @@ public class UserController {
     @PostMapping("/join")
     public ResponseEntity<ResponseDTO<?>> joinData(@AuthenticationPrincipal User user, @RequestBody RekorJoinInformDTO dto){
         try {
-            log.info(user.getUsername() + " 상세정보 입력");
             userService.signUpFromRekor(user.getUsername(),dto);
             ResponseDTO<Object> res = ResponseDTO.builder()
                     .status(ApiStatus.SUCCESS)

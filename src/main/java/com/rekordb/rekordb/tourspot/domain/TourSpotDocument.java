@@ -7,7 +7,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -45,14 +47,14 @@ public class TourSpotDocument {
 
     private int likeCount;
 
-    private List<Tag> tagList;
+    private Set<Tag> tagList;
 
 
     public TourSpotDocument(TourSpot spot){
         this.spotId = spot.getSpotId();
         this.title = spot.getTitle();
         this.address = spot.getAddress();
-        this.tagList = new ArrayList<>();
+        this.tagList = new HashSet<>();
         this.typeId = spot.getTypeId();
         this.readCount =spot.getReadCount();
         this.spotCategory =spot.getSpotCategory();
@@ -62,8 +64,13 @@ public class TourSpotDocument {
         this.rekorCategory = spot.getRekorCategory();
     }
 
-    public void setTagList(List<Tag> tags){
+    public void setTagList(Set<Tag> tags){
         this.tagList = tags;
+    }
+
+    public void addTagList(Set<Tag> tags){
+        tagList.addAll(tags);
+
     }
 
 

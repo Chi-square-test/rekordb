@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
+@Deprecated
 public interface TourSpotRepository extends JpaRepository<TourSpot, SpotId> {
 
     List<TourSpot> findAllByGooglePlaceIdIsNotNull(PageRequest pageRequest);

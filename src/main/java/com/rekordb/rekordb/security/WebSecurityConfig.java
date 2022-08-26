@@ -36,7 +36,7 @@ public class WebSecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                    .antMatchers("/onlymanager/**","/tourspotadmin/**").hasAnyAuthority(RoleType.ADMIN.getName())
+                    .antMatchers("/onlymanager/**","/tourspotadmin/**","/tagadmin/**").hasAnyAuthority(RoleType.ADMIN.getName())
                     .antMatchers("/authapi/**").permitAll()
                 .anyRequest().authenticated()
                 .and()

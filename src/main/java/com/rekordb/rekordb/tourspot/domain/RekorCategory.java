@@ -2,25 +2,26 @@ package com.rekordb.rekordb.tourspot.domain;
 
 import lombok.AllArgsConstructor;
 
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @AllArgsConstructor
 public enum RekorCategory {
-    LANDSCAPE("K-LANDSCAPE",0),
-    CULTURE("K-CULTURE",1),
-    FOOD("K-FOOD",2),
-    SHOPPING("K-SHOPPING",3),
-    POP("K-POP",4),
-    DRAMA("K-DRAMA",5),
-    FESTIVAL("K-FESTIVAL",6),
-    LEISURE("K-LEISURE",7),
-    OTHER("OTHER",8);
+    LANDSCAPE("K-LANDSCAPE",0, Arrays.asList("웅장함", "자연", "힐링", "뷰", "풍경")),
+    CULTURE("K-CULTURE",1, Arrays.asList("전통", "히스토리")),
+    FOOD("K-FOOD",2, Arrays.asList("제철 음식", "전통", "JMT")),
+    SHOPPING("K-SHOPPING",3, Arrays.asList("패션","KRW")),
+    POP("K-POP",4, Arrays.asList("BTS", "뮤직", "댄스")),
+    DRAMA("K-DRAMA",5, Arrays.asList("촬영지", "세트장", "흥미로움")),
+    FESTIVAL("K-FESTIVAL",6, Arrays.asList("황홀함", "music")),
+    LEISURE("K-LEISURE",7, Arrays.asList("남녀노소", "playing")),
+    OTHER("OTHER",8, Collections.emptyList());
 
     private String KName;
     private int idx;
+    private List<String> defaultTagNameList;
 
     @Override
     public String toString(){
@@ -30,6 +31,8 @@ public enum RekorCategory {
     public int idx(){
         return idx;
     }
+
+    public List<String> getDefaultTagNameList(){return defaultTagNameList;}
 
     private static final Map<Integer,RekorCategory> BY_INDEX=
             Stream.of(values()).collect(Collectors.toMap(RekorCategory::idx, Function.identity()));

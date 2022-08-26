@@ -60,7 +60,7 @@ public class TourSpotDBController {
     @GetMapping("/dbmigration")
     public ResponseEntity<ResponseDTO<String>> dbchange(){
         try {
-            externalAPIService.toMongo();
+            //externalAPIService.toMongo();
             ResponseDTO<String> res = ResponseDTO.<String>builder().status(ApiStatus.SUCCESS).data(Collections.singletonList("테스트")).build();
             return ResponseEntity.ok().body(res);
         } catch (NullPointerException e){

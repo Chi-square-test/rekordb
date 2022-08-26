@@ -142,9 +142,9 @@ public class ExternalAPIService {
 
     public void toMongo() {
         List<TourSpot> spotEntitys = tourSpotRepository.findAll();
-        log.info(spotEntitys.toString());
+        //log.info(spotEntitys.toString());
         List<TourSpotDocument> spotDocuments = spotEntitys.stream().map(TourSpotDocument::new).collect(Collectors.toList());
-        tourSpotDocumentRepository.saveAll(spotDocuments);
+        log.info(tourSpotDocumentRepository.saveAll(spotDocuments).toString());
     }
 
 

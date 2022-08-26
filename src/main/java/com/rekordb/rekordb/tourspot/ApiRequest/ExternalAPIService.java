@@ -15,6 +15,7 @@ import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.ssl.SSLContexts;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpEntity;
@@ -48,7 +49,7 @@ public class ExternalAPIService {
 
     private final ReviewRepository reviewRepository;
 
-    private final TourSpotDocumentRepository tourSpotDouumentRepository;
+    private final TourSpotDocumentRepository tourSpotDocumentRepository;
 
     private final ApiKeysProperties apiKeys;
     private static final String TOUR_URI = "https://apis.data.go.kr/B551011/KorService";
@@ -142,7 +143,7 @@ public class ExternalAPIService {
     public void toMongo() {
         List<TourSpot> spotEntitys = tourSpotRepository.findAll();
         List<TourSpotDocument> spotDocuments = spotEntitys.stream().map(TourSpotDocument::new).collect(Collectors.toList());
-        tourSpotDouumentRepository.saveAll(spotDocuments);
+        tourSpotDocumentRepository.saveAll(spotDocuments);
     }
 
 

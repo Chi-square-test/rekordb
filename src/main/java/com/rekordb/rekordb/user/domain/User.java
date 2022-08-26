@@ -1,5 +1,6 @@
 package com.rekordb.rekordb.user.domain;
 
+import com.aventrix.jnanoid.jnanoid.NanoIdUtils;
 import com.rekordb.rekordb.user.dto.RekorCreateDTO;
 import com.rekordb.rekordb.user.dto.RekorJoinInformDTO;
 import lombok.*;
@@ -91,6 +92,7 @@ public class User {
 
     public static User createFromDTO(RekorCreateDTO dto){
         return User.builder()
+                .nickName(NanoIdUtils.randomNanoId())
                 .userId(UserId.createUserId())
                 .password(dto.getEncPassword())
                 .phoneNumber(PhoneNumber.of(dto.getPhone()))

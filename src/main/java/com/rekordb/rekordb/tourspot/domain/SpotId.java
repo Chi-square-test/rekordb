@@ -24,5 +24,9 @@ public class SpotId implements Serializable {
 
     public static SpotId createSpotId(){return new SpotId(NanoIdUtils.randomNanoId());}
 
+    @Override
+    public String toString(){
+        return id;
+    }
 
 }

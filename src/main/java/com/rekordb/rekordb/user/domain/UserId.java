@@ -12,6 +12,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+
 public class UserId implements Serializable {
 
     @Column(name = "UserId")
@@ -21,6 +22,11 @@ public class UserId implements Serializable {
         return new UserId(id);
     }
     public static UserId createUserId(){return new UserId(NanoIdUtils.randomNanoId());}
+
+    @Override
+    public String toString(){
+        return userId;
+    }
 
 
 }

@@ -20,4 +20,9 @@ public class RouteId {
     public static RouteId newRouteId(){
         return new RouteId(NanoIdUtils.randomNanoId());
     }
+
+    @Override
+    public String toString(){
+        return id;
+    }
 }

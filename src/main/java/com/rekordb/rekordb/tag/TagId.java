@@ -12,6 +12,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+
 public class TagId implements Serializable {
 
     @Column(name = "tag_id")
@@ -19,6 +20,11 @@ public class TagId implements Serializable {
 
     public static TagId newTagId(){
         return new TagId(NanoIdUtils.randomNanoId());
+    }
+
+    @Override
+    public String toString(){
+        return id;
     }
 
 }

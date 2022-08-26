@@ -35,8 +35,13 @@ public class UserAuthService {
     public TokenSet createFromRekor(RekorCreateDTO dto){
         validatePhone(dto.getPhone());
         dto.setEncPassword(Password.encryptPassword(passwordEncoder,dto.getPassword()));
-        User newUser = User.createFromDTO(dto);
-        return makeNewAllToken(userRepository.save(newUser));
+        try {
+            User newUser = User.createFromDTO(dto);
+            return makeNewAllToken(userRepository.save(newUser));
+        }catch (Exception e){
+            log.info(e.getMessage());
+            throw e;
+        }
     }
 
 

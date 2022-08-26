@@ -5,7 +5,7 @@ import com.rekordb.rekordb.review.query.ReviewRepository;
 import com.rekordb.rekordb.tourspot.domain.RekorCategory;
 import com.rekordb.rekordb.tourspot.domain.TourSpot;
 import com.rekordb.rekordb.tourspot.domain.TourSpotDocument;
-import com.rekordb.rekordb.tourspot.query.TourSpotDouumentRepository;
+import com.rekordb.rekordb.tourspot.query.TourSpotDocumentRepository;
 import com.rekordb.rekordb.tourspot.query.TourSpotRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -48,7 +48,7 @@ public class ExternalAPIService {
 
     private final ReviewRepository reviewRepository;
 
-    private final TourSpotDouumentRepository tourSpotDouumentRepository;
+    private final TourSpotDocumentRepository tourSpotDouumentRepository;
 
     private final ApiKeysProperties apiKeys;
     private static final String TOUR_URI = "https://apis.data.go.kr/B551011/KorService";

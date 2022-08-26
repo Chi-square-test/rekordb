@@ -7,5 +7,5 @@ import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
 
 
-public interface TourSpotDocumentRepository extends ReactiveMongoRepository<TourSpotDocument, SpotId> {
+public interface TourSpotDocumentRepository extends MongoRepository<TourSpotDocument, SpotId> {
 }

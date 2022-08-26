@@ -8,5 +8,5 @@ import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
 
 
-public interface UserTagRepository extends ReactiveMongoRepository<UserAndTag, UserId> {
+public interface UserTagRepository extends MongoRepository<UserAndTag, UserId> {
 }

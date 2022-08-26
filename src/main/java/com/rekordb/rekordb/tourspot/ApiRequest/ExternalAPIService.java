@@ -144,9 +144,7 @@ public class ExternalAPIService {
         List<TourSpot> spotEntitys = tourSpotRepository.findAll();
         //log.info(spotEntitys.toString());
         List<TourSpotDocument> spotDocuments = spotEntitys.stream().map(TourSpotDocument::new).collect(Collectors.toList());
-        for (TourSpotDocument s: spotDocuments) {
-            log.info(tourSpotDocumentRepository.save(s).toString());
-        }
+        log.info(tourSpotDocumentRepository.saveAll(spotDocuments).toString());
     }
 
 

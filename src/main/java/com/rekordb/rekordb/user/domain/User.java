@@ -29,21 +29,26 @@ public class User {
     @Column(unique = true)
     private String nickName;
 
+    @Column
     private String Oauth2Id;
 
     @Embedded
     private Password password;
 
+    @Column
     @Convert(converter = GenderAttributeConverter.class)
     private Gender gender;
 
+    @Column
     private LocalDate birth;
 
+    @Column
     private String country;
 
     @Embedded
     private PhoneNumber phoneNumber;
 
+    @Column
     @Convert(converter = LanguageAttributeConverter.class)
     private Language language;
 

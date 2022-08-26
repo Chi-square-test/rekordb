@@ -1,20 +1,18 @@
-package com.rekordb.rekordb.user.domain;
+package com.rekordb.rekordb.user;
 
 import com.rekordb.rekordb.ApiStatus;
 import com.rekordb.rekordb.ResponseDTO;
 import com.rekordb.rekordb.tag.Tag;
 import com.rekordb.rekordb.tag.TagService;
 import com.rekordb.rekordb.user.Execption.DuplicateUserInfoException;
-import com.rekordb.rekordb.user.dto.RekorCreateDTO;
 import com.rekordb.rekordb.user.dto.RekorJoinInformDTO;
-import com.rekordb.rekordb.user.dto.TokenSet;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -71,9 +69,9 @@ public class UserController {
     }
 
     @PostMapping("/join")
-    public ResponseEntity<ResponseDTO<?>> joinData(@AuthenticationPrincipal String userId ,@RequestBody RekorJoinInformDTO dto){
+    public ResponseEntity<ResponseDTO<?>> joinData(@AuthenticationPrincipal User user, @RequestBody RekorJoinInformDTO dto){
         try {
-            userService.signUpFromRekor(userId,dto);
+            userService.signUpFromRekor(user.getUsername(),dto);
             ResponseDTO<Object> res = ResponseDTO.builder()
                     .status(ApiStatus.SUCCESS)
                     .build();

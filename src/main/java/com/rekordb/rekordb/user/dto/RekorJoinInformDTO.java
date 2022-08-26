@@ -16,7 +16,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class RekorJoinInformDTO {
     private String name;
-    private String password;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate birth;
     private String phone;

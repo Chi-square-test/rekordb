@@ -19,7 +19,6 @@ import java.util.Set;
 public class TourSpotDocument {
 
     @Id
-    @Indexed(unique = true)
     private SpotId spotId;
 
     private String title;

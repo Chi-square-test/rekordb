@@ -2,6 +2,7 @@ package com.rekordb.rekordb.tourspot.domain;
 
 import com.aventrix.jnanoid.jnanoid.NanoIdUtils;
 import lombok.*;
+import org.springframework.data.annotation.Id;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -15,7 +16,7 @@ import java.io.Serializable;
 
 public class SpotId implements Serializable {
 
-    @Column(name = "spot_Id")
+    @Id
     private String id;
 
     public static SpotId of(String id){
@@ -26,7 +27,9 @@ public class SpotId implements Serializable {
 
     @Override
     public String toString(){
-        return id;
+        return String.format(
+                "SpotId[uniqueString=%s]", id);
+
     }
 
 }

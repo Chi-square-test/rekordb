@@ -2,10 +2,12 @@ package com.rekordb.rekordb.tourspot.domain;
 
 import com.rekordb.rekordb.tag.Tag;
 import lombok.*;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.*;
+
+import javax.persistence.Embedded;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.HashSet;

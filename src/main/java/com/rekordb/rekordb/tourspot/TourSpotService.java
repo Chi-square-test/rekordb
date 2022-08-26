@@ -25,7 +25,7 @@ public class TourSpotService {
 
 
     public Page<TourSpotDocument> getSpotByCategory(int category, int page, String sortBy){
-        Sort sort = SortBy.valueOf(sortBy).getSort();
+        Sort sort = SortBy.getByFront(sortBy).getSort();
         RekorCategory rekorCategory = RekorCategory.valueOfIndex(category);
         PageRequest pageRequest = PageRequest.of(page,AMOUNT_IN_PAGE);
         return tourSpotDocumentRepository.findByRekorCategory(rekorCategory,pageRequest,sort);

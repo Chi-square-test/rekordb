@@ -2,6 +2,7 @@ package com.rekordb.rekordb.tourspot.domain;
 
 import com.rekordb.rekordb.tag.Tag;
 import lombok.*;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.*;
@@ -18,6 +19,7 @@ import java.util.Set;
 public class TourSpotDocument {
 
     @Id
+    @Indexed(unique = true)
     private SpotId spotId;
 
     private String title;

@@ -12,6 +12,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+
 public class SpotId implements Serializable {
 
     @Column(name = "spot_Id")

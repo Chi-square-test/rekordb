@@ -54,7 +54,6 @@ public class AdminTagService {
         }
         List<TourSpotDocument> spotDocuments = tourSpotDocumentRepository.findAll();
         spotDocuments.forEach(tourSpotDocument -> tourSpotDocument.setTagList(catMap.get(tourSpotDocument.getRekorCategory())));
-        log.info(spotDocuments.get(0).getTagList().toString());
         tourSpotDocumentRepository.saveAll(spotDocuments);
 
     }

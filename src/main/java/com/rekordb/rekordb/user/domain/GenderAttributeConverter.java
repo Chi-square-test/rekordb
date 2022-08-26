@@ -11,6 +11,7 @@ public class GenderAttributeConverter implements AttributeConverter<Gender, Inte
 
     @Override
     public Integer convertToDatabaseColumn(Gender attribute) {
+        if(attribute == null) return null;
         if(attribute.equals(Gender.Female)) return 0;
         else return 1;
     }

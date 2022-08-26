@@ -11,6 +11,7 @@ public class LanguageAttributeConverter implements AttributeConverter<Language, 
 
     @Override
     public Integer convertToDatabaseColumn(Language attribute) {
+        if(attribute == null) return null;
         if(attribute.equals(Language.한국어)) return 0;
         else return 1;
     }

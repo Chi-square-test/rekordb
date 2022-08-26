@@ -8,11 +8,11 @@ import com.rekordb.rekordb.user.Execption.DuplicateUserInfoException;
 import com.rekordb.rekordb.user.Execption.NeedLoginException;
 import com.rekordb.rekordb.user.Execption.WrongLoginException;
 import com.rekordb.rekordb.user.domain.*;
+import com.rekordb.rekordb.user.dto.RekorCreateDTO;
 import com.rekordb.rekordb.user.dto.RekorLoginDTO;
-import com.rekordb.rekordb.user.dto.RekorSignUpDTO;
+import com.rekordb.rekordb.user.dto.RekorJoinInformDTO;
 import com.rekordb.rekordb.user.dto.TokenSet;
 import com.rekordb.rekordb.user.query.UserRepository;
-import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -25,20 +25,20 @@ import java.util.Optional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class UserAuthService {
     private final UserRepository userRepository;
     private final RefreshTokenRepository refreshTokenRepository;
     private final TokenProvider tokenProvider;
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Transactional
-    public TokenSet signUpFromRekor(RekorSignUpDTO dto){
-        validateName(dto.getName());
+    public TokenSet createFromRekor(RekorCreateDTO dto){
         validatePhone(dto.getPhone());
         dto.setEncPassword(Password.encryptPassword(passwordEncoder,dto.getPassword()));
-        User newUser = User.signupFromDTO(dto);
+        User newUser = User.createFromDTO(dto);
         return makeNewAllToken(userRepository.save(newUser));
     }
+
 
     public TokenSet loginFromRekor(RekorLoginDTO dto) throws WrongLoginException {
         User user = getByCredentials(PhoneNumber.of(dto.getPhone()), dto.getPassword());
@@ -68,12 +68,6 @@ public class UserService {
         }
     }
 
-    public void validateName(String name) throws DuplicateUserInfoException{
-        if(userRepository.existsByNickName(name)){
-            log.warn("이미 존재하는 이름"+ name);
-            throw new DuplicateUserInfoException("이미 존재하는 이름입니다.");
-        }
-    }
 
     private AuthToken makeAccessToken(User user) {
         if(user.getRoleType().equals(RoleType.ADMIN)) {

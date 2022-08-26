@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RekorSignUpDTO {
+public class RekorJoinInformDTO {
     private String name;
     private String password;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
@@ -23,10 +23,6 @@ public class RekorSignUpDTO {
     private int gender; //여자 0 남자 1
     private String country;
     private int language; //한글 0 영어 1
-
-    private Password encPassword;//이건 내부에서 값을 넣을 예정.
-
-
 
 
 }

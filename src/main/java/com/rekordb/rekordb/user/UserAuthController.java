@@ -5,8 +5,9 @@ import com.rekordb.rekordb.ResponseDTO;
 import com.rekordb.rekordb.user.Execption.DuplicateUserInfoException;
 import com.rekordb.rekordb.user.Execption.NeedLoginException;
 import com.rekordb.rekordb.user.Execption.WrongLoginException;
+import com.rekordb.rekordb.user.dto.RekorCreateDTO;
 import com.rekordb.rekordb.user.dto.RekorLoginDTO;
-import com.rekordb.rekordb.user.dto.RekorSignUpDTO;
+import com.rekordb.rekordb.user.dto.RekorJoinInformDTO;
 import com.rekordb.rekordb.user.dto.TokenSet;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,12 +22,12 @@ import java.util.Collections;
 @RequestMapping("/authapi")
 public class UserAuthController {
 
-    private final UserService userService;
+    private final UserAuthService userAuthService;
 
-    @PostMapping("/signup")
-    public ResponseEntity<ResponseDTO<?>> signUp(@RequestBody RekorSignUpDTO dto){
+    @PostMapping("/create")
+    public ResponseEntity<ResponseDTO<?>> signUp(@RequestBody RekorCreateDTO dto){
         try {
-            TokenSet tokenSet = userService.signUpFromRekor(dto);
+            TokenSet tokenSet = userAuthService.createFromRekor(dto);
             ResponseDTO<TokenSet> res = ResponseDTO.<TokenSet>builder()
                     .status(ApiStatus.SUCCESS)
                     .data(Collections.singletonList(tokenSet))
@@ -42,10 +43,10 @@ public class UserAuthController {
 
     }
 
-    @GetMapping("/signup/validation/phone/{phone}")
+    @GetMapping("/create/validation/phone/{phone}")
     public ResponseEntity<ResponseDTO<?>> validPhone(@PathVariable("phone") String phone){
         try {
-            userService.validatePhone(phone);
+            userAuthService.validatePhone(phone);
             ResponseDTO<Object> res = ResponseDTO.builder()
                     .status(ApiStatus.SUCCESS)
                     .build();
@@ -58,26 +59,12 @@ public class UserAuthController {
         }
     }
 
-    @GetMapping("/signup/validation/nickname/{name}")
-    public ResponseEntity<ResponseDTO<?>> validName(@PathVariable("name") String name){
-        try {
-            userService.validateName(name);
-            ResponseDTO<Object> res = ResponseDTO.builder()
-                    .status(ApiStatus.SUCCESS)
-                    .build();
-            return ResponseEntity.ok().body(res);
-        }catch (DuplicateUserInfoException e){
-            ResponseDTO<Object> responseDTO = ResponseDTO.builder()
-                    .status(ApiStatus.FAIL)
-                    .build();
-            return  ResponseEntity.ok().body(responseDTO);
-        }
-    }
+
 
     @PostMapping("/login")
     public ResponseEntity<ResponseDTO<?>> signUp(@RequestBody RekorLoginDTO dto){
         try {
-            TokenSet tokenSet = userService.loginFromRekor(dto);
+            TokenSet tokenSet = userAuthService.loginFromRekor(dto);
             ResponseDTO<TokenSet> res = ResponseDTO.<TokenSet>builder()
                     .status(ApiStatus.SUCCESS)
                     .data(Collections.singletonList(tokenSet))
@@ -96,7 +83,7 @@ public class UserAuthController {
     @PostMapping("/refresh")
     public ResponseEntity<ResponseDTO<?>> refreshToken(@RequestHeader("Access-Token") String access, @RequestHeader("Refresh-Token") String refresh){
         try {
-            TokenSet tokenSet = userService.tokenRefresh(access,refresh);
+            TokenSet tokenSet = userAuthService.tokenRefresh(access,refresh);
             ResponseDTO<TokenSet> res = ResponseDTO.<TokenSet>builder()
                     .status(ApiStatus.SUCCESS)
                     .data(Collections.singletonList(tokenSet))

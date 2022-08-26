@@ -1,6 +1,7 @@
 package com.rekordb.rekordb.user.domain;
 
-import com.rekordb.rekordb.user.dto.RekorSignUpDTO;
+import com.rekordb.rekordb.user.dto.RekorCreateDTO;
+import com.rekordb.rekordb.user.dto.RekorJoinInformDTO;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -67,21 +68,36 @@ public class User {
     @NotNull
     private RoleType roleType;
 
+    private boolean isJoined;
 
-
-    public static User signupFromDTO(RekorSignUpDTO dto){
+    public static User updateJoinData(User user, RekorJoinInformDTO dto){
         return User.builder()
-                .userId(UserId.createUserId())
+                .userId(user.getUserId())
+                .phoneNumber(user.getPhoneNumber())
+                .password(user.getPassword())
+                .providerType(user.getProviderType())
+                .roleType(user.getRoleType())
+
                 .nickName(dto.getName()) //이 메서드 전에 검증 필요
                 .birth(dto.getBirth())
-                .password(dto.getEncPassword())
                 .gender(Gender.values()[dto.getGender()])
                 .language(Language.values()[dto.getLanguage()])
+                .country(dto.getCountry())
+                .isJoined(true)
+                .build();
+    }
+
+
+
+    public static User createFromDTO(RekorCreateDTO dto){
+        return User.builder()
+                .userId(UserId.createUserId())
+                .password(dto.getEncPassword())
                 .phoneNumber(PhoneNumber.of(dto.getPhone()))
                 .providerType(ProviderType.REKOR)
                 .roleType(RoleType.USER)
+                .isJoined(false)
                 .build();
-
     }
 
     public String getEncPassword(){

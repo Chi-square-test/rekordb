@@ -2,15 +2,21 @@ package com.rekordb.rekordb.tourspot;
 
 import com.rekordb.rekordb.ApiStatus;
 import com.rekordb.rekordb.ResponseDTO;
+import com.rekordb.rekordb.ResponsePageDTO;
 import com.rekordb.rekordb.tourspot.ApiRequest.ExternalAPIService;
+import com.rekordb.rekordb.tourspot.domain.TourSpotDocument;
+import com.rekordb.rekordb.tourspot.dto.SpotListDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collections;
+import java.util.stream.Collectors;
 
 @RestController
 @Slf4j
@@ -25,4 +31,16 @@ public class TourSpotController {
         return ResponseEntity.ok().body(res);
     }
 
+
+    @GetMapping("/category")
+    public ResponseEntity<?> getSpotBycategory(@RequestParam int cat, @RequestParam int page,@RequestParam String sort){
+        Page<TourSpotDocument> spotDocuments = tourSpotService.getSpotByCategory(cat,page,sort);
+        ResponsePageDTO<SpotListDTO> res = ResponsePageDTO.<SpotListDTO>builder()
+                .status(ApiStatus.SUCCESS)
+                .currentPage(spotDocuments.getNumber())
+                .allPage(spotDocuments.getTotalPages())
+                .data(spotDocuments.get().map(SpotListDTO::new).collect(Collectors.toList()))
+                .build();
+        return ResponseEntity.ok().body(res);
+    }
 }

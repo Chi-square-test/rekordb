@@ -31,7 +31,7 @@ public class UserAuthService {
     private final TokenProvider tokenProvider;
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    //@Transactional
+
     public TokenSet createFromRekor(RekorCreateDTO dto){
         validatePhone(dto.getPhone());
         dto.setEncPassword(Password.encryptPassword(passwordEncoder,dto.getPassword()));

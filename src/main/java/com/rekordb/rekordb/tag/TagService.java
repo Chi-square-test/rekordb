@@ -18,8 +18,8 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class TagService {
-    private TagRepository tagRepository;
-    private TourSpotDocumentRepository tourSpotDocumentRepository;
+    private final TagRepository tagRepository;
+    private final TourSpotDocumentRepository tourSpotDocumentRepository;
 
     public List<SpotListDTO> getSpotByTag(String tagname) throws NoSuchElementException{
         Set<Tag> tag = Collections.singleton(tagRepository.findByTagName(tagname).orElseThrow(NoSuchElementException::new));

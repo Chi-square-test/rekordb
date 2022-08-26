@@ -36,7 +36,7 @@ public class UserAuthService {
         validatePhone(dto.getPhone());
         dto.setEncPassword(Password.encryptPassword(passwordEncoder,dto.getPassword()));
         User newUser = User.createFromDTO(dto);
-        log.info(newUser.toString());
+        
         return makeNewAllToken(userRepository.save(newUser));
     }
 

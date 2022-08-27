@@ -15,7 +15,7 @@ import java.util.NoSuchElementException;
 @RestControllerAdvice
 public class UnknownError {
 
-    @ExceptionHandler(value = Exception.class)
+    @ExceptionHandler(value = NoSuchElementException.class)
     public ResponseEntity<?> NoElementError(NoSuchElementException e){
         log.error("db에 없는 데이터 요청. 오류 메세지 : "+e);
         ResponseDTO<Object> responseDTO = ResponseDTO.builder()

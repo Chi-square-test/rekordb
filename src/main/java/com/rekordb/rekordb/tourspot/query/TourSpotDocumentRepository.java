@@ -21,4 +21,10 @@ public interface TourSpotDocumentRepository extends MongoRepository<TourSpotDocu
 
     Page<TourSpotDocument> findByRekorCategory(RekorCategory category, PageRequest pageRequest, Sort sort);
 
+    Page<TourSpotDocument> findByTitleContains(String title, PageRequest pageRequest);
+
+
+
+
+
 }

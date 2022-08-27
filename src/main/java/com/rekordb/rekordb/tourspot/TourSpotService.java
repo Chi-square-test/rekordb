@@ -31,6 +31,12 @@ public class TourSpotService {
         return tourSpotDocumentRepository.findByRekorCategory(rekorCategory,pageRequest,sort);
     }
 
+    public Page<TourSpotDocument> findSpotByName(String name, int page){
+        PageRequest pageRequest = PageRequest.of(page,AMOUNT_IN_PAGE);
+        return tourSpotDocumentRepository.findByTitleContains(name,pageRequest);
+
+    }
+
 
 
 }

@@ -22,7 +22,7 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/api/wishlist")
-public class UserWoshListController {
+public class UserWishListController {
 
     private final UserWishListService userWishListService;
 

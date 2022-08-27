@@ -18,6 +18,7 @@ import java.util.Set;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@EqualsAndHashCode(of ="spotId")
 @Document(collection = "TourSpot")
 public class TourSpotDocument {
 

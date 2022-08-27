@@ -33,8 +33,7 @@ public class TourSpotService {
 
     public Page<TourSpotDocument> findSpotByName(String name, int page){
         PageRequest pageRequest = PageRequest.of(page,AMOUNT_IN_PAGE);
-        return tourSpotDocumentRepository.findByTitleContains(name,pageRequest);
-
+        return tourSpotDocumentRepository.findByTitleContains(name,pageRequest,Sort.by(Sort.Direction.ASC, "rating"));
     }
 
 

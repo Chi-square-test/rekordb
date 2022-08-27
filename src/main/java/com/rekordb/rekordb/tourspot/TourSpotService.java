@@ -1,5 +1,8 @@
 package com.rekordb.rekordb.tourspot;
 
+import com.rekordb.rekordb.tag.Tag;
+import com.rekordb.rekordb.tag.TagService;
+import com.rekordb.rekordb.tag.query.TagRepository;
 import com.rekordb.rekordb.tourspot.domain.RekorCategory;
 import com.rekordb.rekordb.tourspot.domain.TourSpot;
 import com.rekordb.rekordb.tourspot.domain.TourSpotDocument;
@@ -14,6 +17,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -21,6 +25,7 @@ import java.util.List;
 public class TourSpotService {
     private final TourSpotDocumentRepository tourSpotDocumentRepository;
     private static final int AMOUNT_IN_PAGE =30;
+    private final TagRepository tagRepository;
 
 
 
@@ -31,10 +36,14 @@ public class TourSpotService {
         return tourSpotDocumentRepository.findByRekorCategory(rekorCategory,pageRequest,sort);
     }
 
-    public Page<TourSpotDocument> findSpotByName(String name, int page){
+    public Page<TourSpotDocument> findSpot(String name, int page){
         PageRequest pageRequest = PageRequest.of(page,AMOUNT_IN_PAGE);
-        return tourSpotDocumentRepository.findByTitleContains(name,pageRequest,Sort.by(Sort.Direction.DESC, "rating"));
+        PageRequest tagPageRequest = PageRequest.of(0,100);
+        Set<Tag> tagSet =tagRepository.findByTagNameContains(name,tagPageRequest).toSet();
+        return tourSpotDocumentRepository.findByTitleContainsOrTagListIn(name,tagSet,pageRequest,Sort.by(Sort.Direction.DESC, "rating"));
     }
+
+
 
 
 

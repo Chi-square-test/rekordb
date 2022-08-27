@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -42,6 +43,11 @@ public class TagService {
                 .collect(Collectors.toList());
         userTagRepository.save(new UserAndTag(UserId.of(userId),tags));
 
+    }
+
+    public Page<Tag> findTagByName(String name, int page){
+        PageRequest pageRequest = PageRequest.of(page,AMOUNT_IN_PAGE);
+        return tagRepository.findByTagNameContains(name,pageRequest);
     }
 
     public List<Tag> getUserTag(String userId) throws NoSuchElementException{

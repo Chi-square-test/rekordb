@@ -33,25 +33,18 @@ public class TagController {
         return ResponseEntity.ok().body(res);
     }
 
-    @GetMapping("/spot")
-    public ResponseEntity<?> findSpotbyTag(@RequestParam String tag, @RequestParam int page){
-        try {
-            Page<TourSpotDocument> dtoList = tagService.getSpotByTag(tag,page);
-            ResponsePageDTO<SpotListDTO> res = ResponsePageDTO.<SpotListDTO>builder()
-                    .status(ApiStatus.SUCCESS)
-                    .currentPage(dtoList.getNumber())
-                    .allPage(dtoList.getTotalPages())
-                    .data(dtoList.get().map(SpotListDTO::new).collect(Collectors.toList()))
-                    .build();
-            return ResponseEntity.ok().body(res);
-        }catch (NoSuchElementException e) {
-            ResponseDTO<Object> responseDTO = ResponseDTO.builder()
-                    .error("없는 태그입니다.")
-                    .status(ApiStatus.FAIL)
-                    .build();
-            return  ResponseEntity.ok().body(responseDTO);
-        }
+    @GetMapping("/search")
+    public ResponseEntity<?> findTag(@RequestParam String name, @RequestParam int page){
+        Page<Tag> spotDocuments = tagService.findTagByName(name,page);
+        ResponsePageDTO<Tag> res = ResponsePageDTO.<Tag>builder()
+                .status(ApiStatus.SUCCESS)
+                .currentPage(spotDocuments.getNumber())
+                .allPage(spotDocuments.getTotalPages())
+                .data(spotDocuments.get().collect(Collectors.toList()))
+                .build();
+        return ResponseEntity.ok().body(res);
     }
+
 
 
 }

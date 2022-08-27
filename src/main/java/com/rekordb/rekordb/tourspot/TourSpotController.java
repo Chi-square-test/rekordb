@@ -43,9 +43,10 @@ public class TourSpotController {
                 .build();
         return ResponseEntity.ok().body(res);
     }
+
     @GetMapping("/search")
-    public ResponseEntity<?> findTitle(@RequestParam String name, @RequestParam int page){
-        Page<TourSpotDocument> spotDocuments = tourSpotService.findSpotByName(name,page);
+    public ResponseEntity<?> findSpot(@RequestParam String text, @RequestParam int page){
+        Page<TourSpotDocument> spotDocuments = tourSpotService.findSpot(text,page);
         ResponsePageDTO<SpotListDTO> res = ResponsePageDTO.<SpotListDTO>builder()
                 .status(ApiStatus.SUCCESS)
                 .currentPage(spotDocuments.getNumber())
@@ -54,4 +55,6 @@ public class TourSpotController {
                 .build();
         return ResponseEntity.ok().body(res);
     }
+
+
 }

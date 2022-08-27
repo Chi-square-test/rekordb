@@ -4,6 +4,7 @@ import com.rekordb.rekordb.tag.Tag;
 import com.rekordb.rekordb.tag.TagId;
 import com.rekordb.rekordb.tourspot.domain.RekorCategory;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,4 +19,6 @@ import java.util.Optional;
 public interface TagRepository extends MongoRepository<Tag, TagId> {
     Page<Tag> findByDefaultCategory(RekorCategory category, Pageable pageable);
     Optional<Tag> findByTagName(String name);
+
+    Page<Tag> findByTagNameContains(String name, PageRequest pageRequest);
 }

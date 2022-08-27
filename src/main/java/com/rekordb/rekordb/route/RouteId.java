@@ -2,6 +2,7 @@ package com.rekordb.rekordb.route;
 
 import com.aventrix.jnanoid.jnanoid.NanoIdUtils;
 import com.rekordb.rekordb.tag.TagId;
+import com.rekordb.rekordb.tourspot.domain.SpotId;
 import lombok.*;
 
 import javax.persistence.Column;
@@ -24,5 +25,9 @@ public class RouteId {
     @Override
     public String toString(){
         return id;
+    }
+
+    public static RouteId of(String id){
+        return new RouteId(id);
     }
 }

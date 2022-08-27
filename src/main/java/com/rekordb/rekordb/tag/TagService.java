@@ -37,7 +37,8 @@ public class TagService {
 
     public void saveUserTag(String userId, List<String> tagList){
         List<Tag> tags= tagList.stream()
-                .map(tagRepository::findByTagName)
+                .map(TagId::of)
+                .map(tagRepository::findById)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());

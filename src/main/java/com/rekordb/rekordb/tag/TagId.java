@@ -1,6 +1,7 @@
 package com.rekordb.rekordb.tag;
 
 import com.aventrix.jnanoid.jnanoid.NanoIdUtils;
+import com.rekordb.rekordb.tourspot.domain.SpotId;
 import lombok.*;
 
 import javax.persistence.Column;
@@ -25,6 +26,10 @@ public class TagId implements Serializable {
     @Override
     public String toString(){
         return id;
+    }
+
+    public static TagId of(String id){
+        return new TagId(id);
     }
 
 }

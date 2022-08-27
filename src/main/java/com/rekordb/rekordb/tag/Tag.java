@@ -21,7 +21,6 @@ public class Tag {
     @Id
     private TagId tagId;
 
-    @Indexed(unique = true)
     private String tagName;
 
     private String engTagName;

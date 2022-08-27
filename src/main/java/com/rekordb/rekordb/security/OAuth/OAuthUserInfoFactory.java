@@ -1,6 +1,6 @@
 package com.rekordb.rekordb.security.OAuth;
 
-import com.rekordb.rekordb.user.domain.ProviderType;
+import com.rekordb.rekordb.user.domain.userInfo.ProviderType;
 
 import java.util.Map;
 

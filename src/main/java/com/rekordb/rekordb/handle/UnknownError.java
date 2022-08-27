@@ -9,9 +9,21 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.NoSuchElementException;
+
 @Slf4j
 @RestControllerAdvice
 public class UnknownError {
+
+    @ExceptionHandler(value = Exception.class)
+    public ResponseEntity<?> NoElementError(NoSuchElementException e){
+        log.error("db에 없는 데이터 요청. 오류 메세지 : "+e);
+        ResponseDTO<Object> responseDTO = ResponseDTO.builder()
+                .status(ApiStatus.ERROR)
+                .error("잘못된 요청입니다.")
+                .build();
+        return  ResponseEntity.badRequest().body(responseDTO);
+    }
 
     @ExceptionHandler(value = Exception.class)
     public ResponseEntity<?> unknownError(Exception e){

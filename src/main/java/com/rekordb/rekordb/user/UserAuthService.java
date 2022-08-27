@@ -7,12 +7,13 @@ import com.rekordb.rekordb.security.query.RefreshTokenRepository;
 import com.rekordb.rekordb.user.Execption.DuplicateUserInfoException;
 import com.rekordb.rekordb.user.Execption.NeedLoginException;
 import com.rekordb.rekordb.user.Execption.WrongLoginException;
-import com.rekordb.rekordb.user.domain.*;
+import com.rekordb.rekordb.user.domain.userInfo.*;
+import com.rekordb.rekordb.user.domain.userWithSpot.UserWishList;
 import com.rekordb.rekordb.user.dto.RekorCreateDTO;
 import com.rekordb.rekordb.user.dto.RekorLoginDTO;
-import com.rekordb.rekordb.user.dto.RekorJoinInformDTO;
 import com.rekordb.rekordb.user.dto.TokenSet;
 import com.rekordb.rekordb.user.query.UserRepository;
+import com.rekordb.rekordb.user.query.UserWishListRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -20,6 +21,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.Optional;
 
 @Slf4j
@@ -29,6 +32,7 @@ public class UserAuthService {
     private final UserRepository userRepository;
     private final RefreshTokenRepository refreshTokenRepository;
     private final TokenProvider tokenProvider;
+    private final UserWishListRepository userWishListRepository;
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Transactional
@@ -36,6 +40,7 @@ public class UserAuthService {
         validatePhone(dto.getPhone());
         dto.setEncPassword(Password.encryptPassword(passwordEncoder,dto.getPassword()));
         User newUser = User.createFromDTO(dto);
+        userWishListRepository.save(new UserWishList(newUser.getUserId(), new LinkedHashSet<>()));
         return makeNewAllToken(userRepository.save(newUser));
     }
 

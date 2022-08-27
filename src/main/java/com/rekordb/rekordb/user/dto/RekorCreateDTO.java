@@ -1,6 +1,6 @@
 package com.rekordb.rekordb.user.dto;
 
-import com.rekordb.rekordb.user.domain.Password;
+import com.rekordb.rekordb.user.domain.userInfo.Password;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

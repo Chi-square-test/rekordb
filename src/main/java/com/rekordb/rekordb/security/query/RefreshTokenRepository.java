@@ -1,7 +1,7 @@
 package com.rekordb.rekordb.security.query;
 
 import com.rekordb.rekordb.security.Jwt.RefreshToken;
-import com.rekordb.rekordb.user.domain.UserId;
+import com.rekordb.rekordb.user.domain.userInfo.UserId;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

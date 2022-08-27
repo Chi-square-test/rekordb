@@ -4,6 +4,7 @@ import com.rekordb.rekordb.tag.Tag;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 
@@ -23,6 +24,8 @@ public class TourSpotDocument {
     @Id
     private SpotId spotId;
 
+    @Indexed
+    @TextIndexed
     private String title;
 
     private String engTitle;
@@ -46,8 +49,10 @@ public class TourSpotDocument {
 
     private String googlePlaceId;
 
+    @Indexed
     private double rating;
 
+    @Indexed
     private int likeCount;
 
     private Set<Tag> tagList;

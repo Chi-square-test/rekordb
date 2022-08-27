@@ -1,11 +1,9 @@
 package com.rekordb.rekordb.user;
 
-import com.rekordb.rekordb.security.query.RefreshTokenRepository;
 import com.rekordb.rekordb.user.Execption.DuplicateUserInfoException;
-import com.rekordb.rekordb.user.domain.User;
-import com.rekordb.rekordb.user.domain.UserId;
+import com.rekordb.rekordb.user.domain.userInfo.User;
+import com.rekordb.rekordb.user.domain.userInfo.UserId;
 import com.rekordb.rekordb.user.dto.RekorJoinInformDTO;
-import com.rekordb.rekordb.user.dto.TokenSet;
 import com.rekordb.rekordb.user.query.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

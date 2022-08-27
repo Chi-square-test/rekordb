@@ -1,7 +1,6 @@
 package com.rekordb.rekordb.security.Jwt;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.rekordb.rekordb.user.domain.UserId;
+import com.rekordb.rekordb.user.domain.userInfo.UserId;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

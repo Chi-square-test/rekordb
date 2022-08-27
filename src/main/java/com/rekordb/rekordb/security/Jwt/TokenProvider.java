@@ -1,7 +1,7 @@
 package com.rekordb.rekordb.security.Jwt;
 
 import com.rekordb.rekordb.security.Exception.TokenValidFailedException;
-import com.rekordb.rekordb.user.domain.UserId;
+import com.rekordb.rekordb.user.domain.userInfo.UserId;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;

@@ -1,12 +1,10 @@
 package com.rekordb.rekordb.security;
 
-import com.nimbusds.oauth2.sdk.auth.JWTAuthentication;
-import com.rekordb.rekordb.security.Exception.RestAuthenticationEntryPoint;
 import com.rekordb.rekordb.security.Exception.TokenAccessDeniedHandler;
 import com.rekordb.rekordb.security.Jwt.TokenAuthFilter;
 import com.rekordb.rekordb.security.Jwt.TokenExceptionFilter;
 import com.rekordb.rekordb.security.Jwt.TokenProvider;
-import com.rekordb.rekordb.user.domain.RoleType;
+import com.rekordb.rekordb.user.domain.userInfo.RoleType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -15,7 +13,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter;
 
 @EnableWebSecurity
 @Slf4j

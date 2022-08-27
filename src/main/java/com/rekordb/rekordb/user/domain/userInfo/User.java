@@ -1,4 +1,4 @@
-package com.rekordb.rekordb.user.domain;
+package com.rekordb.rekordb.user.domain.userInfo;
 
 import com.aventrix.jnanoid.jnanoid.NanoIdUtils;
 import com.rekordb.rekordb.user.dto.RekorCreateDTO;

@@ -1,6 +1,6 @@
 package com.rekordb.rekordb.tag;
 
-import com.rekordb.rekordb.user.domain.UserId;
+import com.rekordb.rekordb.user.domain.userInfo.UserId;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;

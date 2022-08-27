@@ -1,4 +1,4 @@
-package com.rekordb.rekordb.user.domain;
+package com.rekordb.rekordb.user.domain.userInfo;
 
 import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;

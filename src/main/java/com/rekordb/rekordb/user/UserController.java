@@ -50,7 +50,7 @@ public class UserController {
     }
 
     @GetMapping("/tag")
-    public ResponseEntity<ResponseDTO<?>> getAllTag(@AuthenticationPrincipal User user, @RequestBody List<String> tagList){
+    public ResponseEntity<ResponseDTO<?>> getAllTag(@AuthenticationPrincipal User user){
         ResponseDTO<Tag> res = ResponseDTO.<Tag>builder()
                 .status(ApiStatus.SUCCESS)
                 .data(tagService.getUserTag(user.getUsername()))

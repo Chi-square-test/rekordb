@@ -1,5 +1,7 @@
 package com.rekordb.rekordb.tourspot.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.AllArgsConstructor;
 
 import java.util.*;
@@ -23,6 +25,7 @@ public enum RekorCategory {
     private int idx;
     private List<String> defaultTagNameList;
 
+    @JsonValue
     @Override
     public String toString(){
         return KName;

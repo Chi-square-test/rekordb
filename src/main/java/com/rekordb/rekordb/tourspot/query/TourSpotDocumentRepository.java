@@ -27,4 +27,5 @@ public interface TourSpotDocumentRepository extends MongoRepository<TourSpotDocu
 
 
 
+
 }

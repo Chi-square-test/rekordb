@@ -21,5 +21,12 @@ public class UserAdminCotroller {
         return ResponseEntity.ok().body(null);
     }
 
+    @PutMapping("/spot")
+    public ResponseEntity<?> checkSpot(@RequestBody String spotid) {
+        userAdminService.updateWishCount(spotid);
+        log.info("관광지 좋아요 재점검 "+spotid);
+        return ResponseEntity.ok().body(null);
+    }
+
 
 }

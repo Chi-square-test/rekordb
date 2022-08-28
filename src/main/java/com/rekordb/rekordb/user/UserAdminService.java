@@ -34,12 +34,10 @@ public class UserAdminService {
         UserId userId = UserId.of(id);
         User user = userRepository.getReferenceById(userId);
         refreshTokenRepository.delete(refreshTokenRepository.getReferenceById(userId));
-        Set<TourSpotDocument> documents = userWishListRepository.findById(userId).orElseThrow().getWishList();
-        userWishListRepository.delete(userWishListRepository.findById(userId).orElseThrow());
-        userTagRepository.delete(userTagRepository.findById(userId).orElseThrow());
+        userWishListRepository.findById(userId).ifPresent(userWishList -> updateWishCount(userWishList.getWishList()));
+        userWishListRepository.findById(userId).ifPresent(userWishListRepository::delete);
+        userTagRepository.findById(userId).ifPresent(userTagRepository::delete);
         userRepository.delete(user);
-        updateWishCount(documents);
-
 
     }
 

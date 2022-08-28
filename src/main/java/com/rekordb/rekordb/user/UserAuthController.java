@@ -3,6 +3,7 @@ package com.rekordb.rekordb.user;
 import com.rekordb.rekordb.ApiStatus;
 import com.rekordb.rekordb.ResponseDTO;
 import com.rekordb.rekordb.user.Execption.DuplicateUserInfoException;
+import com.rekordb.rekordb.user.Execption.JoinFormInfoException;
 import com.rekordb.rekordb.user.Execption.NeedLoginException;
 import com.rekordb.rekordb.user.Execption.WrongLoginException;
 import com.rekordb.rekordb.user.dto.RekorCreateDTO;
@@ -12,8 +13,11 @@ import com.rekordb.rekordb.user.dto.TokenSet;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Collections;
 
 @RestController
@@ -25,8 +29,9 @@ public class UserAuthController {
     private final UserAuthService userAuthService;
 
     @PostMapping("/create")
-    public ResponseEntity<ResponseDTO<?>> signUp(@RequestBody RekorCreateDTO dto){
+    public ResponseEntity<ResponseDTO<?>> signUp(@RequestBody @Valid RekorCreateDTO dto, BindingResult bindingResult){
         try {
+            checkNull(bindingResult);
             TokenSet tokenSet = userAuthService.createFromRekor(dto);
             ResponseDTO<TokenSet> res = ResponseDTO.<TokenSet>builder()
                     .status(ApiStatus.SUCCESS)
@@ -96,6 +101,14 @@ public class UserAuthController {
                     .error("다시 로그인 하세요")
                     .build();
             return  ResponseEntity.badRequest().body(responseDTO);
+        }
+    }
+
+    public static void checkNull(BindingResult bindingResult) throws JoinFormInfoException{
+        if(bindingResult.hasErrors()) {
+            String[] errorString =bindingResult.getAllErrors().stream().map(ObjectError::getDefaultMessage).toArray(String[]::new);
+            String msg =String.join(", ",errorString) + "은(는) 필수값입니다.";
+            throw new JoinFormInfoException(msg);
         }
     }
 

@@ -21,6 +21,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.rekordb.rekordb.user.UserAuthController.checkNull;
+
 @RestController
 @Slf4j
 @RequiredArgsConstructor
@@ -77,12 +79,7 @@ public class UserController {
     @PostMapping("/join")
     public ResponseEntity<ResponseDTO<?>> joinData(@AuthenticationPrincipal User user, @RequestBody @Valid RekorJoinInformDTO dto, BindingResult bindingResult){
         try {
-            if(bindingResult.hasErrors()) {
-                String[] errorString =bindingResult.getAllErrors().stream().map(ObjectError::getDefaultMessage).toArray(String[]::new);
-                log.info(bindingResult.getAllErrors().toString());
-                String msg =String.join(", ",errorString) + "은(는) 필수값입니다.";
-                throw new JoinFormInfoException(msg);
-            }
+            checkNull(bindingResult);
             userService.signUpFromRekor(user.getUsername(),dto);
             ResponseDTO<Object> res = ResponseDTO.builder()
                     .status(ApiStatus.SUCCESS)

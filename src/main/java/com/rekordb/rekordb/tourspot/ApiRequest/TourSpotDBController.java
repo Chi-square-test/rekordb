@@ -2,8 +2,7 @@ package com.rekordb.rekordb.tourspot.ApiRequest;
 
 import com.rekordb.rekordb.ApiStatus;
 import com.rekordb.rekordb.ResponseDTO;
-import com.rekordb.rekordb.tourspot.ApiRequest.ExternalAPIService;
-import com.rekordb.rekordb.tourspot.TourSpotService;
+import com.rekordb.rekordb.tourspot.domain.TourSpotService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

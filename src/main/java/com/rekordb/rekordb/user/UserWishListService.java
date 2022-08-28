@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -54,5 +55,7 @@ public class UserWishListService {
         UserWishList wishList = userWishListRepository.findById(UserId.of(userId)).orElseThrow(NoSuchElementException::new);
         return new ArrayList<>(wishList.getWishList());
     }
+
+
 
 }

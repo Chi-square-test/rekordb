@@ -1,10 +1,8 @@
-package com.rekordb.rekordb.tourspot;
+package com.rekordb.rekordb.tourspot.domain;
 
 import com.rekordb.rekordb.ApiStatus;
 import com.rekordb.rekordb.ResponseDTO;
 import com.rekordb.rekordb.ResponsePageDTO;
-import com.rekordb.rekordb.tourspot.ApiRequest.ExternalAPIService;
-import com.rekordb.rekordb.tourspot.domain.TourSpotDocument;
 import com.rekordb.rekordb.tourspot.dto.SpotListDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

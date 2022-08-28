@@ -105,4 +105,6 @@ public class TourSpotDocument {
     public void minusLikeCount(){
         --this.likeCount;
     }
+
+    public void setLikeCount(int likeCount){this.likeCount = likeCount;}
 }

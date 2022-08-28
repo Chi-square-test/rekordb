@@ -1,4 +1,4 @@
-package com.rekordb.rekordb.tourspot;
+package com.rekordb.rekordb.tourspot.domain;
 
 import com.rekordb.rekordb.tag.Tag;
 import com.rekordb.rekordb.tag.TagService;

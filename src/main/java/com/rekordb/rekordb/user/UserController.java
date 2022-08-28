@@ -5,15 +5,20 @@ import com.rekordb.rekordb.ResponseDTO;
 import com.rekordb.rekordb.tag.Tag;
 import com.rekordb.rekordb.tag.TagService;
 import com.rekordb.rekordb.user.Execption.DuplicateUserInfoException;
+import com.rekordb.rekordb.user.Execption.JoinFormInfoException;
 import com.rekordb.rekordb.user.dto.RekorJoinInformDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @Slf4j
@@ -69,14 +74,19 @@ public class UserController {
     }
 
     @PostMapping("/join")
-    public ResponseEntity<ResponseDTO<?>> joinData(@AuthenticationPrincipal User user, @RequestBody RekorJoinInformDTO dto){
+    public ResponseEntity<ResponseDTO<?>> joinData(@AuthenticationPrincipal User user, @RequestBody @Valid RekorJoinInformDTO dto, BindingResult bindingResult){
+        if(bindingResult.hasErrors()) {
+            String[] errorString =bindingResult.getSuppressedFields();
+            String msg =String.join(", ",errorString) + "은(는) 필수값입니다.";
+            throw new JoinFormInfoException(msg);
+        }
         try {
             userService.signUpFromRekor(user.getUsername(),dto);
             ResponseDTO<Object> res = ResponseDTO.builder()
                     .status(ApiStatus.SUCCESS)
                     .build();
             return ResponseEntity.ok().body(res);
-        }catch (DuplicateUserInfoException e){
+        }catch (DuplicateUserInfoException | JoinFormInfoException e){
             ResponseDTO<Object> responseDTO = ResponseDTO.builder()
                     .status(ApiStatus.FAIL)
                     .error(e.getMessage())

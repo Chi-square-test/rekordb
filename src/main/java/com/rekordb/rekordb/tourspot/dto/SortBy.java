@@ -9,7 +9,7 @@ import java.util.Arrays;
 public enum SortBy {
     title("Name") ,
     likcCount("Likes"),
-    rating("rates");
+    rating("Rates");
 
 
     private String front;

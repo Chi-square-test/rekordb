@@ -78,7 +78,7 @@ public class UserController {
     public ResponseEntity<ResponseDTO<?>> joinData(@AuthenticationPrincipal User user, @RequestBody @Valid RekorJoinInformDTO dto, BindingResult bindingResult){
         try {
             if(bindingResult.hasErrors()) {
-                String[] errorString =bindingResult.getAllErrors().stream().map(ObjectError::toString).toArray(String[]::new);
+                String[] errorString =bindingResult.getAllErrors().stream().map(ObjectError::getDefaultMessage).toArray(String[]::new);
                 String msg =String.join(", ",errorString) + "은(는) 필수값입니다.";
                 throw new JoinFormInfoException(msg);
             }

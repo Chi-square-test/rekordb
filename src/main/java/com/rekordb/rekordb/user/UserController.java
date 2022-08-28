@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -75,12 +76,12 @@ public class UserController {
 
     @PostMapping("/join")
     public ResponseEntity<ResponseDTO<?>> joinData(@AuthenticationPrincipal User user, @RequestBody @Valid RekorJoinInformDTO dto, BindingResult bindingResult){
-        if(bindingResult.hasErrors()) {
-            String[] errorString =bindingResult.getSuppressedFields();
-            String msg =String.join(", ",errorString) + "은(는) 필수값입니다.";
-            throw new JoinFormInfoException(msg);
-        }
         try {
+            if(bindingResult.hasErrors()) {
+                String[] errorString =bindingResult.getAllErrors().stream().map(ObjectError::toString).toArray(String[]::new);
+                String msg =String.join(", ",errorString) + "은(는) 필수값입니다.";
+                throw new JoinFormInfoException(msg);
+            }
             userService.signUpFromRekor(user.getUsername(),dto);
             ResponseDTO<Object> res = ResponseDTO.builder()
                     .status(ApiStatus.SUCCESS)

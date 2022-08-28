@@ -33,12 +33,12 @@ public class UserAdminService {
     public void removeUser(String id){
         UserId userId = UserId.of(id);
         User user = userRepository.getReferenceById(userId);
+        log.info("삭제 유저 : "+user.getNickName());
         refreshTokenRepository.delete(refreshTokenRepository.getReferenceById(userId));
         userWishListRepository.findById(userId).ifPresent(userWishList -> updateWishCount(userWishList.getWishList()));
         userWishListRepository.findById(userId).ifPresent(userWishListRepository::delete);
         userTagRepository.findById(userId).ifPresent(userTagRepository::delete);
         userRepository.delete(user);
-
     }
 
     private void updateWishCount(Set<TourSpotDocument> documents){

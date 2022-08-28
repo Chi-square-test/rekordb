@@ -17,6 +17,7 @@ public class UserAdminCotroller {
     @DeleteMapping("/user")
     public ResponseEntity<?> deleteUser(@RequestBody String userid) {
         userAdminService.removeUser(userid);
+        log.info("유저 삭제 요청 "+userid);
         return ResponseEntity.ok().body(null);
     }
 

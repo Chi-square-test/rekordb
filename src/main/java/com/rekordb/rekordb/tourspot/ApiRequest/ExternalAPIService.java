@@ -94,7 +94,7 @@ public class ExternalAPIService {
                 .queryParam("cat3","A05020100")
                 .build();
         String url = URLDecoder.decode(builder.toUri().toString(), StandardCharsets.UTF_8);
-        ApiSpotResponse<ApiItemDTO> response = restTemplate.getForObject(java.net.URI.create(url),ApiSpotResponse.class);
+        ApiSpotResponse response = restTemplate.getForObject(java.net.URI.create(url),ApiSpotResponse.class);
         List<ApiItemDTO> dtos = response.getItems();
         List<TourSpot> spots = dtos.stream().map(ApiItemDTO::apiConvertEntity).collect(Collectors.toList());
         tourSpotRepository.saveAll(spots);
@@ -124,7 +124,7 @@ public class ExternalAPIService {
                 .queryParam("overviewYN","Y")
                 .build();
         String url = URLDecoder.decode(builder.toUri().toString(), StandardCharsets.UTF_8);
-        ApiSpotResponse<CommonItem> response = restTemplate.getForObject(java.net.URI.create(url),ApiSpotResponse.class);
+        ApiCommonResponse response = restTemplate.getForObject(java.net.URI.create(url),ApiCommonResponse.class);
         CommonItem commonItem  = response.getItems().get(0);
         detail.saveDetailCommon(commonItem);
     }
@@ -132,7 +132,7 @@ public class ExternalAPIService {
     private void getTourApiDetailInfo(String id, int typeId, TourSpotDetail detail) throws NullPointerException{
         UriComponents builder = componentsBuilder("/detailInfo",id,typeId).build();
         String url = URLDecoder.decode(builder.toUri().toString(), StandardCharsets.UTF_8);
-        ApiSpotResponse<DetailItem> response = restTemplate.getForObject(java.net.URI.create(url),ApiSpotResponse.class);
+        ApiInfoResponse response = restTemplate.getForObject(java.net.URI.create(url),ApiInfoResponse.class);
         List<DetailItem> detailItems = response.getItems();
         detail.saveDetailInfo(detailItems);
     }
@@ -140,7 +140,7 @@ public class ExternalAPIService {
     private void getTourApiDetailIntro(String id, int typeId, TourSpotDetail detail) throws NullPointerException{
         UriComponents builder = componentsBuilder("/detailIntro",id,typeId).build();
         String url = URLDecoder.decode(builder.toUri().toString(), StandardCharsets.UTF_8);
-        ApiSpotResponse<Map<String,String>> response = restTemplate.getForObject(java.net.URI.create(url),ApiSpotResponse.class);
+        ApiIntroResponse response = restTemplate.getForObject(java.net.URI.create(url),ApiIntroResponse.class);
         Map<String,String>  intro = response.getItems().get(0);
         intro.values().removeIf(String::isBlank);
         detail.saveDetailIntro(intro);
@@ -152,7 +152,7 @@ public class ExternalAPIService {
                 .queryParam("subImageYN","Y")
                 .build();
         String url = URLDecoder.decode(builder.toUri().toString(), StandardCharsets.UTF_8);
-        ApiSpotResponse<ImageItem> response = restTemplate.getForObject(java.net.URI.create(url),ApiSpotResponse.class);
+        ApiImageResponse response = restTemplate.getForObject(java.net.URI.create(url),ApiImageResponse.class);
         List<ImageItem> imageItems = response.getItems();
         detail.saveDetailImage(imageItems);
     }

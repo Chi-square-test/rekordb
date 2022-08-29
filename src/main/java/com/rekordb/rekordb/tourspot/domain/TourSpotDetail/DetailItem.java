@@ -15,6 +15,6 @@ public class DetailItem {
     private String infotext;
 
     public void removeTag(){
-        this.infotext = TourSpotDetail.replaceTag(infoname);
+        this.infotext = TourSpotDetail.replaceTag(infotext);
     }
 }

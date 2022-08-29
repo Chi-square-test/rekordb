@@ -17,7 +17,7 @@ import java.util.Map;
 @Setter(AccessLevel.PRIVATE)
 public class TourSpotDetail {
 
-
+    @Id
     private SpotId spotId;
     private CommonItem commonItem; //detailCommon
     private List<DetailItem> detailItems; //detailInfo

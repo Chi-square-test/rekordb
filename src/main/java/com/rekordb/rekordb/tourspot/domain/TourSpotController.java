@@ -52,7 +52,7 @@ public class TourSpotController {
                 .build();
         return ResponseEntity.ok().body(res);
     }
-    @GetMapping("/random")
+    @GetMapping("/recommend")
     public ResponseEntity<?> getRandomSpot(){
         ResponseDTO<TourSpotDocument> res = ResponseDTO.<TourSpotDocument>builder()
                 .status(ApiStatus.SUCCESS)

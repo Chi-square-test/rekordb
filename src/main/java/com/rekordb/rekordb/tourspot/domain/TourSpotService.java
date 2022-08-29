@@ -53,7 +53,10 @@ public class TourSpotService {
     public DetailAndReviewDTO getDetailAndReviews(String id){
         SpotId spotId = SpotId.of(id);
         TourSpotDetail detail = tourSpotDetailRepository.findById(spotId).orElseGet(()->externalAPIService.saveTourApiDetail(spotId));
-        detail.checkInformContain();
+        if(detail.checkInformContain()){
+            tourSpotDetailRepository.delete(detail);
+            throw new SpotDetailAPIErrorException();
+        }
         List<Review> reviews = reviewRepository.findBySpotId(spotId);
         return DetailAndReviewDTO.ConvertToDTO(detail,reviews);
     }

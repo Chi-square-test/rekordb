@@ -58,9 +58,9 @@ public class TourSpotDetail {
         this.setDetailImageFin(true);
     }
 
-    public void checkInformContain(){
+    public boolean checkInformContain(){
 
-        if(!(detailCommonFin||detailImageFin||detailIntroFin||detailInfoFin)) throw new SpotDetailAPIErrorException();
+        return detailCommonFin||detailImageFin||detailIntroFin||detailInfoFin;
     }
 
 

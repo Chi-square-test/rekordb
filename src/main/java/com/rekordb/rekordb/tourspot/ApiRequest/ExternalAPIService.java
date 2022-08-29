@@ -3,8 +3,14 @@ package com.rekordb.rekordb.tourspot.ApiRequest;
 import com.rekordb.rekordb.review.Review;
 import com.rekordb.rekordb.review.query.ReviewRepository;
 import com.rekordb.rekordb.tourspot.domain.RekorCategory;
+import com.rekordb.rekordb.tourspot.domain.SpotId;
 import com.rekordb.rekordb.tourspot.domain.TourSpot;
+import com.rekordb.rekordb.tourspot.domain.TourSpotDetail.CommonItem;
+import com.rekordb.rekordb.tourspot.domain.TourSpotDetail.DetailItem;
+import com.rekordb.rekordb.tourspot.domain.TourSpotDetail.ImageItem;
+import com.rekordb.rekordb.tourspot.domain.TourSpotDetail.TourSpotDetail;
 import com.rekordb.rekordb.tourspot.domain.TourSpotDocument;
+import com.rekordb.rekordb.tourspot.query.TourSpotDetailRepository;
 import com.rekordb.rekordb.tourspot.query.TourSpotDocumentRepository;
 import com.rekordb.rekordb.tourspot.query.TourSpotRepository;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +42,9 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -51,11 +59,23 @@ public class ExternalAPIService {
 
     private final TourSpotDocumentRepository tourSpotDocumentRepository;
 
+    private final TourSpotDetailRepository tourSpotDetailRepository;
+
     private final ApiKeysProperties apiKeys;
     private static final String TOUR_URI = "https://apis.data.go.kr/B551011/KorService";
     private static final String GOOGLE_URI = "https://maps.googleapis.com/maps/api/place";
     private RestTemplate restTemplate;
 
+    private UriComponentsBuilder componentsBuilder(String endPoint,String contentId,int typeId) {
+        return UriComponentsBuilder.fromHttpUrl(TOUR_URI)
+                .path(endPoint)
+                .queryParam("_type", "json")
+                .queryParam("MobileOS", "ETC")
+                .queryParam("MobileApp", "ReKor")
+                .queryParam("serviceKey", apiKeys.getTourKey())
+                .queryParam("contentId", contentId)
+                .queryParam("contentTypeId",typeId);
+    }
 
     public void getTourAPIData() throws NullPointerException{
         try {
@@ -74,11 +94,69 @@ public class ExternalAPIService {
                 .queryParam("cat3","A05020100")
                 .build();
         String url = URLDecoder.decode(builder.toUri().toString(), StandardCharsets.UTF_8);
-        ApiSpotResponse response = restTemplate.getForObject(java.net.URI.create(url),ApiSpotResponse.class);
+        ApiSpotResponse<ApiItemDTO> response = restTemplate.getForObject(java.net.URI.create(url),ApiSpotResponse.class);
         List<ApiItemDTO> dtos = response.getItems();
         List<TourSpot> spots = dtos.stream().map(ApiItemDTO::apiConvertEntity).collect(Collectors.toList());
         tourSpotRepository.saveAll(spots);
     }
+
+    public TourSpotDetail saveTourApiDetail(SpotId spotId) { //detail 없는건 이 메서드 전에 체크해야함.
+        log.info("tour api에 정보를 요청합니다.");
+        try {
+            restTemplate = ignoreSSL();
+        } catch (KeyStoreException | KeyManagementException | NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        TourSpotDocument tourSpotDocument = tourSpotDocumentRepository.findById(spotId).orElseThrow();
+        int typeId = tourSpotDocument.getTypeId();
+        String id = spotId.getId();
+        TourSpotDetail detail = TourSpotDetail.emptyDetail(spotId);
+        ignoringExc(() ->getTourApiDetailCommon(id,typeId,detail));
+        ignoringExc(() ->getTourApiDetailInfo(id,typeId,detail));
+        ignoringExc(() ->getTourApiDetailIntro(id,typeId,detail));
+        ignoringExc(() ->getTourApiDetailImage(id,typeId,detail));
+        return tourSpotDetailRepository.save(detail);
+    }
+
+    private void getTourApiDetailCommon(String id, int typeId, TourSpotDetail detail) throws NullPointerException{
+        UriComponents builder = componentsBuilder("/detailCommon",id,typeId)
+                .queryParam("defaultYN","Y")
+                .queryParam("overviewYN","Y")
+                .build();
+        String url = URLDecoder.decode(builder.toUri().toString(), StandardCharsets.UTF_8);
+        ApiSpotResponse<CommonItem> response = restTemplate.getForObject(java.net.URI.create(url),ApiSpotResponse.class);
+        CommonItem commonItem  = response.getItems().get(0);
+        detail.saveDetailCommon(commonItem);
+    }
+
+    private void getTourApiDetailInfo(String id, int typeId, TourSpotDetail detail) throws NullPointerException{
+        UriComponents builder = componentsBuilder("/detailInfo",id,typeId).build();
+        String url = URLDecoder.decode(builder.toUri().toString(), StandardCharsets.UTF_8);
+        ApiSpotResponse<DetailItem> response = restTemplate.getForObject(java.net.URI.create(url),ApiSpotResponse.class);
+        List<DetailItem> detailItems = response.getItems();
+        detail.saveDetailInfo(detailItems);
+    }
+
+    private void getTourApiDetailIntro(String id, int typeId, TourSpotDetail detail) throws NullPointerException{
+        UriComponents builder = componentsBuilder("/detailIntro",id,typeId).build();
+        String url = URLDecoder.decode(builder.toUri().toString(), StandardCharsets.UTF_8);
+        ApiSpotResponse<Map<String,String>> response = restTemplate.getForObject(java.net.URI.create(url),ApiSpotResponse.class);
+        Map<String,String>  intro = response.getItems().get(0);
+        intro.values().removeIf(String::isBlank);
+        detail.saveDetailIntro(intro);
+    }
+
+    private void getTourApiDetailImage(String id, int typeId, TourSpotDetail detail) throws NullPointerException{
+        UriComponents builder = componentsBuilder("/detailImage",id,typeId)
+                .queryParam("imageYN","Y")
+                .queryParam("subImageYN","Y")
+                .build();
+        String url = URLDecoder.decode(builder.toUri().toString(), StandardCharsets.UTF_8);
+        ApiSpotResponse<ImageItem> response = restTemplate.getForObject(java.net.URI.create(url),ApiSpotResponse.class);
+        List<ImageItem> imageItems = response.getItems();
+        detail.saveDetailImage(imageItems);
+    }
+
 
     public void findPlaceId() throws NullPointerException{
         restTemplate= new RestTemplate();
@@ -133,7 +211,6 @@ public class ExternalAPIService {
 //                        googleReviews.add(Review.googleReviewToDB(rev,s.getSpotId()));
 //                    }
 //                }
-
             }
             reviewRepository.saveAll(googleReviews);
             log.info(i+"번째 페이지 저장 완료");
@@ -145,6 +222,14 @@ public class ExternalAPIService {
         List<TourSpotDocument> spotDocuments = spotEntitys.stream().map(TourSpotDocument::new).collect(Collectors.toList());
         tourSpotDocumentRepository.saveAll(spotDocuments);
     }
+
+
+
+    public static void ignoringExc(RunnableExc r) {
+        try { r.run(); } catch (Exception e) {log.error(e.getMessage()); }
+    }
+
+    @FunctionalInterface public interface RunnableExc { void run() throws Exception; }
 
 
 

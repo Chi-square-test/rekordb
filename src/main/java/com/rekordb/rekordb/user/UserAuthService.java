@@ -52,7 +52,7 @@ public class UserAuthService {
 
     public TokenSet loginFromRekor(RekorLoginDTO dto) throws WrongLoginException {
         User user = getByCredentials(PhoneNumber.of(dto.getPhone()), dto.getPassword());
-        return makeNewAllToken(user);
+        return TokenSet.addNickNameFactory(makeNewAllToken(user), user.getNickName());
     }
 
     public TokenSet tokenRefresh(String access,String refresh) throws NeedLoginException{ //리팩토링 필요해보임.

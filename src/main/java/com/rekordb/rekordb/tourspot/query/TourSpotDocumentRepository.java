@@ -7,6 +7,8 @@ import com.rekordb.rekordb.tourspot.domain.TourSpotDocument;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.aggregation.AggregationResults;
+import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
@@ -24,7 +26,8 @@ public interface TourSpotDocumentRepository extends MongoRepository<TourSpotDocu
     Page<TourSpotDocument> findByTitleContainsOrTagListIn(String title,Set<Tag> tag, PageRequest pageRequest,Sort sort);
 
 
-
+    @Aggregation(pipeline={"{$sample:{size:4}}"})
+    AggregationResults<TourSpotDocument> random();
 
 
 

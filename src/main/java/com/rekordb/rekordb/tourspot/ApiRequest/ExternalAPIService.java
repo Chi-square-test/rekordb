@@ -67,14 +67,20 @@ public class ExternalAPIService {
     private RestTemplate restTemplate;
 
     private UriComponentsBuilder componentsBuilder(String endPoint,String contentId,int typeId) {
+        return componentsBuilder(endPoint,contentId)
+                .queryParam("contentTypeId",typeId);
+
+
+    }
+
+    private UriComponentsBuilder componentsBuilder(String endPoint,String contentId) {
         return UriComponentsBuilder.fromHttpUrl(TOUR_URI)
                 .path(endPoint)
                 .queryParam("_type", "json")
                 .queryParam("MobileOS", "ETC")
                 .queryParam("MobileApp", "ReKor")
                 .queryParam("serviceKey", apiKeys.getTourKey())
-                .queryParam("contentId", contentId)
-                .queryParam("contentTypeId",typeId);
+                .queryParam("contentId", contentId);
     }
 
     public void getTourAPIData() throws NullPointerException{
@@ -114,7 +120,7 @@ public class ExternalAPIService {
         ignoringExc(() ->getTourApiDetailCommon(id,typeId,detail));
         ignoringExc(() ->getTourApiDetailInfo(id,typeId,detail));
         ignoringExc(() ->getTourApiDetailIntro(id,typeId,detail));
-        ignoringExc(() ->getTourApiDetailImage(id,typeId,detail));
+        ignoringExc(() ->getTourApiDetailImage(id,detail));
         return tourSpotDetailRepository.save(detail);
     }
 
@@ -126,6 +132,7 @@ public class ExternalAPIService {
         String url = URLDecoder.decode(builder.toUri().toString(), StandardCharsets.UTF_8);
         ApiCommonResponse response = restTemplate.getForObject(java.net.URI.create(url),ApiCommonResponse.class);
         CommonItem commonItem  = response.getItems().get(0);
+        commonItem.parsingUrl();
         detail.saveDetailCommon(commonItem);
     }
 
@@ -134,6 +141,7 @@ public class ExternalAPIService {
         String url = URLDecoder.decode(builder.toUri().toString(), StandardCharsets.UTF_8);
         ApiInfoResponse response = restTemplate.getForObject(java.net.URI.create(url),ApiInfoResponse.class);
         List<DetailItem> detailItems = response.getItems();
+        detailItems.forEach(DetailItem::removeTag);
         detail.saveDetailInfo(detailItems);
     }
 
@@ -143,11 +151,12 @@ public class ExternalAPIService {
         ApiIntroResponse response = restTemplate.getForObject(java.net.URI.create(url),ApiIntroResponse.class);
         Map<String,String>  intro = response.getItems().get(0);
         intro.values().removeIf(String::isBlank);
+        intro.replaceAll((k, v) -> v = TourSpotDetail.replaceTag(v));
         detail.saveDetailIntro(intro);
     }
 
-    private void getTourApiDetailImage(String id, int typeId, TourSpotDetail detail) throws NullPointerException{
-        UriComponents builder = componentsBuilder("/detailImage",id,typeId)
+    private void getTourApiDetailImage(String id,  TourSpotDetail detail) throws NullPointerException{
+        UriComponents builder = componentsBuilder("/detailImage",id)
                 .queryParam("imageYN","Y")
                 .queryParam("subImageYN","Y")
                 .build();

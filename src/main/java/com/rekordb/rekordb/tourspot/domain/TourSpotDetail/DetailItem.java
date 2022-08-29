@@ -13,4 +13,8 @@ import javax.persistence.Embeddable;
 public class DetailItem {
     private String infoname;
     private String infotext;
+
+    public void removeTag(){
+        this.infotext = TourSpotDetail.replaceTag(infoname);
+    }
 }

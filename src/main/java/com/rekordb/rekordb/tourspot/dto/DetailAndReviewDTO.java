@@ -35,6 +35,7 @@ public class DetailAndReviewDTO {
                 .plusInfo(detail.getDetailIntro())
                 .imageList(detail.getImageItems())
                 .reviewList(review.stream().map(ReviewDTO::ConvertToDTO).collect(Collectors.toList()))
+                .isReviewed(isReviewed)
                 .build();
     }
 }

@@ -1,5 +1,6 @@
 package com.rekordb.rekordb.review.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.rekordb.rekordb.review.Review;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,8 +20,13 @@ public class ReviewDTO {
     private boolean fromGoogle;
     private int rating;
     private String text;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Double currentRates;
 
+    public static ReviewDTO ConvertToDTO(Review review, double currentRates){
+        return new ReviewDTO(review.getUserName(),review.getTime(), review.isFromGoogle(), review.getRating(), review.getText(),currentRates);
+    }
     public static ReviewDTO ConvertToDTO(Review review){
-        return new ReviewDTO(review.getUserName(),review.getTime(), review.isFromGoogle(), review.getRating(), review.getText());
+        return new ReviewDTO(review.getUserName(),review.getTime(), review.isFromGoogle(), review.getRating(), review.getText(),null);
     }
 }

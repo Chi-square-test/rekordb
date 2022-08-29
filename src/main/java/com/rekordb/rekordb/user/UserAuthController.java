@@ -3,12 +3,11 @@ package com.rekordb.rekordb.user;
 import com.rekordb.rekordb.ApiStatus;
 import com.rekordb.rekordb.ResponseDTO;
 import com.rekordb.rekordb.user.Execption.DuplicateUserInfoException;
-import com.rekordb.rekordb.user.Execption.JoinFormInfoException;
+import com.rekordb.rekordb.NullFormDataException;
 import com.rekordb.rekordb.user.Execption.NeedLoginException;
 import com.rekordb.rekordb.user.Execption.WrongLoginException;
 import com.rekordb.rekordb.user.dto.RekorCreateDTO;
 import com.rekordb.rekordb.user.dto.RekorLoginDTO;
-import com.rekordb.rekordb.user.dto.RekorJoinInformDTO;
 import com.rekordb.rekordb.user.dto.TokenSet;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,8 +29,8 @@ public class UserAuthController {
 
     @PostMapping("/create")
     public ResponseEntity<ResponseDTO<?>> signUp(@RequestBody @Valid RekorCreateDTO dto, BindingResult bindingResult){
+        checkNull(bindingResult);
         try {
-            checkNull(bindingResult);
             TokenSet tokenSet = userAuthService.createFromRekor(dto);
             ResponseDTO<TokenSet> res = ResponseDTO.<TokenSet>builder()
                     .status(ApiStatus.SUCCESS)
@@ -104,11 +103,11 @@ public class UserAuthController {
         }
     }
 
-    public static void checkNull(BindingResult bindingResult) throws JoinFormInfoException{
+    public static void checkNull(BindingResult bindingResult) throws NullFormDataException {
         if(bindingResult.hasErrors()) {
             String[] errorString =bindingResult.getAllErrors().stream().map(ObjectError::getDefaultMessage).toArray(String[]::new);
             String msg =String.join(", ",errorString) + "은(는) 필수값입니다.";
-            throw new JoinFormInfoException(msg);
+            throw new NullFormDataException(msg);
         }
     }
 

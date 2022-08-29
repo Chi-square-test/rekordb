@@ -1,4 +1,4 @@
-package com.rekordb.rekordb.user.Execption;
+package com.rekordb.rekordb;
 
 import lombok.NoArgsConstructor;
 import org.springframework.validation.ObjectError;
@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @NoArgsConstructor
-public class JoinFormInfoException  extends RuntimeException{
-    public JoinFormInfoException(String msg){
+public class NullFormDataException extends RuntimeException{
+    public NullFormDataException(String msg){
         super(msg);
     }
 }

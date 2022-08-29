@@ -10,7 +10,8 @@ import com.rekordb.rekordb.tourspot.domain.TourSpotDetail.TourSpotDetail;
 import com.rekordb.rekordb.tourspot.dto.SortBy;
 import com.rekordb.rekordb.tourspot.query.TourSpotDetailRepository;
 import com.rekordb.rekordb.tourspot.query.TourSpotDocumentRepository;
-import com.rekordb.rekordb.user.dto.DetailAndReviewDTO;
+import com.rekordb.rekordb.tourspot.dto.DetailAndReviewDTO;
+import com.rekordb.rekordb.user.domain.userInfo.UserId;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -50,15 +51,16 @@ public class TourSpotService {
 
 
 
-    public DetailAndReviewDTO getDetailAndReviews(String id){
-        SpotId spotId = SpotId.of(id);
+    public DetailAndReviewDTO getDetailAndReviews(String uid,String sid){
+        SpotId spotId = SpotId.of(sid);
         TourSpotDetail detail = tourSpotDetailRepository.findById(spotId).orElseGet(()->externalAPIService.saveTourApiDetail(spotId));
         if(!detail.checkInformContain()){
             tourSpotDetailRepository.delete(detail);
             throw new SpotDetailAPIErrorException();
         }
         List<Review> reviews = reviewRepository.findBySpotId(spotId);
-        return DetailAndReviewDTO.ConvertToDTO(detail,reviews);
+        boolean isReviewed = reviewRepository.existsByUserIdAndSpotId(UserId.of(uid),spotId);
+        return DetailAndReviewDTO.ConvertToDTO(detail,reviews,isReviewed);
     }
 
     public List<TourSpotDocument> getRandomSpot(){

@@ -3,6 +3,7 @@ package com.rekordb.rekordb.handle;
 
 
 import com.rekordb.rekordb.ApiStatus;
+import com.rekordb.rekordb.NullFormDataException;
 import com.rekordb.rekordb.ResponseDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,16 @@ import java.util.NoSuchElementException;
 @Slf4j
 @RestControllerAdvice
 public class UnknownError {
+
+    @ExceptionHandler(value = NullFormDataException.class)
+    public ResponseEntity<?> NullFormError(NullFormDataException e){
+        log.info("null 필드 요청, "+e.getMessage());
+        ResponseDTO<Object> responseDTO = ResponseDTO.builder()
+                .status(ApiStatus.FAIL)
+                .error(e.getMessage())
+                .build();
+        return  ResponseEntity.badRequest().body(responseDTO);
+    }
 
     @ExceptionHandler(value = NoSuchElementException.class)
     public ResponseEntity<?> NoElementError(NoSuchElementException e){

@@ -1,4 +1,4 @@
-package com.rekordb.rekordb.user.dto;
+package com.rekordb.rekordb.tourspot.dto;
 
 import com.rekordb.rekordb.review.Review;
 import com.rekordb.rekordb.review.dto.ReviewDTO;
@@ -7,10 +7,7 @@ import com.rekordb.rekordb.tourspot.domain.TourSpotDetail.CommonItem;
 import com.rekordb.rekordb.tourspot.domain.TourSpotDetail.DetailItem;
 import com.rekordb.rekordb.tourspot.domain.TourSpotDetail.ImageItem;
 import com.rekordb.rekordb.tourspot.domain.TourSpotDetail.TourSpotDetail;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 import java.util.Map;
@@ -28,8 +25,9 @@ public class DetailAndReviewDTO {
     private Map<String,String> plusInfo; //detailIntro
     private List<ImageItem> imageList;  //detailImage
     private List<ReviewDTO> reviewList;
+    private boolean isReviewed;
 
-    public static DetailAndReviewDTO ConvertToDTO(TourSpotDetail detail, List<Review> review){
+    public static DetailAndReviewDTO ConvertToDTO(TourSpotDetail detail, List<Review> review, boolean isReviewed){
         return DetailAndReviewDTO.builder()
                 .spotId(detail.getSpotId())
                 .commonInfo(detail.getCommonItem())

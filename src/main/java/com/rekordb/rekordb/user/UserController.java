@@ -5,7 +5,7 @@ import com.rekordb.rekordb.ResponseDTO;
 import com.rekordb.rekordb.tag.Tag;
 import com.rekordb.rekordb.tag.TagService;
 import com.rekordb.rekordb.user.Execption.DuplicateUserInfoException;
-import com.rekordb.rekordb.user.Execption.JoinFormInfoException;
+import com.rekordb.rekordb.NullFormDataException;
 import com.rekordb.rekordb.user.dto.RekorJoinInformDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,9 +17,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.rekordb.rekordb.user.UserAuthController.checkNull;
 
@@ -78,14 +76,14 @@ public class UserController {
 
     @PostMapping("/join")
     public ResponseEntity<ResponseDTO<?>> joinData(@AuthenticationPrincipal User user, @RequestBody @Valid RekorJoinInformDTO dto, BindingResult bindingResult){
+        checkNull(bindingResult);
         try {
-            checkNull(bindingResult);
             userService.signUpFromRekor(user.getUsername(),dto);
             ResponseDTO<Object> res = ResponseDTO.builder()
                     .status(ApiStatus.SUCCESS)
                     .build();
             return ResponseEntity.ok().body(res);
-        }catch (DuplicateUserInfoException | JoinFormInfoException e){
+        }catch (DuplicateUserInfoException e){
             ResponseDTO<Object> responseDTO = ResponseDTO.builder()
                     .status(ApiStatus.FAIL)
                     .error(e.getMessage())

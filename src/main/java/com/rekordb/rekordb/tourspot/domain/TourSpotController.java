@@ -5,11 +5,15 @@ import com.rekordb.rekordb.ResponseDTO;
 import com.rekordb.rekordb.ResponsePageDTO;
 import com.rekordb.rekordb.tourspot.Exception.SpotDetailAPIErrorException;
 import com.rekordb.rekordb.tourspot.dto.SpotListDTO;
-import com.rekordb.rekordb.user.dto.DetailAndReviewDTO;
+import com.rekordb.rekordb.tourspot.dto.DetailAndReviewDTO;
+
+import com.rekordb.rekordb.user.domain.userInfo.UserId;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
@@ -62,9 +66,9 @@ public class TourSpotController {
     }
 
     @GetMapping("/detail/{spotid}")
-    public ResponseEntity<?> getDetailAndReviews(@PathVariable("spotid")String spotid){
+    public ResponseEntity<?> getDetailAndReviews(@AuthenticationPrincipal User user, @PathVariable("spotid")String spotid){
         try {
-            DetailAndReviewDTO dto = tourSpotService.getDetailAndReviews(spotid);
+            DetailAndReviewDTO dto = tourSpotService.getDetailAndReviews(user.getUsername(),spotid);
             ResponseDTO<DetailAndReviewDTO> res = ResponseDTO.<DetailAndReviewDTO>builder()
                     .status(ApiStatus.SUCCESS)
                     .data(Collections.singletonList(dto))

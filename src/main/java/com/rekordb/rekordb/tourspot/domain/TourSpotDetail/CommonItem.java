@@ -16,7 +16,7 @@ public class CommonItem {
 
     private String tel;
 
-    private String overView;
+    private String overview;
 
     public void parsingUrl(){
         if(!homepage.isBlank()){

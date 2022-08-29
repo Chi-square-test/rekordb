@@ -10,18 +10,22 @@ import java.util.List;
 @AllArgsConstructor
 public class ApiSpotResponse<T> {
     public response response;
-    class response{
-        public body body;
-        class body{
-            public items items;
-            class items{
-                public List<T> item;
-            }
-        }
-    }
+
 
     public List<T> getItems(){
         return this.response.body.items.item;
+    }
+
+    class response{
+        public body body;
+
+    }
+    class body{
+        public items items;
+
+    }
+    class items{
+        public List<T> item;
     }
 
 }

@@ -1,7 +1,5 @@
 package com.rekordb.rekordb.course;
 
-import com.rekordb.rekordb.course.query.Course;
-import com.rekordb.rekordb.tourspot.domain.TourSpotDocument;
 import com.rekordb.rekordb.user.domain.userInfo.UserId;
 import lombok.*;
 import org.springframework.data.annotation.Id;
@@ -9,6 +7,7 @@ import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Getter
@@ -52,6 +51,7 @@ public class CourseFolder {
     public int getCourseListCount(){
         return courseList.size();
     }
+
     public void addCourse(Course course){
         course.setCourseIdx(getCourseListCount());
         courseList.add(course);
@@ -60,5 +60,14 @@ public class CourseFolder {
     public void deleteCourse(Course course){
         courseList.remove(course);
     }
+
+    public void reIndexCourse(){
+        for (int i = 0; i < courseList.size(); i++) {
+            courseList.get(i).setCourseIdx(i);
+        }
+        Collections.sort(courseList);
+    }
+
+
 
 }

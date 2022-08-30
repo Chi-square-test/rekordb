@@ -2,11 +2,13 @@ package com.rekordb.rekordb.tourspot.dto;
 
 import com.rekordb.rekordb.review.Review;
 import com.rekordb.rekordb.review.dto.ReviewDTO;
+import com.rekordb.rekordb.tourspot.domain.Address;
 import com.rekordb.rekordb.tourspot.domain.SpotId;
 import com.rekordb.rekordb.tourspot.domain.TourSpotDetail.CommonItem;
 import com.rekordb.rekordb.tourspot.domain.TourSpotDetail.DetailItem;
 import com.rekordb.rekordb.tourspot.domain.TourSpotDetail.ImageItem;
 import com.rekordb.rekordb.tourspot.domain.TourSpotDetail.TourSpotDetail;
+import com.rekordb.rekordb.tourspot.domain.TourSpotDocument;
 import lombok.*;
 
 import java.util.List;
@@ -20,6 +22,9 @@ import java.util.stream.Collectors;
 
 public class DetailAndReviewDTO {
     private SpotId spotId;
+    private int likeCount;
+    private double rating;
+    private Address address;
     private CommonItem commonInfo; //detailCommon
     private List<DetailItem> detailList; //detailInfo
     private Map<String,String> plusInfo; //detailIntro
@@ -27,8 +32,11 @@ public class DetailAndReviewDTO {
     private List<ReviewDTO> reviewList;
     private boolean isReviewed;
 
-    public static DetailAndReviewDTO ConvertToDTO(TourSpotDetail detail, List<Review> review, boolean isReviewed){
+    public static DetailAndReviewDTO ConvertToDTO(TourSpotDocument document, TourSpotDetail detail, List<Review> review, boolean isReviewed){
         return DetailAndReviewDTO.builder()
+                .likeCount(document.getLikeCount())
+                .rating(document.getRating())
+                .address(document.getAddress())
                 .spotId(detail.getSpotId())
                 .commonInfo(detail.getCommonItem())
                 .detailList(detail.getDetailItems())

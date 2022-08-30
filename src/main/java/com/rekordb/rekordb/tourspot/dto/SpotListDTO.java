@@ -1,6 +1,7 @@
 package com.rekordb.rekordb.tourspot.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.rekordb.rekordb.tag.Tag;
 import com.rekordb.rekordb.tourspot.domain.*;
 import lombok.*;
@@ -33,6 +34,8 @@ public class SpotListDTO {
     private int likeCount;
 
     private Set<Tag> tags;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Boolean isInWishList;
 
     public SpotListDTO(TourSpotDocument document){
         this.spotId = document.getSpotId();

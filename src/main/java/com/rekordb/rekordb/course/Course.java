@@ -1,23 +1,24 @@
-package com.rekordb.rekordb.course.query;
+package com.rekordb.rekordb.course;
 
-import com.rekordb.rekordb.course.CourseId;
 import com.rekordb.rekordb.tourspot.domain.TourSpotDocument;
 import lombok.*;
 
 import javax.persistence.Embeddable;
+import javax.persistence.Embedded;
 import java.util.List;
 
-@Embeddable
+
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Builder
 @EqualsAndHashCode(of = "courseId")
-public class Course {
+public class Course implements Comparable<Course> {
 
     private CourseId courseId;
 
     private List<TourSpotDocument> spotList;
+
     @Setter
     private String courseName;
 
@@ -35,6 +36,8 @@ public class Course {
     }
 
 
-
-
+    @Override
+    public int compareTo(Course o) {
+        return Integer.compare(courseIdx,o.courseIdx);
+    }
 }

@@ -11,5 +11,6 @@ public interface UserWishListRepository extends MongoRepository<UserWishList, Us
 
     int countByWishListIn(Set<TourSpotDocument> documents);
 
+    boolean existsByUserIdAndWishListContains(UserId userId,TourSpotDocument document);
 
 }

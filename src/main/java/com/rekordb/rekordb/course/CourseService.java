@@ -1,6 +1,5 @@
 package com.rekordb.rekordb.course;
 
-import com.rekordb.rekordb.course.query.Course;
 import com.rekordb.rekordb.course.query.CourseFolderRepository;
 import com.rekordb.rekordb.tourspot.domain.SpotId;
 import com.rekordb.rekordb.tourspot.domain.TourSpotDocument;
@@ -10,10 +9,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.Order;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -31,14 +28,6 @@ public class CourseService {
                 .map(tourSpotDocumentRepository::findById)
                 .map(Optional::orElseThrow)
                 .collect(Collectors.toList());
-
-        List<TourSpotDocument> spotList2 = new ArrayList<>();
-        for (String s: spots) {
-            SpotId id = SpotId.of(s);
-            TourSpotDocument document = tourSpotDocumentRepository.findById(id).orElseThrow();
-            spotList2.add(document);
-        }
-
         CourseFolder root = getRootFolder(userId);
         Course course = Course.makeNewCourse(name,spotList,root.getCourseListCount());
         root.addCourse(course);
@@ -50,26 +39,29 @@ public class CourseService {
         courseFolderRepository.save(CourseFolder.makeFolder(userId,name));
     }//name 공백 금지!! 컨트롤러에서 valid 예정
 
-//    public void changeIdx(String folder, Map<String,Integer> newOrder)
+    public void changeIdx(String user, String folder, List<Integer> newOrder){
+        FolderId folderId = FolderId.of(folder);
+        UserId userId = UserId.of(user);
+        CourseFolder courseFolder =courseFolderRepository.findByUserIdAndFolderId(userId,folderId).orElseThrow();
+        List<Course> courseList = courseFolder.getCourseList();
+        for (int i = 0; i <courseList.size() ; i++) {
+            courseList.get(i).setCourseIdx(newOrder.get(i));
+        }
+        Collections.sort(courseList);
+        courseFolder.setCourseList(courseList);
+        courseFolderRepository.save(courseFolder);
+    }
 
     public void moveToAnotherFolder(String user,String course,String startF, String destF){
         UserId userId = UserId.of(user);
         FolderId startId = FolderId.of(startF);
         FolderId destId = FolderId.of(destF);
         CourseId courseId = CourseId.of(course);
-        CourseFolder startFolder =courseFolderRepository.findByUserIdAndFolderId(userId,startId).orElseThrow();
         CourseFolder destFolder =courseFolderRepository.findByUserIdAndFolderId(userId,destId).orElseThrow();
-        Course movingCourse = startFolder.getCourseList().stream()
-                .filter(c -> c.getCourseId().equals(courseId))
-                .findAny()
-                .orElseThrow();
-        startFolder.deleteCourse(movingCourse);
-        destFolder.addCourse(movingCourse);
-
-
-
-
+        destFolder.addCourse(deleteCourse(userId,startId,courseId));
+        courseFolderRepository.save(destFolder);
     }//name 공백 금지!! 컨트롤러에서 valid 예정
+
 
     public void deleteFolder(String user,String folder){
         UserId userId = UserId.of(user);
@@ -79,10 +71,24 @@ public class CourseService {
     }
 
 
+
     private CourseFolder getRootFolder(UserId userId){
         return courseFolderRepository.findByUserIdAndRootFolderTrue(userId)
                 .orElseGet(()->courseFolderRepository.save(CourseFolder.makeRootFolder(userId)));
 
     }
+
+    public Course deleteCourse(UserId userId, FolderId folderId, CourseId courseId){
+        CourseFolder folder =courseFolderRepository.findByUserIdAndFolderId(userId,folderId).orElseThrow();
+        Course movingCourse = folder.getCourseList().stream()
+                .filter(c -> c.getCourseId().equals(courseId))
+                .findAny()
+                .orElseThrow();
+        folder.deleteCourse(movingCourse);
+        folder.reIndexCourse();
+        courseFolderRepository.save(folder);
+        return movingCourse;
+    }
+
 
 }

@@ -57,10 +57,10 @@ public class TourSpotController {
         return ResponseEntity.ok().body(res);
     }
     @GetMapping("/recommend")
-    public ResponseEntity<ResponseDTO<TourSpotDocument>> getRandomSpot(){
-        ResponseDTO<TourSpotDocument> res = ResponseDTO.<TourSpotDocument>builder()
+    public ResponseEntity<ResponseDTO<SpotListDTO>> getRandomSpot(@AuthenticationPrincipal User user){
+        ResponseDTO<SpotListDTO> res = ResponseDTO.<SpotListDTO>builder()
                 .status(ApiStatus.SUCCESS)
-                .data(tourSpotService.getRandomSpot())
+                .data(tourSpotService.getRandomSpot(user.getUsername()))
                 .build();
         return ResponseEntity.ok().body(res);
     }

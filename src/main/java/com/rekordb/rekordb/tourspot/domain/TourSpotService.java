@@ -8,10 +8,12 @@ import com.rekordb.rekordb.tourspot.ApiRequest.ExternalAPIService;
 import com.rekordb.rekordb.tourspot.Exception.SpotDetailAPIErrorException;
 import com.rekordb.rekordb.tourspot.domain.TourSpotDetail.TourSpotDetail;
 import com.rekordb.rekordb.tourspot.dto.SortBy;
+import com.rekordb.rekordb.tourspot.dto.SpotListDTO;
 import com.rekordb.rekordb.tourspot.query.TourSpotDetailRepository;
 import com.rekordb.rekordb.tourspot.query.TourSpotDocumentRepository;
 import com.rekordb.rekordb.tourspot.dto.DetailAndReviewDTO;
 import com.rekordb.rekordb.user.domain.userInfo.UserId;
+import com.rekordb.rekordb.user.query.UserWishListRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -19,6 +21,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -28,6 +31,7 @@ import java.util.Set;
 public class TourSpotService {
     private final TourSpotDocumentRepository tourSpotDocumentRepository;
     private final TourSpotDetailRepository tourSpotDetailRepository;
+    private final UserWishListRepository wishListRepository;
     private final ReviewRepository reviewRepository;
     private static final int AMOUNT_IN_PAGE =30;
     private final TagRepository tagRepository;
@@ -53,6 +57,7 @@ public class TourSpotService {
 
     public DetailAndReviewDTO getDetailAndReviews(String uid,String sid){
         SpotId spotId = SpotId.of(sid);
+        TourSpotDocument document = tourSpotDocumentRepository.findById(spotId).orElseThrow();
         TourSpotDetail detail = tourSpotDetailRepository.findById(spotId).orElseGet(()->externalAPIService.saveTourApiDetail(spotId));
         if(!detail.checkInformContain()){
             tourSpotDetailRepository.delete(detail);
@@ -60,11 +65,20 @@ public class TourSpotService {
         }
         List<Review> reviews = reviewRepository.findBySpotId(spotId);
         boolean isReviewed = reviewRepository.existsByUserIdAndSpotId(UserId.of(uid),spotId);
-        return DetailAndReviewDTO.ConvertToDTO(detail,reviews,isReviewed);
+        return DetailAndReviewDTO.ConvertToDTO(document,detail,reviews,isReviewed);
     }
 
-    public List<TourSpotDocument> getRandomSpot(){
-        return tourSpotDocumentRepository.random().getMappedResults();
+    public List<SpotListDTO> getRandomSpot(String user){
+        UserId userId = UserId.of(user);
+        List<TourSpotDocument> documents =tourSpotDocumentRepository.random().getMappedResults();
+        List<SpotListDTO> dtos = new ArrayList<>();
+        for (TourSpotDocument d:documents) {
+           Boolean b = wishListRepository.existsByUserIdAndWishListContains(userId,d);
+           SpotListDTO dto = new SpotListDTO(d);
+           dto.setIsInWishList(b);
+           dtos.add(dto);
+        }
+        return dtos;
     }
 
 

@@ -15,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 @AllArgsConstructor
-@Document(collection = "route")
+@Document(collection = "course")
 public class CourseFolder {
 
     @Id

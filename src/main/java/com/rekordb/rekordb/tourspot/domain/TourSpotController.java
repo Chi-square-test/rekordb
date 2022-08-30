@@ -34,7 +34,7 @@ public class TourSpotController {
 
 
     @GetMapping("/category")
-    public ResponseEntity<?> getSpotBycategory(@RequestParam int cat, @RequestParam int page,@RequestParam String sort){
+    public ResponseEntity<ResponsePageDTO<SpotListDTO>> getSpotBycategory(@RequestParam int cat, @RequestParam int page,@RequestParam String sort){
         Page<TourSpotDocument> spotDocuments = tourSpotService.getSpotByCategory(cat,page,sort);
         ResponsePageDTO<SpotListDTO> res = ResponsePageDTO.<SpotListDTO>builder()
                 .status(ApiStatus.SUCCESS)
@@ -46,7 +46,7 @@ public class TourSpotController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<?> findSpot(@RequestParam String text, @RequestParam int page){
+    public ResponseEntity<ResponsePageDTO<SpotListDTO>> findSpot(@RequestParam String text, @RequestParam int page){
         Page<TourSpotDocument> spotDocuments = tourSpotService.findSpot(text,page);
         ResponsePageDTO<SpotListDTO> res = ResponsePageDTO.<SpotListDTO>builder()
                 .status(ApiStatus.SUCCESS)
@@ -57,7 +57,7 @@ public class TourSpotController {
         return ResponseEntity.ok().body(res);
     }
     @GetMapping("/recommend")
-    public ResponseEntity<?> getRandomSpot(){
+    public ResponseEntity<ResponseDTO<TourSpotDocument>> getRandomSpot(){
         ResponseDTO<TourSpotDocument> res = ResponseDTO.<TourSpotDocument>builder()
                 .status(ApiStatus.SUCCESS)
                 .data(tourSpotService.getRandomSpot())
@@ -66,7 +66,7 @@ public class TourSpotController {
     }
 
     @GetMapping("/detail/{spotid}")
-    public ResponseEntity<?> getDetailAndReviews(@AuthenticationPrincipal User user, @PathVariable("spotid")String spotid){
+    public ResponseEntity<ResponseDTO<DetailAndReviewDTO>> getDetailAndReviews(@AuthenticationPrincipal User user, @PathVariable("spotid")String spotid){
         try {
             DetailAndReviewDTO dto = tourSpotService.getDetailAndReviews(user.getUsername(),spotid);
             ResponseDTO<DetailAndReviewDTO> res = ResponseDTO.<DetailAndReviewDTO>builder()
@@ -75,7 +75,7 @@ public class TourSpotController {
                     .build();
             return ResponseEntity.ok().body(res);
         }catch (SpotDetailAPIErrorException e){
-            ResponseDTO<Object> res = ResponseDTO.builder()
+            ResponseDTO<DetailAndReviewDTO> res = ResponseDTO.<DetailAndReviewDTO>builder()
                     .status(ApiStatus.ERROR)
                     .error("상세정보를 불러오던 중 오류가 발생했습니다.")
                     .build();

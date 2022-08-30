@@ -84,26 +84,26 @@ public class ExternalAPIService {
     }
 
     public void getTourAPIData() throws NullPointerException{
-        try {
-            restTemplate = ignoreSSL();
-        } catch (KeyStoreException | KeyManagementException | NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        UriComponents builder = UriComponentsBuilder.fromHttpUrl(TOUR_URI)
-                .path("/areaBasedList")
-                .queryParam("_type","json")
-                .queryParam("numOfRows","11834")
-                .queryParam("pageNo","1")
-                .queryParam("MobileOS","ETC")
-                .queryParam("MobileApp","ReKor")
-                .queryParam("serviceKey",apiKeys.getTourKey())
-                .queryParam("cat3","A05020100")
-                .build();
-        String url = URLDecoder.decode(builder.toUri().toString(), StandardCharsets.UTF_8);
-        ApiSpotResponse response = restTemplate.getForObject(java.net.URI.create(url),ApiSpotResponse.class);
-        List<ApiItemDTO> dtos = response.getItems();
-        List<TourSpot> spots = dtos.stream().map(ApiItemDTO::apiConvertEntity).collect(Collectors.toList());
-        tourSpotRepository.saveAll(spots);
+//        try {
+//            restTemplate = ignoreSSL();
+//        } catch (KeyStoreException | KeyManagementException | NoSuchAlgorithmException e) {
+//            e.printStackTrace();
+//        }
+//        UriComponents builder = UriComponentsBuilder.fromHttpUrl(TOUR_URI)
+//                .path("/areaBasedList")
+//                .queryParam("_type","json")
+//                .queryParam("numOfRows","11834")
+//                .queryParam("pageNo","1")
+//                .queryParam("MobileOS","ETC")
+//                .queryParam("MobileApp","ReKor")
+//                .queryParam("serviceKey",apiKeys.getTourKey())
+//                .queryParam("cat3","A05020100")
+//                .build();
+//        String url = URLDecoder.decode(builder.toUri().toString(), StandardCharsets.UTF_8);
+//        ApiSpotResponse response = restTemplate.getForObject(java.net.URI.create(url),ApiSpotResponse.class);
+//        List<ApiItemDTO> dtos = response.getItems();
+//        List<TourSpot> spots = dtos.stream().map(ApiItemDTO::apiConvertEntity).collect(Collectors.toList());
+//        tourSpotRepository.saveAll(spots);
     }
 
     public TourSpotDetail saveTourApiDetail(SpotId spotId) { //detail 없는건 이 메서드 전에 체크해야함.
@@ -168,30 +168,30 @@ public class ExternalAPIService {
 
 
     public void findPlaceId() throws NullPointerException{
-        restTemplate= new RestTemplate();
-        for (int i = 1; i < 70; i++) {
-            PageRequest pageRequest = PageRequest.of(i,100);
-            List<TourSpot> spots = tourSpotRepository.findByRekorCategory(RekorCategory.FOOD,pageRequest);
-            List<TourSpot> updateSpots = new ArrayList<>();
-            for (TourSpot s: spots) {
-                String title = s.getTitle();
-                UriComponents builder = UriComponentsBuilder.fromHttpUrl(GOOGLE_URI)
-                        .path("/findplacefromtext")
-                        .path("/json")
-                        .queryParam("input",title)
-                        .queryParam("inputtype","textquery")
-                        .queryParam("key",apiKeys.getGoogleKey())
-                        .build();
-                GooglePlaceIdDTO dto = restTemplate.getForObject(builder.toUri(),GooglePlaceIdDTO.class);
-                if(!dto.candidates.isEmpty()){
-                    s.setGooglePlaceId(dto.getCandidates().get(0).getPlace_id());
-                    s.updateRating(dto.getCandidates().get(0).getRating());
-                    updateSpots.add(s);
-                }
-            }
-            tourSpotRepository.saveAll(updateSpots);
-            log.info(i+"번째 페이지 저장 완료");
-        }
+//        restTemplate= new RestTemplate();
+//        for (int i = 1; i < 70; i++) {
+//            PageRequest pageRequest = PageRequest.of(i,100);
+//            List<TourSpot> spots = tourSpotRepository.findByRekorCategory(RekorCategory.FOOD,pageRequest);
+//            List<TourSpot> updateSpots = new ArrayList<>();
+//            for (TourSpot s: spots) {
+//                String title = s.getTitle();
+//                UriComponents builder = UriComponentsBuilder.fromHttpUrl(GOOGLE_URI)
+//                        .path("/findplacefromtext")
+//                        .path("/json")
+//                        .queryParam("input",title)
+//                        .queryParam("inputtype","textquery")
+//                        .queryParam("key",apiKeys.getGoogleKey())
+//                        .build();
+//                GooglePlaceIdDTO dto = restTemplate.getForObject(builder.toUri(),GooglePlaceIdDTO.class);
+//                if(!dto.candidates.isEmpty()){
+//                    s.setGooglePlaceId(dto.getCandidates().get(0).getPlace_id());
+//                    s.updateRating(dto.getCandidates().get(0).getRating());
+//                    updateSpots.add(s);
+//                }
+//            }
+//            tourSpotRepository.saveAll(updateSpots);
+//            log.info(i+"번째 페이지 저장 완료");
+//        }
     }
 
     public void findReview() throws NullPointerException{
@@ -227,9 +227,9 @@ public class ExternalAPIService {
     }
 
     public void toMongo() {
-        List<TourSpot> spotEntitys = tourSpotRepository.findAll();
-        List<TourSpotDocument> spotDocuments = spotEntitys.stream().map(TourSpotDocument::new).collect(Collectors.toList());
-        tourSpotDocumentRepository.saveAll(spotDocuments);
+//        List<TourSpot> spotEntitys = tourSpotRepository.findAll();
+//        List<TourSpotDocument> spotDocuments = spotEntitys.stream().map(TourSpotDocument::new).collect(Collectors.toList());
+//        tourSpotDocumentRepository.saveAll(spotDocuments);
     }
 
 

@@ -21,7 +21,7 @@ public class TagController {
     private final TagService tagService;
 
     @GetMapping()
-    public ResponseEntity<ResponseDTO<?>> getAllTag(){
+    public ResponseEntity<ResponseDTO<Tag>> getAllTag(){
         ResponseDTO<Tag> res = ResponseDTO.<Tag>builder()
                 .status(ApiStatus.SUCCESS)
                 .data(tagService.getAllTag())
@@ -30,7 +30,7 @@ public class TagController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<?> findTag(@RequestParam String name, @RequestParam int page){
+    public ResponseEntity<ResponsePageDTO<Tag>> findTag(@RequestParam String name, @RequestParam int page){
         Page<Tag> spotDocuments = tagService.findTagByName(name,page);
         ResponsePageDTO<Tag> res = ResponsePageDTO.<Tag>builder()
                 .status(ApiStatus.SUCCESS)

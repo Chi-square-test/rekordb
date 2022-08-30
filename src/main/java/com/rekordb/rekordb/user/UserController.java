@@ -31,7 +31,7 @@ public class UserController {
     private final TagService tagService;
 
     @GetMapping("/join/validation")
-    public ResponseEntity<ResponseDTO<?>> checkJoined(@AuthenticationPrincipal User user){
+    public ResponseEntity<ResponseDTO<Object>> checkJoined(@AuthenticationPrincipal User user){
         ApiStatus status = userService.isUserJoined(user.getUsername()) ?  ApiStatus.SUCCESS : ApiStatus.FAIL;
         ResponseDTO<Object> res = ResponseDTO.builder()
                 .status(status)
@@ -40,7 +40,7 @@ public class UserController {
     }
 
     @GetMapping("/join/validation/nickname/{name}")
-    public ResponseEntity<ResponseDTO<?>> validName(@PathVariable("name") String name){
+    public ResponseEntity<ResponseDTO<Object>> validName(@PathVariable("name") String name){
         try {
             userService.validateName(name);
             ResponseDTO<Object> res = ResponseDTO.builder()
@@ -56,7 +56,7 @@ public class UserController {
     }
 
     @GetMapping("/tag")
-    public ResponseEntity<ResponseDTO<?>> getAllTag(@AuthenticationPrincipal User user){
+    public ResponseEntity<ResponseDTO<Tag>> getAllTag(@AuthenticationPrincipal User user){
         ResponseDTO<Tag> res = ResponseDTO.<Tag>builder()
                 .status(ApiStatus.SUCCESS)
                 .data(tagService.getUserTag(user.getUsername()))
@@ -66,7 +66,7 @@ public class UserController {
 
 
     @PostMapping("/tag")
-    public ResponseEntity<ResponseDTO<?>> saveUserTag(@AuthenticationPrincipal User user, @RequestBody List<String> tagList){
+    public ResponseEntity<ResponseDTO<Object>> saveUserTag(@AuthenticationPrincipal User user, @RequestBody List<String> tagList){
         tagService.saveUserTag(user.getUsername(),tagList);
         ResponseDTO<Object> res = ResponseDTO.builder()
                 .status(ApiStatus.SUCCESS)
@@ -75,7 +75,7 @@ public class UserController {
     }
 
     @PostMapping("/join")
-    public ResponseEntity<ResponseDTO<?>> joinData(@AuthenticationPrincipal User user, @RequestBody @Valid RekorJoinInformDTO dto, BindingResult bindingResult){
+    public ResponseEntity<ResponseDTO<Object>> joinData(@AuthenticationPrincipal User user, @RequestBody @Valid RekorJoinInformDTO dto, BindingResult bindingResult){
         checkNull(bindingResult);
         try {
             userService.signUpFromRekor(user.getUsername(),dto);

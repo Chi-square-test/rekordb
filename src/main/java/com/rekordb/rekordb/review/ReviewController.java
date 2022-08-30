@@ -30,7 +30,7 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     @PostMapping
-    public ResponseEntity<?> writeReview(@AuthenticationPrincipal User user, @RequestBody ReviewWriteDTO dto, BindingResult bindingResult){
+    public ResponseEntity<ResponseDTO<ReviewDTO>> writeReview(@AuthenticationPrincipal User user, @RequestBody ReviewWriteDTO dto, BindingResult bindingResult){
         checkNull(bindingResult);
         try{
             ResponseDTO<ReviewDTO> responseDTO = ResponseDTO.<ReviewDTO>builder()
@@ -39,7 +39,7 @@ public class ReviewController {
                     .build();
             return ResponseEntity.ok().body(responseDTO);
         }catch (AlreadyExistReviewException e){
-            ResponseDTO<Object> responseDTO = ResponseDTO.builder()
+            ResponseDTO<ReviewDTO> responseDTO = ResponseDTO.<ReviewDTO>builder()
                     .status(ApiStatus.FAIL)
                     .error("이미 리뷰를 작성한 사용자입니다.")
                     .build();

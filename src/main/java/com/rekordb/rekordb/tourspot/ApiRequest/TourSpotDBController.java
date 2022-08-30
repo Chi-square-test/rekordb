@@ -21,49 +21,31 @@ public class TourSpotDBController {
     private final TourSpotService tourSpotService;
 
     @GetMapping("/updatedb")
-    public ResponseEntity<ResponseDTO<String>> updateDatabase(){
-        try {
-            //externalAPIService.getTourAPIData();
-            ResponseDTO<String> res = ResponseDTO.<String>builder().status(ApiStatus.SUCCESS).data(Collections.singletonList("테스트")).build();
-            return ResponseEntity.ok().body(res);
-        } catch (NullPointerException e){
-            log.error("서버와 통신이 제대로 이루어지지 않았습니다."+ e.getMessage());
-            return ResponseEntity.badRequest().body(null);
-        }
+    public ResponseEntity<Object> updateDatabase(){
+        return onlyDevWork(externalAPIService::getTourAPIData);
     }
 
     @GetMapping("/findgoogleplaceid")
-    public ResponseEntity<ResponseDTO<String>> findgoogleid(){
-        try {
-            //externalAPIService.findPlaceId();
-            ResponseDTO<String> res = ResponseDTO.<String>builder().status(ApiStatus.SUCCESS).data(Collections.singletonList("테스트")).build();
-            return ResponseEntity.ok().body(res);
-        } catch (NullPointerException e){
-            log.error("서버와 통신이 제대로 이루어지지 않았습니다."+ e.getMessage());
-            return ResponseEntity.badRequest().body(null);
-        }
+    public ResponseEntity<Object> findgoogleid(){
+        return onlyDevWork(externalAPIService::findPlaceId);
     }
 
     @GetMapping("/getggreviews")
-    public ResponseEntity<ResponseDTO<String>> getgooglereviews(){
-        try {
-            //externalAPIService.findReview();
-            ResponseDTO<String> res = ResponseDTO.<String>builder().status(ApiStatus.SUCCESS).data(Collections.singletonList("테스트")).build();
-            return ResponseEntity.ok().body(res);
-        } catch (NullPointerException e){
-            log.error("서버와 통신이 제대로 이루어지지 않았습니다."+ e.getMessage());
-            return ResponseEntity.badRequest().body(null);
-        }
+    public ResponseEntity<Object> getgooglereviews(){
+        return onlyDevWork(externalAPIService::findReview);
     }
 
     @GetMapping("/dbmigration")
-    public ResponseEntity<ResponseDTO<String>> dbchange(){
+    public ResponseEntity<Object> dbchange(){
+        return onlyDevWork(externalAPIService::toMongo);
+    }
+
+    public ResponseEntity<Object> onlyDevWork(ExternalAPIService.RunnableExc r) {
         try {
-            externalAPIService.toMongo();
-            ResponseDTO<String> res = ResponseDTO.<String>builder().status(ApiStatus.SUCCESS).data(Collections.singletonList("테스트")).build();
-            return ResponseEntity.ok().body(res);
-        } catch (NullPointerException e){
-            log.error("서버와 통신이 제대로 이루어지지 않았습니다."+ e.getMessage());
+            r.run();
+            return ResponseEntity.ok().body(ResponseDTO.<String>builder().status(ApiStatus.SUCCESS).data(Collections.singletonList("테스트")).build());
+        } catch (Exception e) {
+            log.error(e.getMessage());
             return ResponseEntity.badRequest().body(null);
         }
     }

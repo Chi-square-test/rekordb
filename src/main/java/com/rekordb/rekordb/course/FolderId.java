@@ -1,8 +1,6 @@
-package com.rekordb.rekordb.route;
+package com.rekordb.rekordb.course;
 
 import com.aventrix.jnanoid.jnanoid.NanoIdUtils;
-import com.rekordb.rekordb.tag.TagId;
-import com.rekordb.rekordb.tourspot.domain.SpotId;
 import lombok.*;
 
 import javax.persistence.Embeddable;

@@ -1,8 +1,6 @@
-package com.rekordb.rekordb.route;
+package com.rekordb.rekordb.course;
 
 import com.aventrix.jnanoid.jnanoid.NanoIdUtils;
-import com.rekordb.rekordb.tag.TagId;
-import com.rekordb.rekordb.tourspot.domain.SpotId;
 import lombok.*;
 
 import javax.persistence.Column;
@@ -13,13 +11,13 @@ import javax.persistence.Embeddable;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class RouteId {
+public class CourseId {
 
     @Column(name = "route_id")
     private String id;
 
-    public static RouteId newRouteId(){
-        return new RouteId(NanoIdUtils.randomNanoId());
+    public static CourseId newCourseId(){
+        return new CourseId(NanoIdUtils.randomNanoId());
     }
 
     @Override
@@ -27,7 +25,7 @@ public class RouteId {
         return id;
     }
 
-    public static RouteId of(String id){
-        return new RouteId(id);
+    public static CourseId of(String id){
+        return new CourseId(id);
     }
 }

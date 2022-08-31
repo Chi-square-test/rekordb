@@ -64,8 +64,12 @@ public class CourseFolder {
     }
 
     public void moveCourseIdx(int start, int dest){
-        courseList.add(dest,courseList.remove(start));
-
+        Course course = courseList.get(start);
+        int delta = start<dest ? 1 : -1;
+        for (int i = start; i !=dest ; i+=delta) {
+            courseList.set(i, courseList.get(i + delta));
+        }
+        courseList.set(dest,course);
     }
 
 

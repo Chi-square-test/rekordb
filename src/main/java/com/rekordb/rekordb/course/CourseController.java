@@ -4,7 +4,6 @@ import com.rekordb.rekordb.ApiStatus;
 import com.rekordb.rekordb.ResponseDTO;
 import com.rekordb.rekordb.course.dto.*;
 import com.rekordb.rekordb.course.exception.FolderException;
-import com.rekordb.rekordb.user.domain.userInfo.UserId;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

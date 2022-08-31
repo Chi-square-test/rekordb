@@ -69,8 +69,11 @@ public class CourseFolder {
             courseList.add(dest, courseList.get(start));
             courseList.remove(start);
         } else {
+            log.info(courseList.toString());
             courseList.add(dest, courseList.get(start));
+            log.info(courseList.toString());
             courseList.remove(start + 1);
+            log.info(courseList.toString());
         }
 
     }

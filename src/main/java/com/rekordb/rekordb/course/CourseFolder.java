@@ -65,6 +65,7 @@ public class CourseFolder {
 
     public void moveCourseIdx(int start, int dest){
 
+        log.info(start+" " +dest);
         if (start < dest) {
             courseList.add(dest, courseList.get(start));
             courseList.remove(start);

@@ -17,7 +17,7 @@ import java.util.NoSuchElementException;
 public class UnknownError {
 
     @ExceptionHandler(value = NullFormDataException.class)
-    public ResponseEntity<?> NullFormError(NullFormDataException e){
+    public ResponseEntity<Object> nullFormError(NullFormDataException e){
         log.info("null 필드 요청, "+e.getMessage());
         ResponseDTO<Object> responseDTO = ResponseDTO.builder()
                 .status(ApiStatus.FAIL)
@@ -27,7 +27,7 @@ public class UnknownError {
     }
 
     @ExceptionHandler(value = NoSuchElementException.class)
-    public ResponseEntity<?> NoElementError(NoSuchElementException e){
+    public ResponseEntity<Object> noElementError(NoSuchElementException e){
         log.error("db에 없는 데이터 요청. 오류 메세지 : "+e);
         ResponseDTO<Object> responseDTO = ResponseDTO.builder()
                 .status(ApiStatus.ERROR)
@@ -37,7 +37,7 @@ public class UnknownError {
     }
 
     @ExceptionHandler(value = Exception.class)
-    public ResponseEntity<?> unknownError(Exception e){
+    public ResponseEntity<Object> unknownError(Exception e){
         log.error("상정하지 않은 오류가 발생함. 오류 메세지 : "+e);
         ResponseDTO<Object> responseDTO = ResponseDTO.builder()
                 .status(ApiStatus.ERROR)

@@ -11,7 +11,7 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class newFolderDTO {
+public class NewFolderDTO {
     @NotBlank(message = "폴더 이름")
     private String folderName;
 }

@@ -35,8 +35,8 @@ public class CourseController {
         return successAndReturnNull();
     }
     @PostMapping("/folder")
-    public ResponseEntity<ResponseDTO<Object>> addNewFolder(@AuthenticationPrincipal User user, @RequestBody @Valid String name){
-        courseService.createFolder(user.getUsername(), name);
+    public ResponseEntity<ResponseDTO<Object>> addNewFolder(@AuthenticationPrincipal User user, @RequestBody @Valid NewFolderDTO name){
+        courseService.createFolder(user.getUsername(), name.getFolderName());
         return successAndReturnNull();
     }
     @PutMapping//폴더내 코스들 순서 변경
@@ -56,9 +56,9 @@ public class CourseController {
         return successAndReturnNull();
     }
     @DeleteMapping("/folder")//폴더 제거거
-    public ResponseEntity<ResponseDTO<Object>> removeFolder(@AuthenticationPrincipal User user,@RequestBody String folderId){
+    public ResponseEntity<ResponseDTO<Object>> removeFolder(@AuthenticationPrincipal User user,@RequestBody DeleteFolderDTO folderId){
         try {
-            courseService.deleteFolder(user.getUsername(),folderId);
+            courseService.deleteFolder(user.getUsername(),folderId.getFolderId());
             return successAndReturnNull();
         }catch (FolderException e){
             ResponseDTO<Object> dto = ResponseDTO.builder()

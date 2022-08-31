@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Collections;
 
 @RestController
 @Slf4j
@@ -30,14 +31,22 @@ public class CourseController {
 
     }
     @PostMapping//새 코스추가
-    public ResponseEntity<ResponseDTO<Object>> addNewCourse(@AuthenticationPrincipal User user, @RequestBody @Valid NewCourseDTO spots){
-        courseService.createCourse(user.getUsername(),spots.getName(),spots.getSpots());
-        return successAndReturnNull();
+    public ResponseEntity<ResponseDTO<CourseFolderDTO>> addNewCourse(@AuthenticationPrincipal User user, @RequestBody @Valid NewCourseDTO spots){
+        CourseFolderDTO dto = courseService.createCourse(user.getUsername(),spots.getName(),spots.getSpots());
+        ResponseDTO<CourseFolderDTO> res = ResponseDTO.<CourseFolderDTO>builder()
+                .status(ApiStatus.SUCCESS)
+                .data(Collections.singletonList(dto))
+                .build();
+        return ResponseEntity.ok().body(res);
     }
     @PostMapping("/folder")
-    public ResponseEntity<ResponseDTO<Object>> addNewFolder(@AuthenticationPrincipal User user, @RequestBody @Valid NewFolderDTO name){
-        courseService.createFolder(user.getUsername(), name.getFolderName());
-        return successAndReturnNull();
+    public ResponseEntity<ResponseDTO<CourseFolderDTO>> addNewFolder(@AuthenticationPrincipal User user, @RequestBody @Valid NewFolderDTO name){
+        CourseFolderDTO dto = courseService.createFolder(user.getUsername(), name.getFolderName());
+        ResponseDTO<CourseFolderDTO> res = ResponseDTO.<CourseFolderDTO>builder()
+                .status(ApiStatus.SUCCESS)
+                .data(Collections.singletonList(dto))
+                .build();
+        return ResponseEntity.ok().body(res);
     }
     @PutMapping//폴더내 코스들 순서 변경
     public ResponseEntity<ResponseDTO<Object>> changeCourseIdx(@AuthenticationPrincipal User user, @RequestBody CourseChangeDTO dto){

@@ -29,7 +29,7 @@ public class CourseService {
                 .collect(Collectors.toList());
     }
 
-    public void createCourse(String user,String name, List<String> spots){
+    public CourseFolderDTO createCourse(String user,String name, List<String> spots){
         UserId userId = UserId.of(user);
         List<TourSpotDocument> spotList = spots.stream()
                 .map(SpotId::of)
@@ -39,12 +39,12 @@ public class CourseService {
         CourseFolder root = getRootFolder(userId);
         Course course = Course.makeNewCourse(name,spotList);
         root.addCourse(course);
-        courseFolderRepository.save(root);
+        return CourseFolderDTO.convertToDTO(courseFolderRepository.save(root));
     }
 
-    public void createFolder(String user,String name){
+    public CourseFolderDTO createFolder(String user,String name){
         UserId userId = UserId.of(user);
-        courseFolderRepository.save(CourseFolder.makeFolder(userId,name));
+        return CourseFolderDTO.convertToDTO(courseFolderRepository.save(CourseFolder.makeFolder(userId,name)));
     }//name 공백 금지!! 컨트롤러에서 valid 예정
 
 

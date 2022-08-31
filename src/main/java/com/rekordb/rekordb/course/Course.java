@@ -13,7 +13,7 @@ import java.util.List;
 @Getter
 @Builder
 @EqualsAndHashCode(of = "courseId")
-public class Course implements Comparable<Course> {
+public class Course {
 
     private CourseId courseId;
 
@@ -22,22 +22,18 @@ public class Course implements Comparable<Course> {
     @Setter
     private String courseName;
 
-    @Setter
-    private int courseIdx;
-
-
-    public static Course makeNewCourse(String name, List<TourSpotDocument> spotList, int idx){
+    public static Course makeNewCourse(String name, List<TourSpotDocument> spotList) {
         return Course.builder()
                 .courseId(CourseId.newCourseId())
                 .spotList(spotList)
-                .courseName("")
-                .courseIdx(idx)
+                .courseName(name)
                 .build();
     }
-
-
-    @Override
-    public int compareTo(Course o) {
-        return Integer.compare(courseIdx,o.courseIdx);
+    public void moveSpotIdx(int start, int dest){
+        TourSpotDocument document = spotList.remove(start);
+        spotList.set(dest,document);
     }
 }
+
+
+

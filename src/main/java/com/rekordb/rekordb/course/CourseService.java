@@ -1,5 +1,7 @@
 package com.rekordb.rekordb.course;
 
+import com.rekordb.rekordb.course.dto.CourseFolderDTO;
+import com.rekordb.rekordb.course.exception.FolderException;
 import com.rekordb.rekordb.course.query.CourseFolderRepository;
 import com.rekordb.rekordb.tourspot.domain.SpotId;
 import com.rekordb.rekordb.tourspot.domain.TourSpotDocument;
@@ -9,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -21,6 +22,13 @@ public class CourseService {
     private final CourseFolderRepository courseFolderRepository;
     private final TourSpotDocumentRepository tourSpotDocumentRepository;
 
+    public List<CourseFolderDTO> getCourseFolder(String user){
+        UserId userId = UserId.of(user);
+        return  courseFolderRepository.findByUserId(userId).stream()
+                .map(CourseFolderDTO::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
     public void createCourse(String user,String name, List<String> spots){
         UserId userId = UserId.of(user);
         List<TourSpotDocument> spotList = spots.stream()
@@ -29,7 +37,7 @@ public class CourseService {
                 .map(Optional::orElseThrow)
                 .collect(Collectors.toList());
         CourseFolder root = getRootFolder(userId);
-        Course course = Course.makeNewCourse(name,spotList,root.getCourseListCount());
+        Course course = Course.makeNewCourse(name,spotList);
         root.addCourse(course);
         courseFolderRepository.save(root);
     }
@@ -39,16 +47,12 @@ public class CourseService {
         courseFolderRepository.save(CourseFolder.makeFolder(userId,name));
     }//name 공백 금지!! 컨트롤러에서 valid 예정
 
-    public void changeIdx(String user, String folder, List<Integer> newOrder){
+
+    public void changeCourseIdx(String user, String folder, int start, int dest){
         FolderId folderId = FolderId.of(folder);
         UserId userId = UserId.of(user);
         CourseFolder courseFolder =courseFolderRepository.findByUserIdAndFolderId(userId,folderId).orElseThrow();
-        List<Course> courseList = courseFolder.getCourseList();
-        for (int i = 0; i <courseList.size() ; i++) {
-            courseList.get(i).setCourseIdx(newOrder.get(i));
-        }
-        Collections.sort(courseList);
-        courseFolder.setCourseList(courseList);
+        courseFolder.moveCourseIdx(start, dest);
         courseFolderRepository.save(courseFolder);
     }
 
@@ -67,6 +71,7 @@ public class CourseService {
         UserId userId = UserId.of(user);
         FolderId folderId = FolderId.of(folder);
         CourseFolder courseFolder = courseFolderRepository.findByUserIdAndFolderId(userId,folderId).orElseThrow();
+        if(courseFolder.isRootFolder()) throw new FolderException("루트 폴더는 삭제할 수 없습니다");
         courseFolderRepository.delete(courseFolder);
     }
 
@@ -78,17 +83,31 @@ public class CourseService {
 
     }
 
-    public Course deleteCourse(UserId userId, FolderId folderId, CourseId courseId){
+    public void deleteCourse(String userId, String folderId, String courseId){
+        deleteCourse(UserId.of(userId), FolderId.of(folderId), CourseId.of(courseId));
+    }
+
+    private Course deleteCourse(UserId userId, FolderId folderId, CourseId courseId){
         CourseFolder folder =courseFolderRepository.findByUserIdAndFolderId(userId,folderId).orElseThrow();
         Course movingCourse = folder.getCourseList().stream()
                 .filter(c -> c.getCourseId().equals(courseId))
                 .findAny()
                 .orElseThrow();
         folder.deleteCourse(movingCourse);
-        folder.reIndexCourse();
         courseFolderRepository.save(folder);
         return movingCourse;
     }
 
-
+//    public void changeCourseIdx(String user, String folder, List<Integer> newOrder){
+//        FolderId folderId = FolderId.of(folder);
+//        UserId userId = UserId.of(user);
+//        CourseFolder courseFolder =courseFolderRepository.findByUserIdAndFolderId(userId,folderId).orElseThrow();
+//        List<Course> courseList = courseFolder.getCourseList();
+//        for (int i = 0; i <courseList.size() ; i++) {
+//            courseList.get(i).setCourseIdx(newOrder.get(i));
+//        }
+//        Collections.sort(courseList);
+//        courseFolder.setCourseList(courseList);
+//        courseFolderRepository.save(courseFolder);
+//    }
 }

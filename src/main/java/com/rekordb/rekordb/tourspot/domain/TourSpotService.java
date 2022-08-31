@@ -65,7 +65,7 @@ public class TourSpotService {
         }
         List<Review> reviews = reviewRepository.findBySpotId(spotId);
         boolean isReviewed = reviewRepository.existsByUserIdAndSpotId(UserId.of(uid),spotId);
-        return DetailAndReviewDTO.ConvertToDTO(document,detail,reviews,isReviewed);
+        return DetailAndReviewDTO.convertToDTO(document,detail,reviews,isReviewed);
     }
 
     public List<SpotListDTO> getRandomSpot(String user){

@@ -22,9 +22,7 @@ import java.util.stream.Collectors;
 
 public class DetailAndReviewDTO {
     private SpotId spotId;
-    private int likeCount;
-    private double rating;
-    private Address address;
+    private SpotListDTO spotInfo;
     private CommonItem commonInfo; //detailCommon
     private List<DetailItem> detailList; //detailInfo
     private Map<String,String> plusInfo; //detailIntro
@@ -32,11 +30,9 @@ public class DetailAndReviewDTO {
     private List<ReviewDTO> reviewList;
     private boolean isReviewed;
 
-    public static DetailAndReviewDTO ConvertToDTO(TourSpotDocument document, TourSpotDetail detail, List<Review> review, boolean isReviewed){
+    public static DetailAndReviewDTO convertToDTO(TourSpotDocument document, TourSpotDetail detail, List<Review> review, boolean isReviewed){
         return DetailAndReviewDTO.builder()
-                .likeCount(document.getLikeCount())
-                .rating(document.getRating())
-                .address(document.getAddress())
+                .spotInfo(new SpotListDTO(document))
                 .spotId(detail.getSpotId())
                 .commonInfo(detail.getCommonItem())
                 .detailList(detail.getDetailItems())

@@ -53,7 +53,6 @@ public class CourseFolder {
     }
 
     public void addCourse(Course course){
-        course.setCourseIdx(getCourseListCount());
         courseList.add(course);
     }
 
@@ -61,11 +60,9 @@ public class CourseFolder {
         courseList.remove(course);
     }
 
-    public void reIndexCourse(){
-        for (int i = 0; i < courseList.size(); i++) {
-            courseList.get(i).setCourseIdx(i);
-        }
-        Collections.sort(courseList);
+    public void moveCourseIdx(int start, int dest){
+        Course course = courseList.remove(start);
+        courseList.set(dest,course);
     }
 
 

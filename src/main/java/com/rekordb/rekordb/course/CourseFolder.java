@@ -2,6 +2,7 @@ package com.rekordb.rekordb.course;
 
 import com.rekordb.rekordb.user.domain.userInfo.UserId;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@Slf4j
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
@@ -62,6 +64,7 @@ public class CourseFolder {
 
     public void moveCourseIdx(int start, int dest){
         Course course = courseList.remove(start);
+        log.info(course.getCourseName());
         courseList.add(dest,course);
     }
 

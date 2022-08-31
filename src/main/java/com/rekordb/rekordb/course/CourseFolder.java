@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 @Slf4j
@@ -46,7 +47,7 @@ public class CourseFolder {
                 .folderName(name)
                 .userId(userId)
                 .rootFolder(false)
-                .courseList(new ArrayList<>())
+                .courseList(new LinkedList<>())
                 .build();
     }
 
@@ -63,11 +64,9 @@ public class CourseFolder {
     }
 
     public void moveCourseIdx(int start, int dest){
-        log.info(courseList.toString());
         Course course = courseList.remove(start);
-        log.info(courseList.toString());
         courseList.add(dest,course);
-        log.info(courseList.toString());
+
     }
 
 

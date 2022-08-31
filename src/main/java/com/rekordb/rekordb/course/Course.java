@@ -5,6 +5,7 @@ import lombok.*;
 
 import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -25,7 +26,7 @@ public class Course {
     public static Course makeNewCourse(String name, List<TourSpotDocument> spotList) {
         return Course.builder()
                 .courseId(CourseId.newCourseId())
-                .spotList(spotList)
+                .spotList(new LinkedList<>(spotList))
                 .courseName(name)
                 .build();
     }

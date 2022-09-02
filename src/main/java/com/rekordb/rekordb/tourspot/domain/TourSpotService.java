@@ -58,7 +58,7 @@ public class TourSpotService {
     public DetailAndReviewDTO getDetailAndReviews(String uid,String sid){
         SpotId spotId = SpotId.of(sid);
         TourSpotDocument document = tourSpotDocumentRepository.findById(spotId).orElseThrow();
-        TourSpotDetail detail = tourSpotDetailRepository.findById(spotId).orElseGet(()->externalAPIService.saveTourApiDetail(spotId));
+        TourSpotDetail detail = tourSpotDetailRepository.findById(spotId).orElseGet(()->externalAPIService.saveTourApiDetail(document));
         if(!detail.checkInformContain()){
             tourSpotDetailRepository.delete(detail);
             throw new SpotDetailAPIErrorException();

@@ -14,6 +14,7 @@ import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
 
 import java.awt.print.Pageable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -25,6 +26,7 @@ public interface TourSpotDocumentRepository extends MongoRepository<TourSpotDocu
 
     Page<TourSpotDocument> findByTitleContainsOrTagListIn(String title,Set<Tag> tag, PageRequest pageRequest,Sort sort);
 
+    ArrayList<TourSpotDocument> findBySpotIdNotIn(List<SpotId> ids);
 
     @Aggregation(pipeline={"{$sample:{size:4}}"})
     AggregationResults<TourSpotDocument> random();

@@ -40,6 +40,11 @@ public class TourSpotDBController {
         return onlyDevWork(externalAPIService::toMongo);
     }
 
+    @GetMapping("/detailinfoupdate")
+    public ResponseEntity<Object> detailUpdate(){
+        return onlyDevWork(externalAPIService::saveDetail);
+    }
+
     public ResponseEntity<Object> onlyDevWork(ExternalAPIService.RunnableExc r) {
         try {
             r.run();
@@ -49,4 +54,6 @@ public class TourSpotDBController {
             return ResponseEntity.badRequest().body(null);
         }
     }
+
+
 }

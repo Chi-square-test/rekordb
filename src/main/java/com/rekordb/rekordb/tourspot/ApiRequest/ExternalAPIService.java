@@ -105,16 +105,22 @@ public class ExternalAPIService {
 //        List<TourSpot> spots = dtos.stream().map(ApiItemDTO::apiConvertEntity).collect(Collectors.toList());
 //        tourSpotRepository.saveAll(spots);
     }
+    public void saveDetail(){
+        List<SpotId> alreadyHasDetail = tourSpotDetailRepository.findAll().stream().map(TourSpotDetail::getSpotId).collect(Collectors.toList());
+        ArrayList<TourSpotDocument> documents = tourSpotDocumentRepository.findBySpotIdNotIn(alreadyHasDetail);
+        documents.parallelStream().forEach(this::saveTourApiDetail);
+    }
 
-    public TourSpotDetail saveTourApiDetail(SpotId spotId) { //detail 없는건 이 메서드 전에 체크해야함.
+
+    public TourSpotDetail saveTourApiDetail(TourSpotDocument document) { //detail 없는건 이 메서드 전에 체크해야함.
         log.info("tour api에 정보를 요청합니다.");
         try {
             restTemplate = ignoreSSL();
         } catch (KeyStoreException | KeyManagementException | NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-        TourSpotDocument tourSpotDocument = tourSpotDocumentRepository.findById(spotId).orElseThrow();
-        int typeId = tourSpotDocument.getTypeId();
+        SpotId spotId = document.getSpotId();
+        int typeId = document.getTypeId();
         String id = spotId.getId();
         TourSpotDetail detail = TourSpotDetail.emptyDetail(spotId);
         ignoringExc(() ->getTourApiDetailCommon(id,typeId,detail));

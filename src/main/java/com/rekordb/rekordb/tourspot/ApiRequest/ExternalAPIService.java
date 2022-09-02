@@ -106,7 +106,7 @@ public class ExternalAPIService {
 //        List<TourSpot> spots = dtos.stream().map(ApiItemDTO::apiConvertEntity).collect(Collectors.toList());
 //        tourSpotRepository.saveAll(spots);
     }
-    @Scheduled(fixedDelay = 30000)
+    //@Scheduled(fixedDelay = 30000)
     public void saveDetail(){
         List<SpotId> alreadyHasDetail = tourSpotDetailRepository.findAll().stream().map(TourSpotDetail::getSpotId).collect(Collectors.toList());
         ArrayList<TourSpotDocument> documents = tourSpotDocumentRepository.findTop50BySpotIdNotIn(alreadyHasDetail);

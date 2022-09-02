@@ -29,6 +29,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
@@ -105,15 +106,17 @@ public class ExternalAPIService {
 //        List<TourSpot> spots = dtos.stream().map(ApiItemDTO::apiConvertEntity).collect(Collectors.toList());
 //        tourSpotRepository.saveAll(spots);
     }
+    @Scheduled(fixedDelay = 30000)
     public void saveDetail(){
         List<SpotId> alreadyHasDetail = tourSpotDetailRepository.findAll().stream().map(TourSpotDetail::getSpotId).collect(Collectors.toList());
-        ArrayList<TourSpotDocument> documents = tourSpotDocumentRepository.findBySpotIdNotIn(alreadyHasDetail);
-        documents.parallelStream().forEach(this::saveTourApiDetail);
+        ArrayList<TourSpotDocument> documents = tourSpotDocumentRepository.findTop10BySpotIdNotIn(alreadyHasDetail);
+        log.info(String.valueOf(documents.size()));
+        documents.forEach(this::saveTourApiDetail);
     }
 
 
     public TourSpotDetail saveTourApiDetail(TourSpotDocument document) { //detail 없는건 이 메서드 전에 체크해야함.
-        log.info("tour api에 정보를 요청합니다.");
+        //log.info("tour api에 정보를 요청합니다.");
         try {
             restTemplate = ignoreSSL();
         } catch (KeyStoreException | KeyManagementException | NoSuchAlgorithmException e) {

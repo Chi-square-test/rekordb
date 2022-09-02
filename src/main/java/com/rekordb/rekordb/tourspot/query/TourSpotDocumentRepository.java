@@ -26,7 +26,7 @@ public interface TourSpotDocumentRepository extends MongoRepository<TourSpotDocu
 
     Page<TourSpotDocument> findByTitleContainsOrTagListIn(String title,Set<Tag> tag, PageRequest pageRequest,Sort sort);
 
-    ArrayList<TourSpotDocument> findTop10BySpotIdNotIn(List<SpotId> ids);
+    ArrayList<TourSpotDocument> findTop50BySpotIdNotIn(List<SpotId> ids);
 
     @Aggregation(pipeline={"{$sample:{size:4}}"})
     AggregationResults<TourSpotDocument> random();

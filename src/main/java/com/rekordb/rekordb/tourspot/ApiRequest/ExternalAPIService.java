@@ -109,7 +109,7 @@ public class ExternalAPIService {
     @Scheduled(fixedDelay = 30000)
     public void saveDetail(){
         List<SpotId> alreadyHasDetail = tourSpotDetailRepository.findAll().stream().map(TourSpotDetail::getSpotId).collect(Collectors.toList());
-        ArrayList<TourSpotDocument> documents = tourSpotDocumentRepository.findTop10BySpotIdNotIn(alreadyHasDetail);
+        ArrayList<TourSpotDocument> documents = tourSpotDocumentRepository.findTop50BySpotIdNotIn(alreadyHasDetail);
         log.info(String.valueOf(documents.size()));
         documents.forEach(this::saveTourApiDetail);
     }

@@ -1,5 +1,8 @@
 package com.rekordb.rekordb.tourspot.ApiRequest;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rekordb.rekordb.review.Review;
 import com.rekordb.rekordb.review.query.ReviewRepository;
 import com.rekordb.rekordb.tourspot.domain.RekorCategory;
@@ -203,7 +206,7 @@ public class ExternalAPIService {
 //        }
     }
 
-    public String findReview() throws NullPointerException{
+    public String findReview() throws NullPointerException, JsonProcessingException {
         restTemplate= new RestTemplate();
         for (int i = 0; i <1; i++) {
             PageRequest pageRequest = PageRequest.of(i,1);
@@ -220,10 +223,15 @@ public class ExternalAPIService {
                         .build();
                 HttpHeaders headers = new HttpHeaders();
                 headers.set("Accept-Language","ko-kr");
-                log.info(builder.toString());
+                //log.info(builder.toString());
                 ResponseEntity<String> dto = restTemplate.exchange(builder.toUri(), HttpMethod.GET,new HttpEntity<>(headers),String.class);
                 log.info(dto.getBody());
-                return dto.getBody();
+                ObjectMapper objectMapper = new ObjectMapper();
+                JsonNode jsonNode = objectMapper.readTree(dto.getBody());
+                GoogleReviewDTO[] dtos = objectMapper.treeToValue(jsonNode.path("reviews"),GoogleReviewDTO[].class);
+                log.info(dtos[0].toString());
+                return dtos[0].toString();
+
                 //ResponseEntity<GoogleReviewDTO> dto = restTemplate.exchange(builder.toUri(), HttpMethod.GET,new HttpEntity<>(headers),GoogleReviewDTO.class);
 
 //                if(dto.getBody().result.reviews!=null){

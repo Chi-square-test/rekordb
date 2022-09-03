@@ -10,21 +10,9 @@ import java.util.List;
 @Data
 
 public class GoogleReviewDTO {
-    ArrayList < Object > html_attributions = new ArrayList<> ();
-    Result result;
-    String status;
-    @ToString
-    public static class Result{
-        review[] reviews;
-
-    }
-    @Getter
-    @ToString
-    public static class review{
-        int rating;
-        String relative_time_description;
-        long time;
-        String text;
-    }
+    int rating;
+    String relative_time_description;
+    long time;
+    String text;
 
 }

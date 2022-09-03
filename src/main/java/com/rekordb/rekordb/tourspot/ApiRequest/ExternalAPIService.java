@@ -207,9 +207,9 @@ public class ExternalAPIService {
         restTemplate= new RestTemplate();
         for (int i = 0; i <1; i++) {
             PageRequest pageRequest = PageRequest.of(i,1);
-            List<TourSpotDocument> spots = tourSpotDocumentRepository.findAllByGooglePlaceIdIsNotNull(pageRequest);
+            List<TourSpot> spots = tourSpotRepository.findAllByGooglePlaceIdIsNotNull(pageRequest);
             List<Review> googleReviews = new ArrayList<>();
-            for (TourSpotDocument s: spots) {
+            for (TourSpot s: spots) {
                 String placeId = s.getGooglePlaceId();
                 UriComponents builder = UriComponentsBuilder.fromHttpUrl(GOOGLE_URI)
                         .path("/details")

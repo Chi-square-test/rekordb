@@ -203,7 +203,7 @@ public class ExternalAPIService {
 //        }
     }
 
-    public void findReview() throws NullPointerException{
+    public String findReview() throws NullPointerException{
         restTemplate= new RestTemplate();
         for (int i = 0; i <1; i++) {
             PageRequest pageRequest = PageRequest.of(i,1);
@@ -222,6 +222,7 @@ public class ExternalAPIService {
                 headers.set("Accept-Language","ko-kr");
                 ResponseEntity<String> dto = restTemplate.exchange(builder.toUri(), HttpMethod.GET,new HttpEntity<>(headers),String.class);
                 log.info(dto.getBody());
+                return dto.getBody();
                 //ResponseEntity<GoogleReviewDTO> dto = restTemplate.exchange(builder.toUri(), HttpMethod.GET,new HttpEntity<>(headers),GoogleReviewDTO.class);
 
 //                if(dto.getBody().result.reviews!=null){
@@ -233,6 +234,7 @@ public class ExternalAPIService {
             //reviewRepository.saveAll(googleReviews);
             //log.info(i+"번째 페이지 저장 완료");
         }
+        return null;
     }
 
     public void toMongo() {

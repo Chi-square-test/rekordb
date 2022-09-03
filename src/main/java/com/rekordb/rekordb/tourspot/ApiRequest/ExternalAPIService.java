@@ -207,9 +207,9 @@ public class ExternalAPIService {
         restTemplate= new RestTemplate();
         for (int i = 0; i <1; i++) {
             PageRequest pageRequest = PageRequest.of(i,1);
-            List<TourSpot> spots = tourSpotRepository.findAllByGooglePlaceIdIsNotNull(pageRequest);
+            List<TourSpotDocument> spots = tourSpotDocumentRepository.findAllByGooglePlaceIdIsNotNull(pageRequest);
             List<Review> googleReviews = new ArrayList<>();
-            for (TourSpot s: spots) {
+            for (TourSpotDocument s: spots) {
                 String placeId = s.getGooglePlaceId();
                 UriComponents builder = UriComponentsBuilder.fromHttpUrl(GOOGLE_URI)
                         .path("/details")
@@ -221,17 +221,17 @@ public class ExternalAPIService {
                 HttpHeaders headers = new HttpHeaders();
                 headers.set("Accept-Language","ko-kr");
                 ResponseEntity<String> dto = restTemplate.exchange(builder.toUri(), HttpMethod.GET,new HttpEntity<>(headers),String.class);
-
+                log.info(dto.getBody());
                 //ResponseEntity<GoogleReviewDTO> dto = restTemplate.exchange(builder.toUri(), HttpMethod.GET,new HttpEntity<>(headers),GoogleReviewDTO.class);
-                log.info(dto.getBody().toString());
+
 //                if(dto.getBody().result.reviews!=null){
 //                    for (GoogleReviewDTO.review rev: dto.getBody().result.reviews) {
 //                        googleReviews.add(Review.googleReviewToDB(rev,s.getSpotId()));
 //                    }
 //                }
             }
-            reviewRepository.saveAll(googleReviews);
-            log.info(i+"번째 페이지 저장 완료");
+            //reviewRepository.saveAll(googleReviews);
+            //log.info(i+"번째 페이지 저장 완료");
         }
     }
 

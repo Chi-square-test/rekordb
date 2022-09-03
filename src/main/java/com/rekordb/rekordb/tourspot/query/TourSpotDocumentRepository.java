@@ -31,6 +31,8 @@ public interface TourSpotDocumentRepository extends MongoRepository<TourSpotDocu
     @Aggregation(pipeline={"{$sample:{size:4}}"})
     AggregationResults<TourSpotDocument> random();
 
+    List<TourSpotDocument> findAllByGooglePlaceIdIsNotNull(PageRequest pageRequest);
+
 
 
 }

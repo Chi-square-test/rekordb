@@ -16,7 +16,7 @@ public class GoogleReviewDTO implements Serializable {
     String status;
     @ToString
     public static class Result implements Serializable{
-        review[] reviews;
+        ArrayList<review> reviews;
 
     }
     @Getter

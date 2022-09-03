@@ -220,6 +220,7 @@ public class ExternalAPIService {
                         .build();
                 HttpHeaders headers = new HttpHeaders();
                 headers.set("Accept-Language","ko-kr");
+                log.info(builder.toString());
                 ResponseEntity<String> dto = restTemplate.exchange(builder.toUri(), HttpMethod.GET,new HttpEntity<>(headers),String.class);
                 log.info(dto.getBody());
                 return dto.getBody();

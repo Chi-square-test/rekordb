@@ -15,13 +15,13 @@ public class GoogleReviewDTO implements Serializable {
     Result result;
     String status;
     @ToString
-    public static class Result{
+    public static class Result implements Serializable{
         review[] reviews;
 
     }
     @Getter
     @ToString
-    public static class review{
+    public static class review implements Serializable{
         int rating;
         String relative_time_description;
         long time;

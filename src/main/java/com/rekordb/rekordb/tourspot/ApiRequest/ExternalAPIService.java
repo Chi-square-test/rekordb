@@ -224,13 +224,12 @@ public class ExternalAPIService {
                 HttpHeaders headers = new HttpHeaders();
                 headers.set("Accept-Language","ko-kr");
                 //log.info(builder.toString());
-                ResponseEntity<String> dto = restTemplate.exchange(builder.toUri(), HttpMethod.GET,new HttpEntity<>(headers),String.class);
-                log.info(dto.getBody());
-                ObjectMapper objectMapper = new ObjectMapper();
-                JsonNode jsonNode = objectMapper.readTree(dto.getBody());
-                GoogleReviewDTO[] dtos = objectMapper.treeToValue(jsonNode.path("reviews"),GoogleReviewDTO[].class);
-                log.info(dtos[0].toString());
-                return dtos[0].toString();
+                ResponseEntity<GoogleReviewDTO> dto = restTemplate.exchange(builder.toUri(), HttpMethod.GET,new HttpEntity<>(headers),GoogleReviewDTO.class);
+
+
+                log.info(dto.getBody().toString());
+                log.info(dto.getBody().result.reviews.toString());
+                return dto.getBody().toString();
 
                 //ResponseEntity<GoogleReviewDTO> dto = restTemplate.exchange(builder.toUri(), HttpMethod.GET,new HttpEntity<>(headers),GoogleReviewDTO.class);
 

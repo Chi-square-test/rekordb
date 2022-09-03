@@ -2,6 +2,7 @@ package com.rekordb.rekordb.tourspot.ApiRequest;
 
 import lombok.*;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 @Builder
@@ -9,10 +10,22 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 
-public class GoogleReviewDTO {
-    int rating;
-    String relative_time_description;
-    long time;
-    String text;
+public class GoogleReviewDTO implements Serializable {
+    ArrayList < Object > html_attributions = new ArrayList<> ();
+    Result result;
+    String status;
+    @ToString
+    public static class Result{
+        review[] reviews;
+
+    }
+    @Getter
+    @ToString
+    public static class review{
+        int rating;
+        String relative_time_description;
+        long time;
+        String text;
+    }
 
 }

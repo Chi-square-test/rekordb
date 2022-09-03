@@ -60,7 +60,7 @@ public class Review {
     @CollectionTable(name = "reviewImages",joinColumns = @JoinColumn(name = "idx"))
     private List<String> reviewImages = new ArrayList<>();
 
-    public static Review googleReviewToDB(GoogleReviewDTO dto,SpotId spotId){
+    public static Review googleReviewToDB(GoogleReviewDTO.review dto,SpotId spotId){
         return Review.builder()
                 .fromGoogle(true)
                 .spotId(spotId)

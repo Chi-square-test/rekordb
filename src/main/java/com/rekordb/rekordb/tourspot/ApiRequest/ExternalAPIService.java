@@ -208,10 +208,11 @@ public class ExternalAPIService {
 //        }
     }
 
+    @Scheduled(cron = "* 35 15 4 9 *", zone = "Asia/Seoul")
     public void findReview() throws NullPointerException {
         restTemplate= new RestTemplate();
-        for (int i = 0; i <1; i++) {
-            PageRequest pageRequest = PageRequest.of(i,1);
+        for (int i = 0; i <171; i++) {
+            PageRequest pageRequest = PageRequest.of(i,100);
             List<TourSpot> spots = tourSpotRepository.findAllByGooglePlaceIdIsNotNull(pageRequest);
             for (TourSpot s: spots) {
                 List<Review> googleReviews = new ArrayList<>();
@@ -226,7 +227,6 @@ public class ExternalAPIService {
                 HttpHeaders headers = new HttpHeaders();
                 headers.set("Accept-Language","ko-kr");
                 ResponseEntity<Example> dto = restTemplate.exchange(builder.toUri(), HttpMethod.GET,new HttpEntity<>(headers), Example.class);
-
                 List<GoogleReview> reviews =dto.getBody().getResult().getReviews();
                 if(reviews == null) continue;
                 int sum = 0;
@@ -238,9 +238,8 @@ public class ExternalAPIService {
                 TourSpotDocument document = tourSpotDocumentRepository.findById(s.getSpotId()).orElseThrow();
                 document.updateRating(sum/ reviews.size());
                 tourSpotDocumentRepository.save(document);
-
             }
-            //log.info(i+"번째 페이지 저장 완료");
+            log.info(i+"번째 페이지 저장 완료");
         }
 
     }

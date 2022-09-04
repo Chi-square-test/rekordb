@@ -15,4 +15,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     @Query("select AVG(r.rating) FROM Review r WHERE r.spotId =?1")
     int getSpotAverage(SpotId spotId);
 
+    @Query("select r.spotId FROM Review r GROUP BY r.spotId")
+    List<SpotId> findReviewExist();
+
 }

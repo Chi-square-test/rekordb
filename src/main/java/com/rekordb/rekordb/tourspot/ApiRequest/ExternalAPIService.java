@@ -53,6 +53,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Deprecated
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -208,55 +209,55 @@ public class ExternalAPIService {
 //        }
     }
 
-    @Scheduled(cron = "* 40 18 4 9 *", zone = "Asia/Seoul")
+
     public void findReview() throws NullPointerException {
-        restTemplate= new RestTemplate();
-        List<SpotId> already = reviewRepository.findReviewExist();
-        int count = tourSpotRepository.countByGooglePlaceIdIsNotNullAndSpotIdNotIn(already);
-        log.info("남은 집계 수 : "+count);
-        for (int i = 0; i <count/100; i++) {
-            PageRequest pageRequest = PageRequest.of(i,100);
-            List<TourSpot> spots = tourSpotRepository.findAllByGooglePlaceIdIsNotNullAndSpotIdNotIn(already,pageRequest);
-            for (TourSpot s: spots) {
-                List<Review> googleReviews = new ArrayList<>();
-                String placeId = s.getGooglePlaceId();
-                UriComponents builder = UriComponentsBuilder.fromHttpUrl(GOOGLE_URI)
-                        .path("/details")
-                        .path("/json")
-                        .queryParam("place_id",placeId)
-                        .queryParam("fields","reviews")
-                        .queryParam("key",apiKeys.getGoogleKey())
-                        .build();
-                HttpHeaders headers = new HttpHeaders();
-                headers.set("Accept-Language","ko-kr");
-                ResponseEntity<Example> dto = restTemplate.exchange(builder.toUri(), HttpMethod.GET,new HttpEntity<>(headers), Example.class);
-                try{
-                    List<GoogleReview> reviews =dto.getBody().getResult().getReviews();
-                    int sum = 0;
-                    for (GoogleReview r:reviews) {
-                        googleReviews.add(Review.googleReviewToDB(r,s.getSpotId()));
-                        sum+=r.getRating();
-                    }
-                    reviewRepository.saveAll(googleReviews);
-                    googleReviews.clear();
-                    int finalSum = sum;
-                    tourSpotDocumentRepository.findById(s.getSpotId()).ifPresent(
-                            document -> {
-                                document.updateRating(finalSum / reviews.size());
-                                tourSpotDocumentRepository.save(document);
-                            }
-                    );
-                }catch (NullPointerException e){
-                    log.info("정상적인 리뷰 수집 불가로 플레이스 id 제거");
-                    s.deleteGooglePlaceId();
-                    tourSpotRepository.save(s);
-                    continue;
-                }
-
-
-            }
-            log.info(i+"번째 페이지 저장 완료");
-        }
+//        restTemplate= new RestTemplate();
+//        List<SpotId> already = reviewRepository.findReviewExist();
+//        int count = tourSpotRepository.countByGooglePlaceIdIsNotNullAndSpotIdNotIn(already);
+//        log.info("남은 집계 수 : "+count);
+//        for (int i = 0; i <count/100; i++) {
+//            PageRequest pageRequest = PageRequest.of(i,100);
+//            List<TourSpot> spots = tourSpotRepository.findAllByGooglePlaceIdIsNotNullAndSpotIdNotIn(already,pageRequest);
+//            for (TourSpot s: spots) {
+//                List<Review> googleReviews = new ArrayList<>();
+//                String placeId = s.getGooglePlaceId();
+//                UriComponents builder = UriComponentsBuilder.fromHttpUrl(GOOGLE_URI)
+//                        .path("/details")
+//                        .path("/json")
+//                        .queryParam("place_id",placeId)
+//                        .queryParam("fields","reviews")
+//                        .queryParam("key",apiKeys.getGoogleKey())
+//                        .build();
+//                HttpHeaders headers = new HttpHeaders();
+//                headers.set("Accept-Language","ko-kr");
+//                ResponseEntity<Example> dto = restTemplate.exchange(builder.toUri(), HttpMethod.GET,new HttpEntity<>(headers), Example.class);
+//                try{
+//                    List<GoogleReview> reviews =dto.getBody().getResult().getReviews();
+//                    int sum = 0;
+//                    for (GoogleReview r:reviews) {
+//                        googleReviews.add(Review.googleReviewToDB(r,s.getSpotId()));
+//                        sum+=r.getRating();
+//                    }
+//                    reviewRepository.saveAll(googleReviews);
+//                    googleReviews.clear();
+//                    int finalSum = sum;
+//                    tourSpotDocumentRepository.findById(s.getSpotId()).ifPresent(
+//                            document -> {
+//                                document.updateRating(finalSum / reviews.size());
+//                                tourSpotDocumentRepository.save(document);
+//                            }
+//                    );
+//                }catch (NullPointerException e){
+//                    log.info("정상적인 리뷰 수집 불가로 플레이스 id 제거");
+//                    s.deleteGooglePlaceId();
+//                    tourSpotRepository.save(s);
+//                    continue;
+//                }
+//
+//
+//            }
+//            log.info(i+"번째 페이지 저장 완료");
+//        }
 
     }
 

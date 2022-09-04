@@ -12,9 +12,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collections;
 
-@RestController
+//@RestController
 @Slf4j
-@RequestMapping("/tourspotadmin")
+@Deprecated
+//@RequestMapping("/tourspotadmin")
 @RequiredArgsConstructor
 public class TourSpotDBController {
     private final ExternalAPIService externalAPIService;

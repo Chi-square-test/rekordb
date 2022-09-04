@@ -227,7 +227,7 @@ public class ExternalAPIService {
                 headers.set("Accept-Language","ko-kr");
                 ResponseEntity<Example> dto = restTemplate.exchange(builder.toUri(), HttpMethod.GET,new HttpEntity<>(headers), Example.class);
 
-                List<GoogleReview> reviews =dto.getBody().getResult().getGoogleReviews();
+                List<GoogleReview> reviews =dto.getBody().getResult().getReviews();
                 if(reviews == null) continue;
                 int sum = 0;
                 for (GoogleReview r:reviews) {
@@ -237,6 +237,7 @@ public class ExternalAPIService {
                 }
                 TourSpotDocument document = tourSpotDocumentRepository.findById(s.getSpotId()).orElseThrow();
                 document.updateRating(sum/ reviews.size());
+                tourSpotDocumentRepository.save(document);
 
             }
             //log.info(i+"번째 페이지 저장 완료");

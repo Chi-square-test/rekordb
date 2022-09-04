@@ -14,6 +14,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
@@ -64,7 +65,7 @@ public class Review {
         return Review.builder()
                 .fromGoogle(true)
                 .spotId(spotId)
-                .time(LocalDateTime.ofEpochSecond(r.getTime()*1000,0, ZoneOffset.of("+9")))
+                .time(LocalDateTime.ofInstant(Instant.ofEpochSecond(r.getTime(), 0),ZoneOffset.of("+9")))
                 .rating(r.getRating())
                 .text(r.getText())
                 .userId(UserId.of("Google User"))

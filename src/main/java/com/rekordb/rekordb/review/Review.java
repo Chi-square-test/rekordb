@@ -47,6 +47,7 @@ public class Review {
 
     private int rating;
 
+    @Column(columnDefinition = "TEXT")
     private String text;
 
     @CreatedDate

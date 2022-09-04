@@ -208,7 +208,7 @@ public class ExternalAPIService {
 //        }
     }
 
-    @Scheduled(cron = "* 35 15 4 9 *", zone = "Asia/Seoul")
+    @Scheduled(cron = "* 45 15 4 9 *", zone = "Asia/Seoul")
     public void findReview() throws NullPointerException {
         restTemplate= new RestTemplate();
         for (int i = 0; i <171; i++) {
@@ -232,9 +232,10 @@ public class ExternalAPIService {
                 int sum = 0;
                 for (GoogleReview r:reviews) {
                     googleReviews.add(Review.googleReviewToDB(r,s.getSpotId()));
-                    reviewRepository.saveAll(googleReviews);
                     sum+=r.getRating();
                 }
+                reviewRepository.saveAll(googleReviews);
+                googleReviews.clear();
                 TourSpotDocument document = tourSpotDocumentRepository.findById(s.getSpotId()).orElseThrow();
                 document.updateRating(sum/ reviews.size());
                 tourSpotDocumentRepository.save(document);

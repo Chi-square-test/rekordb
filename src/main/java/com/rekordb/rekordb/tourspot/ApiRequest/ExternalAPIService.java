@@ -208,7 +208,7 @@ public class ExternalAPIService {
 //        }
     }
 
-    @Scheduled(cron = "* 53 16 4 9 *", zone = "Asia/Seoul")
+    @Scheduled(cron = "* 36 18 4 9 *", zone = "Asia/Seoul")
     public void findReview() throws NullPointerException {
         restTemplate= new RestTemplate();
         List<SpotId> already = reviewRepository.findReviewExist();
@@ -230,10 +230,16 @@ public class ExternalAPIService {
                 HttpHeaders headers = new HttpHeaders();
                 headers.set("Accept-Language","ko-kr");
                 ResponseEntity<Example> dto = restTemplate.exchange(builder.toUri(), HttpMethod.GET,new HttpEntity<>(headers), Example.class);
-                if(dto.getBody() == null) continue;
-                if(dto.getBody().getResult() == null) continue;
-                if(dto.getBody().getResult().getReviews() == null) continue;
-                List<GoogleReview> reviews =dto.getBody().getResult().getReviews();
+                List<GoogleReview> reviews;
+                try{
+                    reviews =dto.getBody().getResult().getReviews();
+                }catch (NullPointerException e){
+                    log.info("정상적인 리뷰 수집 불가로 플레이스 id 제거");
+                    s.deleteGooglePlaceId();
+                    tourSpotRepository.save(s);
+                    continue;
+                }
+
                 int sum = 0;
                 for (GoogleReview r:reviews) {
                     googleReviews.add(Review.googleReviewToDB(r,s.getSpotId()));

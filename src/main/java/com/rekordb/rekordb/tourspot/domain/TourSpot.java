@@ -71,6 +71,7 @@ public class TourSpot {
         images.clear();
         images.addAll(imgs);
     }
+    public void deleteGooglePlaceId(){this.googlePlaceId=null;}
 
     public void setGooglePlaceId(String id){
         this.googlePlaceId =id;

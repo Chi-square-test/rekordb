@@ -208,7 +208,7 @@ public class ExternalAPIService {
 //        }
     }
 
-    @Scheduled(cron = "* 21 16 4 9 *", zone = "Asia/Seoul")
+    @Scheduled(cron = "* 53 16 4 9 *", zone = "Asia/Seoul")
     public void findReview() throws NullPointerException {
         restTemplate= new RestTemplate();
         List<SpotId> already = reviewRepository.findReviewExist();

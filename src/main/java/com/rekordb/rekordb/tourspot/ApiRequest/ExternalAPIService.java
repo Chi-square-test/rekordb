@@ -241,9 +241,13 @@ public class ExternalAPIService {
                 }
                 reviewRepository.saveAll(googleReviews);
                 googleReviews.clear();
-                TourSpotDocument document = tourSpotDocumentRepository.findById(s.getSpotId()).orElseThrow();
-                document.updateRating(sum/ reviews.size());
-                tourSpotDocumentRepository.save(document);
+                int finalSum = sum;
+                tourSpotDocumentRepository.findById(s.getSpotId()).ifPresent(
+                        document -> {
+                            document.updateRating(finalSum / reviews.size());
+                            tourSpotDocumentRepository.save(document);
+                        }
+                );
             }
             log.info(i+"번째 페이지 저장 완료");
         }

@@ -208,7 +208,7 @@ public class ExternalAPIService {
 //        }
     }
 
-    @Scheduled(cron = "* 17 16 4 9 *", zone = "Asia/Seoul")
+    @Scheduled(cron = "* 21 16 4 9 *", zone = "Asia/Seoul")
     public void findReview() throws NullPointerException {
         restTemplate= new RestTemplate();
         List<SpotId> already = reviewRepository.findReviewExist();
@@ -230,8 +230,10 @@ public class ExternalAPIService {
                 HttpHeaders headers = new HttpHeaders();
                 headers.set("Accept-Language","ko-kr");
                 ResponseEntity<Example> dto = restTemplate.exchange(builder.toUri(), HttpMethod.GET,new HttpEntity<>(headers), Example.class);
+                if(dto.getBody() == null) continue;
+                if(dto.getBody().getResult() == null) continue;
+                if(dto.getBody().getResult().getReviews() == null) continue;
                 List<GoogleReview> reviews =dto.getBody().getResult().getReviews();
-                if(reviews == null) continue;
                 int sum = 0;
                 for (GoogleReview r:reviews) {
                     googleReviews.add(Review.googleReviewToDB(r,s.getSpotId()));

@@ -208,7 +208,7 @@ public class ExternalAPIService {
 //        }
     }
 
-    @Scheduled(cron = "* 36 18 4 9 *", zone = "Asia/Seoul")
+    @Scheduled(cron = "* 40 18 4 9 *", zone = "Asia/Seoul")
     public void findReview() throws NullPointerException {
         restTemplate= new RestTemplate();
         List<SpotId> already = reviewRepository.findReviewExist();
@@ -230,9 +230,22 @@ public class ExternalAPIService {
                 HttpHeaders headers = new HttpHeaders();
                 headers.set("Accept-Language","ko-kr");
                 ResponseEntity<Example> dto = restTemplate.exchange(builder.toUri(), HttpMethod.GET,new HttpEntity<>(headers), Example.class);
-                List<GoogleReview> reviews;
                 try{
-                    reviews =dto.getBody().getResult().getReviews();
+                    List<GoogleReview> reviews =dto.getBody().getResult().getReviews();
+                    int sum = 0;
+                    for (GoogleReview r:reviews) {
+                        googleReviews.add(Review.googleReviewToDB(r,s.getSpotId()));
+                        sum+=r.getRating();
+                    }
+                    reviewRepository.saveAll(googleReviews);
+                    googleReviews.clear();
+                    int finalSum = sum;
+                    tourSpotDocumentRepository.findById(s.getSpotId()).ifPresent(
+                            document -> {
+                                document.updateRating(finalSum / reviews.size());
+                                tourSpotDocumentRepository.save(document);
+                            }
+                    );
                 }catch (NullPointerException e){
                     log.info("정상적인 리뷰 수집 불가로 플레이스 id 제거");
                     s.deleteGooglePlaceId();
@@ -240,20 +253,7 @@ public class ExternalAPIService {
                     continue;
                 }
 
-                int sum = 0;
-                for (GoogleReview r:reviews) {
-                    googleReviews.add(Review.googleReviewToDB(r,s.getSpotId()));
-                    sum+=r.getRating();
-                }
-                reviewRepository.saveAll(googleReviews);
-                googleReviews.clear();
-                int finalSum = sum;
-                tourSpotDocumentRepository.findById(s.getSpotId()).ifPresent(
-                        document -> {
-                            document.updateRating(finalSum / reviews.size());
-                            tourSpotDocumentRepository.save(document);
-                        }
-                );
+
             }
             log.info(i+"번째 페이지 저장 완료");
         }

@@ -1,7 +1,7 @@
 package com.rekordb.rekordb.review;
 
 import com.rekordb.rekordb.review.dto.ReviewWriteDTO;
-import com.rekordb.rekordb.tourspot.ApiRequest.GoogleReviewDTO;
+import com.rekordb.rekordb.tourspot.ApiRequest.test.GoogleReview;
 import com.rekordb.rekordb.tourspot.domain.SpotId;
 import com.rekordb.rekordb.user.domain.userInfo.User;
 import com.rekordb.rekordb.user.domain.userInfo.UserId;
@@ -60,13 +60,13 @@ public class Review {
     @CollectionTable(name = "reviewImages",joinColumns = @JoinColumn(name = "idx"))
     private List<String> reviewImages = new ArrayList<>();
 
-    public static Review googleReviewToDB(GoogleReviewDTO.review dto,SpotId spotId){
+    public static Review googleReviewToDB(GoogleReview r, SpotId spotId){
         return Review.builder()
                 .fromGoogle(true)
                 .spotId(spotId)
-                .time(LocalDateTime.ofEpochSecond(dto.getTime()*1000,0, ZoneOffset.of("+9")))
-                .rating(dto.getRating())
-                .text(dto.getText())
+                .time(LocalDateTime.ofEpochSecond(r.getTime()*1000,0, ZoneOffset.of("+9")))
+                .rating(r.getRating())
+                .text(r.getText())
                 .userId(UserId.of("Google User"))
                 .userName("Google User")
                 .build();

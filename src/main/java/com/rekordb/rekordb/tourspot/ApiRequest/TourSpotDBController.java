@@ -32,12 +32,7 @@ public class TourSpotDBController {
 
     @GetMapping("/getggreviews")
     public ResponseEntity<Object> getgooglereviews(){
-        try {
-            return ResponseEntity.ok().body(ResponseDTO.<String>builder().status(ApiStatus.SUCCESS).data(Collections.singletonList(externalAPIService.findReview())).build());
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            return ResponseEntity.badRequest().body(null);
-        }
+        return onlyDevWork(externalAPIService::findReview);
     }
 
     @GetMapping("/dbmigration")

@@ -22,18 +22,18 @@ import lombok.Data;
 public class Result {
 
     @JsonProperty("reviews")
-    private List<Review> reviews = null;
+    private List<GoogleReview> googleReviews = null;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     @JsonProperty("reviews")
-    public List<Review> getReviews() {
-        return reviews;
+    public List<GoogleReview> getGoogleReviews() {
+        return googleReviews;
     }
 
     @JsonProperty("reviews")
-    public void setReviews(List<Review> reviews) {
-        this.reviews = reviews;
+    public void setGoogleReviews(List<GoogleReview> googleReviews) {
+        this.googleReviews = googleReviews;
     }
 
     @JsonAnyGetter

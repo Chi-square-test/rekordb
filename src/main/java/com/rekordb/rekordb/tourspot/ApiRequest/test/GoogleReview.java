@@ -25,7 +25,7 @@ import lombok.Data;
 })
 @Generated("jsonschema2pojo")
 @Data
-public class Review {
+public class GoogleReview {
 
     @JsonProperty("author_name")
     private String authorName;

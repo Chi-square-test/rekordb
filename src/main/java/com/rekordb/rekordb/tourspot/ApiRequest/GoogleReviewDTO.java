@@ -15,6 +15,7 @@ import java.util.Map;
 @AllArgsConstructor
 @Data
 
+@Deprecated
 public class GoogleReviewDTO implements Serializable {
     ArrayList < Object > html_attributions = new ArrayList<> ();
     Result result;

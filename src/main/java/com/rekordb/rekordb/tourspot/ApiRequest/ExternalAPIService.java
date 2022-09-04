@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rekordb.rekordb.review.Review;
 import com.rekordb.rekordb.review.query.ReviewRepository;
 import com.rekordb.rekordb.tourspot.ApiRequest.test.Example;
+import com.rekordb.rekordb.tourspot.ApiRequest.test.GoogleReview;
 import com.rekordb.rekordb.tourspot.domain.RekorCategory;
 import com.rekordb.rekordb.tourspot.domain.SpotId;
 import com.rekordb.rekordb.tourspot.domain.TourSpot;
@@ -207,13 +208,13 @@ public class ExternalAPIService {
 //        }
     }
 
-    public String findReview() throws NullPointerException, JsonProcessingException {
+    public void findReview() throws NullPointerException {
         restTemplate= new RestTemplate();
         for (int i = 0; i <1; i++) {
             PageRequest pageRequest = PageRequest.of(i,1);
             List<TourSpot> spots = tourSpotRepository.findAllByGooglePlaceIdIsNotNull(pageRequest);
-            List<Review> googleReviews = new ArrayList<>();
             for (TourSpot s: spots) {
+                List<Review> googleReviews = new ArrayList<>();
                 String placeId = s.getGooglePlaceId();
                 UriComponents builder = UriComponentsBuilder.fromHttpUrl(GOOGLE_URI)
                         .path("/details")
@@ -224,26 +225,23 @@ public class ExternalAPIService {
                         .build();
                 HttpHeaders headers = new HttpHeaders();
                 headers.set("Accept-Language","ko-kr");
-                //log.info(builder.toString());
                 ResponseEntity<Example> dto = restTemplate.exchange(builder.toUri(), HttpMethod.GET,new HttpEntity<>(headers), Example.class);
 
+                List<GoogleReview> reviews =dto.getBody().getResult().getGoogleReviews();
+                if(reviews == null) continue;
+                int sum = 0;
+                for (GoogleReview r:reviews) {
+                    googleReviews.add(Review.googleReviewToDB(r,s.getSpotId()));
+                    reviewRepository.saveAll(googleReviews);
+                    sum+=r.getRating();
+                }
+                TourSpotDocument document = tourSpotDocumentRepository.findById(s.getSpotId()).orElseThrow();
+                document.updateRating(sum/ reviews.size());
 
-                log.info(dto.getBody().toString());
-                log.info(dto.getBody().getResult().getReviews().toString());
-                return dto.getBody().toString();
-
-                //ResponseEntity<GoogleReviewDTO> dto = restTemplate.exchange(builder.toUri(), HttpMethod.GET,new HttpEntity<>(headers),GoogleReviewDTO.class);
-
-//                if(dto.getBody().result.reviews!=null){
-//                    for (GoogleReviewDTO.review rev: dto.getBody().result.reviews) {
-//                        googleReviews.add(Review.googleReviewToDB(rev,s.getSpotId()));
-//                    }
-//                }
             }
-            //reviewRepository.saveAll(googleReviews);
             //log.info(i+"번째 페이지 저장 완료");
         }
-        return null;
+
     }
 
     public void toMongo() {

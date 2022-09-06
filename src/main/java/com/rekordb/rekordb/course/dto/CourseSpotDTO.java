@@ -1,5 +1,6 @@
 package com.rekordb.rekordb.course.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.rekordb.rekordb.tourspot.domain.TourSpotDocument;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,7 +15,9 @@ import java.util.List;
 @Data
 public class CourseSpotDTO {
     private String spotId;
+    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
     private boolean isWished;
+    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
     private boolean isRecommend;
 
     public SpotWithCheck convertToValue(TourSpotDocument document){

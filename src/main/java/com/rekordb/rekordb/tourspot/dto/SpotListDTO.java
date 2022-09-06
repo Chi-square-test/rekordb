@@ -2,6 +2,7 @@ package com.rekordb.rekordb.tourspot.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.rekordb.rekordb.course.dto.SpotWithCheck;
 import com.rekordb.rekordb.tag.Tag;
 import com.rekordb.rekordb.tourspot.domain.*;
 import lombok.*;
@@ -35,7 +36,10 @@ public class SpotListDTO {
 
     private Set<Tag> tags;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Boolean isInWishList;
+    private Boolean isWished;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Boolean isRecommend;
 
     public SpotListDTO(TourSpotDocument document){
         this.spotId = document.getSpotId();
@@ -46,6 +50,19 @@ public class SpotListDTO {
         this.rating = document.getRating();
         this.likeCount = document.getLikeCount();
         this.tags = document.getTagList();
+    }
+
+    public SpotListDTO(SpotWithCheck spot){
+        this.spotId = spot.getDocument().getSpotId();
+        this.title =  spot.getDocument().getTitle();
+        this.address =  spot.getDocument().getAddress();
+        this.rekorCategory =  spot.getDocument().getRekorCategory();
+        this.images =  spot.getDocument().getImages();
+        this.rating =  spot.getDocument().getRating();
+        this.likeCount =  spot.getDocument().getLikeCount();
+        this.tags =  spot.getDocument().getTagList();
+        this.isWished = spot.isWished();
+        this.isRecommend = spot.isRecommend();
     }
 
 

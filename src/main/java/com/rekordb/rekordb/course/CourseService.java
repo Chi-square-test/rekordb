@@ -1,6 +1,8 @@
 package com.rekordb.rekordb.course;
 
 import com.rekordb.rekordb.course.dto.CourseFolderDTO;
+import com.rekordb.rekordb.course.dto.CourseSpotDTO;
+import com.rekordb.rekordb.course.dto.SpotWithCheck;
 import com.rekordb.rekordb.course.exception.FolderException;
 import com.rekordb.rekordb.course.query.CourseFolderRepository;
 import com.rekordb.rekordb.tourspot.domain.SpotId;
@@ -11,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -29,15 +32,22 @@ public class CourseService {
                 .collect(Collectors.toList());
     }
 
-    public CourseFolderDTO createCourse(String user,String name, List<String> spots){
+    public CourseFolderDTO createCourse(String user,String name, List<CourseSpotDTO> spots){
         UserId userId = UserId.of(user);
         List<TourSpotDocument> spotList = spots.stream()
+                .map(CourseSpotDTO::getSpotId)
                 .map(SpotId::of)
                 .map(tourSpotDocumentRepository::findById)
                 .map(Optional::orElseThrow)
                 .collect(Collectors.toList());
         CourseFolder root = getRootFolder(userId);
-        Course course = Course.makeNewCourse(name,spotList);
+
+        List<SpotWithCheck> withCheckList = new ArrayList<>();
+        for (int i = 0; i < spots.size(); i++) {
+            withCheckList.add(spots.get(i).convertToValue(spotList.get(i)));
+        }
+
+        Course course = Course.makeNewCourse(name,withCheckList);
         root.addCourse(course);
         return CourseFolderDTO.convertToDTO(courseFolderRepository.save(root));
     }

@@ -1,5 +1,6 @@
 package com.rekordb.rekordb.tourspot.query;
 
+import com.rekordb.rekordb.course.dto.SpotWithCheck;
 import com.rekordb.rekordb.tag.Tag;
 import com.rekordb.rekordb.tourspot.domain.RekorCategory;
 import com.rekordb.rekordb.tourspot.domain.SpotId;
@@ -32,7 +33,5 @@ public interface TourSpotDocumentRepository extends MongoRepository<TourSpotDocu
     AggregationResults<TourSpotDocument> random();
 
     List<TourSpotDocument> findAllByGooglePlaceIdIsNotNull(PageRequest pageRequest);
-
-
 
 }

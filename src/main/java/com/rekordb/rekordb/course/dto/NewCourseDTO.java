@@ -16,5 +16,5 @@ import java.util.List;
 public class NewCourseDTO {
     @NotBlank(message = "코스 이름")
     private String name;
-    private List<String> spots;
+    private List<CourseSpotDTO> spots;
 }

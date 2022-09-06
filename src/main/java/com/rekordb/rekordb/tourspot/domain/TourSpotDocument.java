@@ -23,40 +23,40 @@ import java.util.Set;
 public class TourSpotDocument {
 
     @Id
-    private SpotId spotId;
+    protected SpotId spotId;
 
     @Indexed
     @TextIndexed
-    private String title;
+    protected String title;
 
-    private String engTitle;
-
-    @Embedded
-    private Address address;
+    protected String engTitle;
 
     @Embedded
-    private EngAddress engAddress;
+    protected Address address;
 
     @Embedded
-    private SpotCategory spotCategory;
+    protected EngAddress engAddress;
 
-    private RekorCategory rekorCategory;
+    @Embedded
+    protected SpotCategory spotCategory;
 
-    private List<String> images = new ArrayList<>();
+    protected RekorCategory rekorCategory;
 
-    private int readCount;
+    protected List<String> images = new ArrayList<>();
 
-    private int typeId;
+    protected int readCount;
 
-    private String googlePlaceId;
+    protected int typeId;
+
+    protected String googlePlaceId;
 
     @Indexed
-    private double rating;
+    protected double rating;
 
     @Indexed
-    private int likeCount;
+    protected int likeCount;
 
-    private Set<Tag> tagList;
+    protected Set<Tag> tagList;
 
 
     public TourSpotDocument(TourSpot spot){

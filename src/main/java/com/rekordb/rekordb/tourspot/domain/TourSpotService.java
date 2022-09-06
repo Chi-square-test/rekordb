@@ -75,7 +75,7 @@ public class TourSpotService {
         for (TourSpotDocument d:documents) {
            Boolean b = wishListRepository.existsByUserIdAndWishListContains(userId,d);
            SpotListDTO dto = new SpotListDTO(d);
-           dto.setIsInWishList(b);
+           dto.setIsWished(b);
            dtos.add(dto);
         }
         return dtos;

@@ -1,5 +1,6 @@
 package com.rekordb.rekordb.course;
 
+import com.rekordb.rekordb.course.dto.SpotWithCheck;
 import com.rekordb.rekordb.tourspot.domain.TourSpotDocument;
 import lombok.*;
 
@@ -18,12 +19,12 @@ public class Course {
 
     private CourseId courseId;
 
-    private List<TourSpotDocument> spotList;
+    private List<SpotWithCheck> spotList;
 
     @Setter
     private String courseName;
 
-    public static Course makeNewCourse(String name, List<TourSpotDocument> spotList) {
+    public static Course makeNewCourse(String name, List<SpotWithCheck> spotList) {
         return Course.builder()
                 .courseId(CourseId.newCourseId())
                 .spotList(new LinkedList<>(spotList))
@@ -31,7 +32,7 @@ public class Course {
                 .build();
     }
     public void moveSpotIdx(int start, int dest){
-        TourSpotDocument document = spotList.remove(start);
+        SpotWithCheck document = spotList.remove(start);
         spotList.set(dest,document);
     }
 }

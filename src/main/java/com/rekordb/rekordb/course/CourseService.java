@@ -71,6 +71,7 @@ public class CourseService {
         UserId userId = UserId.of(user);
         FolderId folderId = FolderId.of(dto.getId());
         CourseFolder courseFolder = courseFolderRepository.findByUserIdAndFolderId(userId,folderId).orElseThrow();
+        if(courseFolder.isRootFolder()) throw new FolderException("루트 폴더는 변경할 수 없습니다.");
         courseFolder.setFolderName(dto.getName());
         courseFolderRepository.save(courseFolder);
     }

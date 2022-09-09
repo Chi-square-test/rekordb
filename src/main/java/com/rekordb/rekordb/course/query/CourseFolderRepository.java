@@ -13,5 +13,6 @@ public interface CourseFolderRepository extends MongoRepository<CourseFolder, Co
     Optional<CourseFolder> findByUserIdAndRootFolderTrue(UserId userId);
     Optional<CourseFolder> findByUserIdAndFolderId(UserId userId, FolderId folderId);
     List<CourseFolder> findByUserId(UserId userId);
+    Optional<CourseFolder> findByUserIdAndCourseListCourseId(UserId userId,CourseId courseId);
 
 }

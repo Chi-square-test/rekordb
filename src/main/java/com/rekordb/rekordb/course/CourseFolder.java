@@ -73,6 +73,13 @@ public class CourseFolder {
 
     }
 
+    public Course findCourse(CourseId courseId){
+        return getCourseList().stream()
+                .filter(c -> c.getCourseId().equals(courseId))
+                .findAny()
+                .orElseThrow();
+    }
+
 
 
 }

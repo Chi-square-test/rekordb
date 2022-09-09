@@ -2,6 +2,7 @@ package com.rekordb.rekordb.course;
 
 import com.rekordb.rekordb.course.dto.CourseFolderDTO;
 import com.rekordb.rekordb.course.dto.CourseSpotDTO;
+import com.rekordb.rekordb.course.dto.RenameDTO;
 import com.rekordb.rekordb.course.dto.SpotWithCheck;
 import com.rekordb.rekordb.course.exception.FolderException;
 import com.rekordb.rekordb.course.query.CourseFolderRepository;
@@ -57,6 +58,22 @@ public class CourseService {
         return CourseFolderDTO.convertToDTO(courseFolderRepository.save(CourseFolder.makeFolder(userId,name)));
     }//name 공백 금지!! 컨트롤러에서 valid 예정
 
+    public void renameCourse(String user,RenameDTO dto){
+        UserId userId = UserId.of(user);
+        CourseId courseId = CourseId.of(dto.getId());
+        CourseFolder courseFolder = courseFolderRepository.findByUserIdAndCourseListCourseId(userId,courseId).orElseThrow();
+        Course renameCourse = courseFolder.findCourse(courseId);
+        renameCourse.setCourseName(dto.getName());
+        courseFolderRepository.save(courseFolder);
+    }
+
+    public void renameFolder(String user,RenameDTO dto){
+        UserId userId = UserId.of(user);
+        FolderId folderId = FolderId.of(dto.getId());
+        CourseFolder courseFolder = courseFolderRepository.findByUserIdAndFolderId(userId,folderId).orElseThrow();
+        courseFolder.setFolderName(dto.getName());
+        courseFolderRepository.save(courseFolder);
+    }
 
     public void changeCourseIdx(String user, String folder, int start, int dest){
         FolderId folderId = FolderId.of(folder);
@@ -99,10 +116,7 @@ public class CourseService {
 
     private Course deleteCourse(UserId userId, FolderId folderId, CourseId courseId){
         CourseFolder folder =courseFolderRepository.findByUserIdAndFolderId(userId,folderId).orElseThrow();
-        Course movingCourse = folder.getCourseList().stream()
-                .filter(c -> c.getCourseId().equals(courseId))
-                .findAny()
-                .orElseThrow();
+        Course movingCourse =folder.findCourse(courseId);
         folder.deleteCourse(movingCourse);
         courseFolderRepository.save(folder);
         return movingCourse;

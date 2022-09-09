@@ -86,7 +86,6 @@ public class UserAuthService {
         }
         else
             return tokenProvider.createAccessToken(user.getUserId(),user.getRoleType().getName());
-
     }
 
     private TokenSet makeNewAllToken(User user){

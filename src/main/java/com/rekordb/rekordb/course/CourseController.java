@@ -48,6 +48,17 @@ public class CourseController {
                 .build();
         return ResponseEntity.ok().body(res);
     }
+    @PutMapping("/name")
+    public ResponseEntity<ResponseDTO<Object>> renameCourse(@AuthenticationPrincipal User user, @RequestBody @Valid RenameDTO renameDTO){
+        courseService.renameCourse(user.getUsername(), renameDTO);
+        return successAndReturnNull();
+    }
+    @PutMapping("/folder/name")
+    public ResponseEntity<ResponseDTO<Object>> renameFolder(@AuthenticationPrincipal User user, @RequestBody @Valid RenameDTO renameDTO){
+        courseService.renameFolder(user.getUsername(), renameDTO);
+        return successAndReturnNull();
+    }
+
     @PutMapping//폴더내 코스들 순서 변경
     public ResponseEntity<ResponseDTO<Object>> changeCourseIdx(@AuthenticationPrincipal User user, @RequestBody CourseChangeDTO dto){
         courseService.changeCourseIdx(user.getUsername(), dto.getFolderId(), dto.getStart(),dto.getDest());

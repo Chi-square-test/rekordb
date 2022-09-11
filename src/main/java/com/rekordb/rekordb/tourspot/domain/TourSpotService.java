@@ -7,6 +7,7 @@ import com.rekordb.rekordb.tag.query.TagRepository;
 import com.rekordb.rekordb.tourspot.ApiRequest.ExternalAPIService;
 import com.rekordb.rekordb.tourspot.Exception.SpotDetailAPIErrorException;
 import com.rekordb.rekordb.tourspot.domain.TourSpotDetail.TourSpotDetail;
+import com.rekordb.rekordb.tourspot.dto.CheckItem;
 import com.rekordb.rekordb.tourspot.dto.SortBy;
 import com.rekordb.rekordb.tourspot.dto.SpotListDTO;
 import com.rekordb.rekordb.tourspot.query.TourSpotDetailRepository;
@@ -65,7 +66,8 @@ public class TourSpotService {
         }
         List<Review> reviews = reviewRepository.findBySpotId(spotId);
         boolean isReviewed = reviewRepository.existsByUserIdAndSpotId(UserId.of(uid),spotId);
-        return DetailAndReviewDTO.convertToDTO(document,detail,reviews,isReviewed);
+        boolean isInWishList = wishListRepository.existsByUserIdAndWishListContains(UserId.of(uid),document);
+        return DetailAndReviewDTO.convertToDTO(document,detail,reviews,new CheckItem(isReviewed,isInWishList));
     }
 
     public List<SpotListDTO> getRandomSpot(String user){

@@ -35,7 +35,7 @@ public class AdminTagController {
     @PostMapping("/setspottag")
     public ResponseEntity<ResponseDTO<?>> setSpotTags(@RequestBody SpotTagDTO dto){
         try {
-            adminTagService.addSpotNewTag(dto.getSpotId(),dto.getTags());
+            adminTagService.addSpotNewTag(dto.getSpotId(),dto.getTagList());
             ResponseDTO<String> res = ResponseDTO.<String>builder().status(ApiStatus.SUCCESS).data(Collections.singletonList("테스트")).build();
             return ResponseEntity.ok().body(res);
         } catch (NullPointerException e){

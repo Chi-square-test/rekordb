@@ -13,5 +13,5 @@ import java.util.List;
 @Data
 public class SpotTagDTO {
     private String spotId;
-    public List<String> tags;
+    private List<String> tagList;
 }

@@ -25,7 +25,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "review")
+@Table(name = "review_eng")
 @EntityListeners(AuditingEntityListener.class)
 public class Review {
     @Id

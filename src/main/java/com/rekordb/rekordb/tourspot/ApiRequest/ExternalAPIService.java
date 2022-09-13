@@ -209,15 +209,15 @@ public class ExternalAPIService {
 //        }
     }
 
-    @Scheduled(cron = "0 8 16 13 9 *",zone = "Asia/Seoul")
+    @Scheduled(cron = "0 14 16 13 9 *",zone = "Asia/Seoul")
     public void findReview() throws NullPointerException {
         restTemplate= new RestTemplate();
         //List<SpotId> already = reviewRepository.findReviewExist();
-        int count = tourSpotRepository.countByGooglePlaceIdIsNotNullAndSpotIdNotIn(Collections.emptyList());
+        int count = tourSpotRepository.countByGooglePlaceIdIsNotNull();
         log.info("남은 집계 수 : "+count);
         for (int i = 0; i <count/100; i++) {
             PageRequest pageRequest = PageRequest.of(i,100);
-            List<TourSpot> spots = tourSpotRepository.findAllByGooglePlaceIdIsNotNullAndSpotIdNotIn(Collections.emptyList(),pageRequest);
+            List<TourSpot> spots = tourSpotRepository.findAllByGooglePlaceIdIsNotNull(pageRequest);
             for (TourSpot s: spots) {
                 List<Review> googleReviews = new ArrayList<>();
                 String placeId = s.getGooglePlaceId();

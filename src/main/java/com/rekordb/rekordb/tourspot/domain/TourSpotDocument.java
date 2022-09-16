@@ -79,7 +79,6 @@ public class TourSpotDocument {
 
     public void addTagList(Set<Tag> tags){
         tagList.addAll(tags);
-
     }
 
 

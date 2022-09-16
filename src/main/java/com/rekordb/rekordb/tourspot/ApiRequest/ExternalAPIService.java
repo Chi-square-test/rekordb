@@ -3,8 +3,12 @@ package com.rekordb.rekordb.tourspot.ApiRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mongodb.client.DistinctIterable;
+import com.mongodb.client.MongoCursor;
 import com.rekordb.rekordb.review.Review;
 import com.rekordb.rekordb.review.query.ReviewRepository;
+import com.rekordb.rekordb.tag.Tag;
+import com.rekordb.rekordb.tag.query.TagRepository;
 import com.rekordb.rekordb.tourspot.ApiRequest.test.Example;
 import com.rekordb.rekordb.tourspot.ApiRequest.test.GoogleReview;
 import com.rekordb.rekordb.tourspot.domain.RekorCategory;
@@ -29,6 +33,7 @@ import org.apache.http.ssl.SSLContexts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -47,11 +52,10 @@ import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
+
+import static com.rekordb.rekordb.tag.Tag.makeNewTag;
 
 @Deprecated
 @Slf4j
@@ -67,6 +71,10 @@ public class ExternalAPIService {
     private final TourSpotDocumentRepository tourSpotDocumentRepository;
 
     private final TourSpotDetailRepository tourSpotDetailRepository;
+
+    private final AddTagRepo addTagRepo;
+
+    private final TagRepository tagRepository;
 
     private final ApiKeysProperties apiKeys;
     private static final String TOUR_URI = "https://apis.data.go.kr/B551011/KorService";
@@ -209,7 +217,31 @@ public class ExternalAPIService {
 //        }
     }
 
-    @Scheduled(cron = "0 14 16 13 9 *",zone = "Asia/Seoul")
+    public void addTagsFromReviews(){
+       List<CopyofReviewAndTags> list = addTagRepo.findAllByTagNotNull();
+       int i=0;
+        for (CopyofReviewAndTags t:list) {
+            SpotId id = SpotId.of(t.getSpot_id());
+            Set<Tag> tags = new HashSet<>();
+            for (String s: t.getTag()) {
+                log.info(String.valueOf(i++));
+                Tag tag = tagRepository.findByTagName(s)
+                        .orElseGet(()-> tagRepository.save(makeNewTag(s)));
+                tags.add(tag);
+            }
+            log.info(id.getId());
+            try{
+                TourSpotDocument document = tourSpotDocumentRepository.findById(id).orElseThrow(NoSuchElementException::new);
+                document.addTagList(tags);
+                tourSpotDocumentRepository.save(document);
+            }catch (NoSuchElementException ignored){
+
+            }
+
+        }
+    }
+
+    //@Scheduled(cron = "0 14 16 13 9 *",zone = "Asia/Seoul")
     public void findReview() throws NullPointerException {
         restTemplate= new RestTemplate();
         //List<SpotId> already = reviewRepository.findReviewExist();

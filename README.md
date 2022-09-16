@@ -1,5 +1,5 @@
-# Re-Kor
-###Get a recommendation Your Korea
+# Re-Kor  
+###Get a recommendation Your Korea  
 ![rekorimg](images/rekorImg.png)
 ___
 

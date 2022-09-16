@@ -22,7 +22,7 @@ IPhone : 출시 예정
 
 ___
 ## Front-Side Repository
-GitHub : [Re-kor App](https://github.com/ChaeHyun-Kim/Re-Kor)
+GitHub : [~~Re-kor App~~](https://github.com/ChaeHyun-Kim/Re-Kor) 보안문제로 현재 private
 
 
 ___

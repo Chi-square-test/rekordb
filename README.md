@@ -30,7 +30,7 @@ ___
  - BackEnd : Java 14, SpringBoot
  - Database : MariaDB, MongoDB
  - Infra : Jenkins, Docker, Harbor, Nginx
- - Communication : REST API
+ - Communication : RESTful
 ___
 ## 시스템 구조
 ![struct](images/rekor_struct.png)

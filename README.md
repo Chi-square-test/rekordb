@@ -1,4 +1,4 @@
-# Re-Kor  
+# Re-Kor (Back-End Repository)  
 ### Get a recommendation Your Korea  
 ![rekorimg](images/rekorImg.png)
 ___

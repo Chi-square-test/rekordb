@@ -3,7 +3,7 @@
 ![rekorimg](images/rekorImg.png)
 ___
 
-##프로젝트 소개
+## 프로젝트 소개
 |   |    | 
 |---|:---:|
 | `이름` |Re-Kor | 
@@ -21,7 +21,7 @@ Android : [Google Play Store](https://play.google.com/store/apps/details?id=com.
 IPhone : 출시 예정
 
 ___
-##Front-Side Repository
+## Front-Side Repository
 GitHub : [Re-kor App](https://github.com/ChaeHyun-Kim/Re-Kor)
 
 

@@ -1,6 +1,5 @@
 # Re-Kor  
-___
-###Get a recommendation Your Korea  
+### Get a recommendation Your Korea  
 ![rekorimg](images/rekorImg.png)
 ___
 
@@ -17,7 +16,7 @@ ___
 | | - 다양한 외국인을 수용하기 위한 다중 언어 지원  | 
 | | - 관광지에 대한 리뷰 작성/공유  | 
 ___
-##서비스 링크
+## 서비스 링크
 Android : [Google Play Store](https://play.google.com/store/apps/details?id=com.suji_chae.ReKor)  
 IPhone : 출시 예정
 
@@ -27,11 +26,11 @@ GitHub : [Re-kor App](https://github.com/ChaeHyun-Kim/Re-Kor)
 
 
 ___
-##기술 스택  
+## 기술 스택  
  - BackEnd : Java 14, SpringBoot
  - Database : MariaDB, MongoDB
  - Infra : Jenkins, Docker, Harbor, Nginx
  - Communication : REST API
 ___
-##시스템 구조
+## 시스템 구조
 ![struct](images/rekor_struct.png)

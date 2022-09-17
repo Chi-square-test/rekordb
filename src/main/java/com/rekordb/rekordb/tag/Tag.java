@@ -23,6 +23,7 @@ public class Tag {
 
     private String tagName;
 
+    @Setter
     private String engTagName;
 
     private String tagCategory;

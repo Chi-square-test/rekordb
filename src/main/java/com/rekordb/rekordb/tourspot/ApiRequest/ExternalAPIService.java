@@ -3,12 +3,18 @@ package com.rekordb.rekordb.tourspot.ApiRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import com.google.cloud.translate.Translate;
+import com.google.cloud.translate.TranslateOptions;
+import com.google.cloud.translate.Translation;
 import com.mongodb.client.DistinctIterable;
 import com.mongodb.client.MongoCursor;
 import com.rekordb.rekordb.review.Review;
 import com.rekordb.rekordb.review.query.ReviewRepository;
 import com.rekordb.rekordb.tag.Tag;
+import com.rekordb.rekordb.tag.UserAndTag;
 import com.rekordb.rekordb.tag.query.TagRepository;
+import com.rekordb.rekordb.tag.query.UserTagRepository;
 import com.rekordb.rekordb.tourspot.ApiRequest.juso.JusoRes;
 import com.rekordb.rekordb.tourspot.ApiRequest.test.Example;
 import com.rekordb.rekordb.tourspot.ApiRequest.test.GoogleReview;
@@ -35,13 +41,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -74,6 +79,8 @@ public class ExternalAPIService {
 
     private final TourSpotDetailRepository tourSpotDetailRepository;
 
+    private final UserTagRepository userTagRepository;
+
     private final AddTagRepo addTagRepo;
 
     private final TagRepository tagRepository;
@@ -82,6 +89,7 @@ public class ExternalAPIService {
     private static final String TOUR_URI = "https://apis.data.go.kr/B551011/KorService";
     private static final String GOOGLE_URI = "https://maps.googleapis.com/maps/api/place";
     private static final String JUSO_URI = "https://business.juso.go.kr/addrlink/addrEngApi.do";
+
     private RestTemplate restTemplate;
 
     private UriComponentsBuilder componentsBuilder(String endPoint,String contentId,int typeId) {
@@ -100,6 +108,110 @@ public class ExternalAPIService {
                 .queryParam("serviceKey", apiKeys.getTourKey())
                 .queryParam("contentId", contentId);
     }
+
+
+    public void tagDiffChange(){
+        List<TourSpotDocument> documents = tourSpotDocumentRepository.findAll();
+        for (TourSpotDocument s: documents) {
+            s.getTagList().forEach(tag -> tag.setEngTagName(tagRepository.findById(tag.getTagId()).orElseThrow().getEngTagName()));
+        }
+        tourSpotDocumentRepository.saveAll(documents);
+        List<UserAndTag> userAndTags = userTagRepository.findAll();
+        for (UserAndTag u: userAndTags) {
+            u.getTagList().forEach(tag -> tag.setEngTagName(tagRepository.findById(tag.getTagId()).orElseThrow().getEngTagName()));
+        }
+        userTagRepository.saveAll(userAndTags);
+        log.info("fin");
+    }
+
+
+    public void translateTitle(){
+        Translate translate = TranslateOptions.getDefaultInstance().getService();
+        int least = tourSpotDocumentRepository.countByEngTitleIsNull();
+        while (least>0){
+            List<TourSpotDocument> documents = tourSpotDocumentRepository.findTop100ByEngTitleIsNull();
+            List<TourSpotDocument> saveSpot = new ArrayList<>();
+            for (TourSpotDocument d:documents) {
+                Translation translation =
+                        translate.translate(
+                                d.getTitle(),
+                                Translate.TranslateOption.sourceLanguage("ko"),
+                                Translate.TranslateOption.targetLanguage("en"));
+                String res = translation.getTranslatedText();
+                log.info("Translation: "+res);
+                d.setEngTitle(res);
+                saveSpot.add(d);
+
+            }
+            tourSpotDocumentRepository.saveAll(saveSpot);
+            least = tourSpotDocumentRepository.countByEngTitleIsNull();
+        }
+
+
+    }
+
+
+    public void translateTag(){
+        int least = tagRepository.countByEngTagName("");
+        log.info(least+"");
+        Translate translate = TranslateOptions.getDefaultInstance().getService();
+        while (least>0){
+            List<Tag> tags = tagRepository.findTop100ByEngTagName("");
+            List<Tag> saveTag = new ArrayList<>();
+            for (Tag d:tags) {
+                Translation translation =
+                        translate.translate(
+                                d.getTagName(),
+                                Translate.TranslateOption.sourceLanguage("ko"),
+                                Translate.TranslateOption.targetLanguage("en"));
+                String res = translation.getTranslatedText();
+                log.info("Translation: "+res);
+                d.setEngTagName(res);
+                saveTag.add(d);
+
+            }
+            tagRepository.saveAll(saveTag);
+            least = tagRepository.countByEngTagName("");
+        }
+        log.info("fin");
+    }
+
+
+    public void translateLastAddr(){
+        int count = tourSpotDocumentRepository.countByEngAddressNullAndAddress_Addr1IsNotNull();
+        log.info("남은 집계 수 : " + count);
+
+        Translate translate = TranslateOptions.getDefaultInstance().getService();
+        while (count>0){
+            List<TourSpotDocument> documents = tourSpotDocumentRepository.findTop100ByEngAddressNullAndAddress_Addr1IsNotNull();
+            List<TourSpotDocument> spots = new ArrayList<>();
+            for (TourSpotDocument d : documents) {
+                Translation translation =
+                        translate.translate(
+                                d.getAddress().getAddr1(),
+                                Translate.TranslateOption.sourceLanguage("ko"),
+                                Translate.TranslateOption.targetLanguage("en"));
+                String res1 = translation.getTranslatedText();
+                translation =
+                        translate.translate(
+                                d.getAddress().getAddr2(),
+                                Translate.TranslateOption.sourceLanguage("ko"),
+                                Translate.TranslateOption.targetLanguage("en"));
+                String res2 = translation.getTranslatedText();
+                log.info("Translation: "+res1+" "+res2);
+                d.setEnglishAddr(res1,res2);
+                spots.add(d);
+
+            }
+            tourSpotDocumentRepository.saveAll(spots);
+            count = tourSpotDocumentRepository.countByEngAddressNullAndAddress_Addr1IsNotNull();
+        }
+        log.info("fin");
+
+
+    }
+
+
 
 
     public void convertAddEnglish() {
@@ -340,18 +452,6 @@ public class ExternalAPIService {
     }
 
     @FunctionalInterface public interface RunnableExc { void run() throws Exception; }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

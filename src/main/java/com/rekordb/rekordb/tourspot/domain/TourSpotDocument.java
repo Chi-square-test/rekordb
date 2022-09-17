@@ -29,6 +29,7 @@ public class TourSpotDocument {
     @TextIndexed
     protected String title;
 
+    @Setter
     protected String engTitle;
 
     @Embedded

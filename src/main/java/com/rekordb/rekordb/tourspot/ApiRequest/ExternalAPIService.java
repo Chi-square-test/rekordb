@@ -9,6 +9,7 @@ import com.rekordb.rekordb.review.Review;
 import com.rekordb.rekordb.review.query.ReviewRepository;
 import com.rekordb.rekordb.tag.Tag;
 import com.rekordb.rekordb.tag.query.TagRepository;
+import com.rekordb.rekordb.tourspot.ApiRequest.juso.JusoRes;
 import com.rekordb.rekordb.tourspot.ApiRequest.test.Example;
 import com.rekordb.rekordb.tourspot.ApiRequest.test.GoogleReview;
 import com.rekordb.rekordb.tourspot.domain.RekorCategory;
@@ -47,6 +48,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.net.ssl.SSLContext;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
@@ -57,7 +59,7 @@ import java.util.stream.Collectors;
 
 import static com.rekordb.rekordb.tag.Tag.makeNewTag;
 
-@Deprecated
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -79,6 +81,7 @@ public class ExternalAPIService {
     private final ApiKeysProperties apiKeys;
     private static final String TOUR_URI = "https://apis.data.go.kr/B551011/KorService";
     private static final String GOOGLE_URI = "https://maps.googleapis.com/maps/api/place";
+    private static final String JUSO_URI = "https://business.juso.go.kr/addrlink/addrEngApi.do";
     private RestTemplate restTemplate;
 
     private UriComponentsBuilder componentsBuilder(String endPoint,String contentId,int typeId) {
@@ -96,6 +99,39 @@ public class ExternalAPIService {
                 .queryParam("MobileApp", "ReKor")
                 .queryParam("serviceKey", apiKeys.getTourKey())
                 .queryParam("contentId", contentId);
+    }
+
+
+    public void convertAddEnglish() {
+        restTemplate = new RestTemplate();
+        int count = tourSpotDocumentRepository.countByEngAddressNullAndAddress_Addr1IsNotNull();
+        log.info("남은 집계 수 : " + count);
+        List<TourSpotDocument> documents = tourSpotDocumentRepository.findAllByEngAddressNullAndAddress_Addr1IsNotNull();
+        List<TourSpotDocument> saveSpot = new ArrayList<>();
+        for (TourSpotDocument d : documents) {
+            UriComponents builder = UriComponentsBuilder.fromHttpUrl(JUSO_URI)
+                    .queryParam("confmKey", apiKeys.getJusoKey())
+                    .queryParam("currentPage", "1")
+                    .queryParam("countPerPage", "1")
+                    .queryParam("keyword", d.getAddress().getAddr1())
+                    .queryParam("resultType", "json")
+                    .build();
+
+            JusoRes response = restTemplate.getForObject(builder.toUri(), JusoRes.class);
+            try{
+                if(Integer.parseInt(response.getResults().getCommon().getTotalCount())>0){
+                    d.setEnglishAddr(response.getResults().getJuso().get(0).getRoadAddr(),response.getResults().getJuso().get(0).getSggNm());
+                    saveSpot.add(d);
+                }
+                else{
+                    log.info("검색 결과가 없어요");
+                }
+            }catch (Exception e){
+                log.info(e.toString());
+            }
+        }
+        log.info("저장된 개수"+saveSpot.size());
+        tourSpotDocumentRepository.saveAll(saveSpot);
     }
 
     public void getTourAPIData() throws NullPointerException{

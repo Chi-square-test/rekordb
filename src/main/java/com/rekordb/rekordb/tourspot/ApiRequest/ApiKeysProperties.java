@@ -12,4 +12,5 @@ import org.springframework.boot.context.properties.ConstructorBinding;
 public class ApiKeysProperties {
     private final String googleKey;
     private final String tourKey;
+    private final String jusoKey;
 }

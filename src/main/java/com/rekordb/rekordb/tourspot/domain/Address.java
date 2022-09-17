@@ -16,4 +16,14 @@ public class Address {
     private String addr2;
     private String mapx;
     private String mapy;
+
+    public static Address convertToEng(Address address ,EngAddress engAddress){
+        return Address.builder()
+                .addr1(engAddress.getEngAddr1())
+                .addr2(engAddress.getEngAddr2())
+                .areaCode(address.getAreaCode())
+                .mapx(address.getMapx())
+                .mapy(address.getMapy())
+                .build();
+    }
 }

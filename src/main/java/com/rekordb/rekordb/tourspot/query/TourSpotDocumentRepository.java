@@ -34,4 +34,8 @@ public interface TourSpotDocumentRepository extends MongoRepository<TourSpotDocu
 
     List<TourSpotDocument> findAllByGooglePlaceIdIsNotNull(PageRequest pageRequest);
 
+    List<TourSpotDocument> findAllByEngAddressNullAndAddress_Addr1IsNotNull();
+    int countByEngAddressNullAndAddress_Addr1IsNotNull();
+
+
 }

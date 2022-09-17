@@ -14,7 +14,7 @@ import java.util.Collections;
 
 //@RestController
 @Slf4j
-@Deprecated
+
 //@RequestMapping("/tourspotadmin")
 @RequiredArgsConstructor
 public class TourSpotDBController {

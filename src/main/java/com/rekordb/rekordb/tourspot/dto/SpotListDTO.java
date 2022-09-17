@@ -41,7 +41,7 @@ public class SpotListDTO {
     public SpotListDTO(TourSpotDocument document){
         this.spotId = document.getSpotId();
         this.title = document.getTitle();
-        this.address = document.getAddress();
+        this.address = document.convertToEng();
         this.rekorCategory = document.getRekorCategory();
         this.images = document.getImages();
         this.rating = document.getRating();
@@ -52,7 +52,7 @@ public class SpotListDTO {
     public SpotListDTO(SpotWithCheck spot){
         this.spotId = spot.getDocument().getSpotId();
         this.title =  spot.getDocument().getTitle();
-        this.address =  spot.getDocument().getAddress();
+        this.address =  spot.getDocument().convertToEng();
         this.rekorCategory =  spot.getDocument().getRekorCategory();
         this.images =  spot.getDocument().getImages();
         this.rating =  spot.getDocument().getRating();

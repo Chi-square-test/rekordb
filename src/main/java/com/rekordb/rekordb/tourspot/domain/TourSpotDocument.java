@@ -72,6 +72,9 @@ public class TourSpotDocument {
         this.images =spot.getImages();
         this.rekorCategory = spot.getRekorCategory();
     }
+    public Address convertToEng(){
+        return engAddress != null ? Address.convertToEng(address,engAddress) : address;
+    }
 
     public void setTagList(Set<Tag> tags){
         this.tagList = tags;
@@ -86,6 +89,10 @@ public class TourSpotDocument {
     public void changeImgList(List<String> imgs){
         images.clear();
         images.addAll(imgs);
+    }
+
+    public void setEnglishAddr(String addr,String sgg){
+        this.engAddress = new EngAddress(addr,sgg);
     }
 
     public void setGooglePlaceId(String id){

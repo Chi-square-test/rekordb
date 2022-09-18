@@ -25,7 +25,7 @@ public class CourseController {
     private final CourseService courseService;
     private final TourSpotService tourSpotService;
 
-    @GetMapping("recommend")
+    @GetMapping("/recommend")
     public ResponseEntity<ResponseDTO<SpotListDTO>> getRecommendSpot(){
         ResponseDTO<SpotListDTO> dto = ResponseDTO.<SpotListDTO>builder()
                 .status(ApiStatus.SUCCESS)

@@ -76,13 +76,23 @@ public class CourseController {
     public ResponseEntity<ResponseDTO<Object>> changeCourseIdx(@AuthenticationPrincipal User user, @RequestBody CourseChangeDTO dto){
         courseService.changeCourseIdx(user.getUsername(), dto.getFolderId(), dto.getStart(),dto.getDest());
         return successAndReturnNull();
-
     }
     @PutMapping("/move")//다른 폴더로 코스 이동
     public ResponseEntity<ResponseDTO<Object>> moveCourseToOther(@AuthenticationPrincipal User user,@RequestBody FolderChangeDTO dto){
         courseService.moveToAnotherFolder(user.getUsername(), dto.getCourseId(), dto.getStart(),dto.getDest());
         return successAndReturnNull();
     }
+
+    @PutMapping("/spot")//코스 내 관관지 변병
+    public ResponseEntity<ResponseDTO<CourseFolderDTO>> changeCourseSpot(@AuthenticationPrincipal User user, @RequestBody @Valid NewCourseDTO spots) {
+        CourseFolderDTO dto = courseService.changeCourseSpot(user.getUsername(), spots.getName(), spots.getSpots());
+        ResponseDTO<CourseFolderDTO> res = ResponseDTO.<CourseFolderDTO>builder()
+                .status(ApiStatus.SUCCESS)
+                .data(Collections.singletonList(dto))
+                .build();
+        return ResponseEntity.ok().body(res);
+    }
+
     @DeleteMapping//코스 제거
     public ResponseEntity<ResponseDTO<Object>> removeCourse(@AuthenticationPrincipal User user, @RequestBody DeleteCourseDTO dto){
         courseService.deleteCourse(user.getUsername(),dto.getFolderId(),dto.getCourseId());

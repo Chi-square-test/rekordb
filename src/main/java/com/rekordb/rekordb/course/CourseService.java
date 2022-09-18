@@ -84,6 +84,29 @@ public class CourseService {
         courseFolderRepository.save(courseFolder);
     }
 
+    public CourseFolderDTO changeCourseSpot(String user,String course, List<CourseSpotDTO> spots){
+        UserId userId = UserId.of(user);
+        CourseId courseId = CourseId.of(course);
+        CourseFolder courseFolder = courseFolderRepository.findByUserIdAndCourseListCourseId(userId,courseId).orElseThrow();
+        List<TourSpotDocument> spotList = spots.stream()
+                .map(CourseSpotDTO::getSpotId)
+                .map(SpotId::of)
+                .map(tourSpotDocumentRepository::findById)
+                .map(Optional::orElseThrow)
+                .collect(Collectors.toList());
+        Course changedCourse = courseFolder.findCourse(courseId);
+
+        List<SpotWithCheck> withCheckList = new ArrayList<>();
+        for (int i = 0; i < spots.size(); i++) {
+            withCheckList.add(spots.get(i).convertToValue(spotList.get(i)));
+        }
+        changedCourse.changeSpotList(withCheckList);
+        return CourseFolderDTO.convertToDTO( courseFolderRepository.save(courseFolder));
+
+
+
+    }
+
     public void moveToAnotherFolder(String user,String course,String startF, String destF){
         UserId userId = UserId.of(user);
         FolderId startId = FolderId.of(startF);

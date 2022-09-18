@@ -35,6 +35,10 @@ public class Course {
         SpotWithCheck document = spotList.remove(start);
         spotList.set(dest,document);
     }
+
+    public void changeSpotList(List<SpotWithCheck> spots){
+        this.spotList=spots;
+    }
 }
 
 

@@ -30,7 +30,7 @@ public class DetailAndReviewDTO {
     private List<ReviewDTO> reviewList;
     private CheckItem checkItem;
 
-    public static DetailAndReviewDTO convertToDTO(TourSpotDocument document, TourSpotDetail detail, List<Review> review, CheckItem checkItem){
+    public static DetailAndReviewDTO convertToDTO(TourSpotDocument document, TourSpotDetail detail,List<ReviewDTO> reviewList, CheckItem checkItem){
         return DetailAndReviewDTO.builder()
                 .spotInfo(new SpotListDTO(document))
                 .spotId(detail.getSpotId())
@@ -38,8 +38,8 @@ public class DetailAndReviewDTO {
                 .detailList(detail.getDetailItems())
                 .plusInfo(detail.getDetailIntro())
                 .imageList(detail.getImageItems())
-                .reviewList(review.stream().map(ReviewDTO::ConvertToDTO).collect(Collectors.toList()))
                 .checkItem(checkItem)
+                .reviewList(reviewList)
                 .build();
     }
 }

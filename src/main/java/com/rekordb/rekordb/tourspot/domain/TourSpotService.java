@@ -1,6 +1,8 @@
 package com.rekordb.rekordb.tourspot.domain;
 
 import com.rekordb.rekordb.review.Review;
+import com.rekordb.rekordb.review.ReviewService;
+import com.rekordb.rekordb.review.dto.ReviewDTO;
 import com.rekordb.rekordb.review.query.ReviewRepository;
 import com.rekordb.rekordb.tag.Tag;
 import com.rekordb.rekordb.tag.query.TagRepository;
@@ -25,6 +27,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -36,6 +39,7 @@ public class TourSpotService {
     private final ReviewRepository reviewRepository;
     private static final int AMOUNT_IN_PAGE =30;
     private final TagRepository tagRepository;
+    private final ReviewService reviewService;
     private final ExternalAPIService externalAPIService;
 
 
@@ -64,10 +68,13 @@ public class TourSpotService {
             tourSpotDetailRepository.delete(detail);
             throw new SpotDetailAPIErrorException();
         }
-        List<Review> reviews = reviewRepository.findBySpotId(spotId);
+        List<ReviewDTO> reviews = reviewRepository.findBySpotId(spotId).stream()
+                .map(review -> ReviewDTO.ConvertToDTO(review,reviewService.getReviewTagList(review)))
+                .collect(Collectors.toList());
         boolean isReviewed = reviewRepository.existsByUserIdAndSpotId(UserId.of(uid),spotId);
         boolean isInWishList = wishListRepository.existsByUserIdAndWishListContains(UserId.of(uid),document);
         return DetailAndReviewDTO.convertToDTO(document,detail,reviews,new CheckItem(isReviewed,isInWishList));
+
     }
 
     public List<SpotListDTO> getRandomSpot(String user){

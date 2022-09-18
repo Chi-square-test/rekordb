@@ -5,6 +5,7 @@ import com.rekordb.rekordb.tag.query.TagRepository;
 import com.rekordb.rekordb.tag.query.UserTagRepository;
 import com.rekordb.rekordb.tourspot.domain.TourSpotDocument;
 import com.rekordb.rekordb.tourspot.query.TourSpotDocumentRepository;
+import com.rekordb.rekordb.user.domain.userInfo.User;
 import com.rekordb.rekordb.user.domain.userInfo.UserId;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -53,6 +54,11 @@ public class TagService {
 
     public List<Tag> getUserTag(String userId) throws NoSuchElementException{
         UserAndTag userAndTag = userTagRepository.findById(UserId.of(userId)).orElseThrow(NoSuchElementException::new);
+        return userAndTag.getTagList();
+    }
+
+    public List<Tag> getUserTag(User user) throws NoSuchElementException{
+        UserAndTag userAndTag = userTagRepository.findById(user.getUserId()).orElseThrow(NoSuchElementException::new);
         return userAndTag.getTagList();
     }
 

@@ -4,6 +4,7 @@ import com.rekordb.rekordb.review.ReviewService;
 import com.rekordb.rekordb.review.dto.ReviewDTO;
 import com.rekordb.rekordb.review.query.ReviewRepository;
 import com.rekordb.rekordb.tag.Tag;
+import com.rekordb.rekordb.tag.TagService;
 import com.rekordb.rekordb.tag.query.TagRepository;
 import com.rekordb.rekordb.tourspot.ApiRequest.ExternalAPIService;
 import com.rekordb.rekordb.tourspot.Exception.SpotDetailAPIErrorException;
@@ -15,6 +16,7 @@ import com.rekordb.rekordb.tourspot.query.TourSpotDetailRepository;
 import com.rekordb.rekordb.tourspot.query.TourSpotDocumentRepository;
 import com.rekordb.rekordb.tourspot.dto.DetailAndReviewDTO;
 import com.rekordb.rekordb.user.domain.userInfo.UserId;
+import com.rekordb.rekordb.user.query.UserRepository;
 import com.rekordb.rekordb.user.query.UserWishListRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,10 +38,13 @@ public class TourSpotService {
     private final TourSpotDetailRepository tourSpotDetailRepository;
     private final UserWishListRepository wishListRepository;
     private final ReviewRepository reviewRepository;
+    private final UserRepository userRepository;
     private static final int AMOUNT_IN_PAGE =30;
     private final TagRepository tagRepository;
     private final ReviewService reviewService;
     private final ExternalAPIService externalAPIService;
+    private final TagService tagService;
+
 
 
 
@@ -70,6 +75,11 @@ public class TourSpotService {
         List<ReviewDTO> reviews = reviewRepository.findBySpotId(spotId).stream()
                 .map(review -> ReviewDTO.ConvertToDTO(review,reviewService.getReviewTagList(review)))
                 .collect(Collectors.toList());
+        for (ReviewDTO d : reviews) {
+            if(!d.isFromGoogle()){
+                d.setUserTagList(tagService.getUserTag(userRepository.findByNickName(d.getUserName()).orElseThrow()));
+            }
+        }
         boolean isReviewed = reviewRepository.existsByUserIdAndSpotId(UserId.of(uid),spotId);
         boolean isInWishList = wishListRepository.existsByUserIdAndWishListContains(UserId.of(uid),document);
         return DetailAndReviewDTO.convertToDTO(document,detail,reviews,new CheckItem(isReviewed,isInWishList));

@@ -17,6 +17,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
@@ -81,6 +82,16 @@ public class TourSpotController {
                     .build();
             return ResponseEntity.ok().body(res);
         }
+
+    }
+    @GetMapping("/detail/{spotid}/similar")
+    public ResponseEntity<ResponseDTO<SpotListDTO>> getSimilarSpots( @PathVariable("spotid")String spotid){
+        List<SpotListDTO> dto = tourSpotService.getSimilarSpot(spotid);
+        ResponseDTO<SpotListDTO> res = ResponseDTO.<SpotListDTO>builder()
+                .status(ApiStatus.SUCCESS)
+                .data(dto)
+                .build();
+        return ResponseEntity.ok().body(res);
 
     }
 

@@ -43,5 +43,11 @@ public interface TourSpotDocumentRepository extends MongoRepository<TourSpotDocu
     int countByEngTitleIsNull();
     List<TourSpotDocument> findTop100ByEngAddressNullAndAddress_Addr1IsNotNull();
 
+    @Aggregation(pipeline={
+            "{$match:{\"rekorCategory\":?0}}",
+            "{$sample:{size:6}}"
+    })
+    AggregationResults<TourSpotDocument> similar(RekorCategory rekorCategory);
+
 
 }

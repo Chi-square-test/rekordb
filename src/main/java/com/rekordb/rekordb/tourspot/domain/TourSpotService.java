@@ -90,6 +90,15 @@ public class TourSpotService {
         return dtos;
     }
 
+    public List<SpotListDTO> getSimilarSpot(String spot){
+        SpotId spotId = SpotId.of(spot);
+        TourSpotDocument document = tourSpotDocumentRepository.findById(spotId).orElseThrow();
+        List<TourSpotDocument> documents =tourSpotDocumentRepository.similar(document.getRekorCategory()).getMappedResults();
+        return documents.stream().map(SpotListDTO::new).collect(Collectors.toList());
+    }
+
+
+
 
 
 

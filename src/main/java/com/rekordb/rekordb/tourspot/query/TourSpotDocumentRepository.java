@@ -44,6 +44,7 @@ public interface TourSpotDocumentRepository extends MongoRepository<TourSpotDocu
     List<TourSpotDocument> findTop100ByEngAddressNullAndAddress_Addr1IsNotNull();
 
     @Aggregation(pipeline={
+            "{$match:{\"images.0\":{$nin:[\"\"]}}}",
             "{$match:{\"rekorCategory\":?0}}",
             "{$sample:{size:6}}"
     })

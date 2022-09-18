@@ -5,6 +5,7 @@ import com.rekordb.rekordb.ResponseDTO;
 import com.rekordb.rekordb.tag.Tag;
 import com.rekordb.rekordb.tag.TagService;
 import com.rekordb.rekordb.tourspot.domain.TourSpotDocument;
+import com.rekordb.rekordb.tourspot.dto.SpotListDTO;
 import com.rekordb.rekordb.user.Execption.DuplicateUserInfoException;
 import com.rekordb.rekordb.user.domain.userWithSpot.UserWishList;
 import com.rekordb.rekordb.user.dto.RekorJoinInformDTO;
@@ -27,8 +28,8 @@ public class UserWishListController {
     private final UserWishListService userWishListService;
 
     @GetMapping
-    public ResponseEntity<ResponseDTO<?>> getWishList(@AuthenticationPrincipal User user){
-        ResponseDTO<TourSpotDocument> res = ResponseDTO.<TourSpotDocument>builder()
+    public ResponseEntity<ResponseDTO<SpotListDTO>> getWishList(@AuthenticationPrincipal User user){
+        ResponseDTO<SpotListDTO> res = ResponseDTO.<SpotListDTO>builder()
                 .status(ApiStatus.SUCCESS)
                 .data(userWishListService.getUserWishList(user.getUsername()))
                 .build();

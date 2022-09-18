@@ -13,7 +13,7 @@ public enum SortBy {
             return Sort.by(Sort.Direction.ASC, this.name());
         }
     } ,
-    likcCount("Likes"){
+    likeCount("Likes"){
         @Override
         public Sort getSort() {
             return Sort.by(Sort.Direction.DESC, this.name());

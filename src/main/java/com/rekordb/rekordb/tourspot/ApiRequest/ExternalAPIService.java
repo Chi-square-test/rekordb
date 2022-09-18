@@ -9,6 +9,10 @@ import com.google.cloud.translate.TranslateOptions;
 import com.google.cloud.translate.Translation;
 import com.mongodb.client.DistinctIterable;
 import com.mongodb.client.MongoCursor;
+import com.rekordb.rekordb.course.Course;
+import com.rekordb.rekordb.course.CourseFolder;
+import com.rekordb.rekordb.course.dto.SpotWithCheck;
+import com.rekordb.rekordb.course.query.CourseFolderRepository;
 import com.rekordb.rekordb.review.Review;
 import com.rekordb.rekordb.review.query.ReviewRepository;
 import com.rekordb.rekordb.tag.Tag;
@@ -18,17 +22,16 @@ import com.rekordb.rekordb.tag.query.UserTagRepository;
 import com.rekordb.rekordb.tourspot.ApiRequest.juso.JusoRes;
 import com.rekordb.rekordb.tourspot.ApiRequest.test.Example;
 import com.rekordb.rekordb.tourspot.ApiRequest.test.GoogleReview;
-import com.rekordb.rekordb.tourspot.domain.RekorCategory;
-import com.rekordb.rekordb.tourspot.domain.SpotId;
-import com.rekordb.rekordb.tourspot.domain.TourSpot;
+import com.rekordb.rekordb.tourspot.domain.*;
 import com.rekordb.rekordb.tourspot.domain.TourSpotDetail.CommonItem;
 import com.rekordb.rekordb.tourspot.domain.TourSpotDetail.DetailItem;
 import com.rekordb.rekordb.tourspot.domain.TourSpotDetail.ImageItem;
 import com.rekordb.rekordb.tourspot.domain.TourSpotDetail.TourSpotDetail;
-import com.rekordb.rekordb.tourspot.domain.TourSpotDocument;
 import com.rekordb.rekordb.tourspot.query.TourSpotDetailRepository;
 import com.rekordb.rekordb.tourspot.query.TourSpotDocumentRepository;
 import com.rekordb.rekordb.tourspot.query.TourSpotRepository;
+import com.rekordb.rekordb.user.domain.userWithSpot.UserWishList;
+import com.rekordb.rekordb.user.query.UserWishListRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
@@ -81,6 +84,10 @@ public class ExternalAPIService {
 
     private final UserTagRepository userTagRepository;
 
+    private final UserWishListRepository userWishListRepository;
+
+    private final CourseFolderRepository courseFolderRepository;
+
     private final AddTagRepo addTagRepo;
 
     private final TagRepository tagRepository;
@@ -109,19 +116,48 @@ public class ExternalAPIService {
                 .queryParam("contentId", contentId);
     }
 
-
+    //@Scheduled(cron = "0 33 14 18 9 *",zone = "Asia/Seoul")
     public void tagDiffChange(){
         List<TourSpotDocument> documents = tourSpotDocumentRepository.findAll();
         for (TourSpotDocument s: documents) {
             s.getTagList().forEach(tag -> tag.setEngTagName(tagRepository.findById(tag.getTagId()).orElseThrow().getEngTagName()));
         }
         tourSpotDocumentRepository.saveAll(documents);
+        log.info("documents tags are updated");
+
         List<UserAndTag> userAndTags = userTagRepository.findAll();
         for (UserAndTag u: userAndTags) {
             u.getTagList().forEach(tag -> tag.setEngTagName(tagRepository.findById(tag.getTagId()).orElseThrow().getEngTagName()));
         }
         userTagRepository.saveAll(userAndTags);
+
+        log.info("users tags are updated");
+
+        List<UserWishList> userWishLists = userWishListRepository.findAll();
+        for (UserWishList u: userWishLists) {
+            u.getWishList().forEach(this::updateSpotTagAndAddr);
+        }
+        userWishListRepository.saveAll(userWishLists);
+
+        log.info("wishlists are updated");
+
+        List<CourseFolder> courseFolders = courseFolderRepository.findAll();
+        for (CourseFolder f:courseFolders) {
+            for (Course c :f.getCourseList()) {
+                c.getSpotList().forEach((spot ->updateSpotTagAndAddr(spot.getDocument())));
+            }
+        }
+        courseFolderRepository.saveAll(courseFolders);
+        log.info("course tags are updated");
+
         log.info("fin");
+    }
+
+    private void updateSpotTagAndAddr(TourSpotDocument s){
+        s.getTagList().forEach(tag -> tag.setEngTagName(tagRepository.findById(tag.getTagId()).orElseThrow().getEngTagName()));
+        s.setEngTitle((tourSpotDocumentRepository.findById(s.getSpotId()).orElseThrow().getEngTitle()));
+        EngAddress e = tourSpotDocumentRepository.findById(s.getSpotId()).orElseThrow().getEngAddress();
+        s.setEnglishAddr(e.getEngAddr1(),e.getEngAddr2());
     }
 
 
@@ -389,7 +425,7 @@ public class ExternalAPIService {
         }
     }
 
-    //@Scheduled(cron = "0 14 16 13 9 *",zone = "Asia/Seoul")
+
     public void findReview() throws NullPointerException {
         restTemplate= new RestTemplate();
         //List<SpotId> already = reviewRepository.findReviewExist();
@@ -408,10 +444,10 @@ public class ExternalAPIService {
                         .queryParam("fields","reviews")
                         .queryParam("key",apiKeys.getGoogleKey())
                         .build();
-                HttpHeaders headers = new HttpHeaders();
-                ResponseEntity<Example> dto = restTemplate.exchange(builder.toUri(), HttpMethod.GET,new HttpEntity<>(headers), Example.class);
+
+                Example dto = restTemplate.getForObject(builder.toUri(), Example.class);
                 try{
-                    List<GoogleReview> reviews =dto.getBody().getResult().getReviews();
+                    List<GoogleReview> reviews =dto.getResult().getReviews();
 //                    int sum = 0;
                     for (GoogleReview r:reviews) {
                         googleReviews.add(Review.googleReviewToDB(r,s.getSpotId()));

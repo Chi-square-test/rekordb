@@ -13,6 +13,7 @@ public interface TourSpotRepository extends JpaRepository<TourSpot, SpotId> {
 
     List<TourSpot> findAllByGooglePlaceIdIsNotNull(PageRequest pageRequest);
     List<TourSpot> findByRekorCategory(RekorCategory rekorCategory,PageRequest pageRequest);
-    List<TourSpot> findAllByGooglePlaceIdIsNotNullAndSpotIdNotIn(List<SpotId> id,PageRequest pageRequest);
+    List<TourSpot> findTop100ByGooglePlaceIdIsNotNullAndSpotIdNotIn(List<SpotId> id);
     int countByGooglePlaceIdIsNotNull();
+    List<TourSpot> findTop100ByGooglePlaceIdIsNotNull();
 }

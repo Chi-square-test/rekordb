@@ -116,7 +116,7 @@ public class ExternalAPIService {
                 .queryParam("contentId", contentId);
     }
 
-    //@Scheduled(cron = "0 33 14 18 9 *",zone = "Asia/Seoul")
+    //@Scheduled(cron = "0 9 15 18 9 *",zone = "Asia/Seoul")
     public void tagDiffChange(){
         List<TourSpotDocument> documents = tourSpotDocumentRepository.findAll();
         for (TourSpotDocument s: documents) {

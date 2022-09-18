@@ -29,7 +29,7 @@ public interface TourSpotDocumentRepository extends MongoRepository<TourSpotDocu
 
     ArrayList<TourSpotDocument> findTop50BySpotIdNotIn(List<SpotId> ids);
 
-    @Aggregation(pipeline={"{$sample:{size:4}}"})
+    @Aggregation(pipeline={"{$match:{\"images.0\":{$nin:[\"\"]}}},{$sample:{size:10}}"})
     AggregationResults<TourSpotDocument> random();
 
     List<TourSpotDocument> findAllByGooglePlaceIdIsNotNull(PageRequest pageRequest);

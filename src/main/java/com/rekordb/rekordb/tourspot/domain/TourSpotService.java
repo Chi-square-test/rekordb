@@ -1,6 +1,5 @@
 package com.rekordb.rekordb.tourspot.domain;
 
-import com.rekordb.rekordb.review.Review;
 import com.rekordb.rekordb.review.ReviewService;
 import com.rekordb.rekordb.review.dto.ReviewDTO;
 import com.rekordb.rekordb.review.query.ReviewRepository;
@@ -77,9 +76,9 @@ public class TourSpotService {
 
     }
 
-    public List<SpotListDTO> getRandomSpot(String user){
+    public List<SpotListDTO> getRandomSpotWithHaveImage(String user){
         UserId userId = UserId.of(user);
-        List<TourSpotDocument> documents =tourSpotDocumentRepository.random().getMappedResults();
+        List<TourSpotDocument> documents =tourSpotDocumentRepository.randomWithImage().getMappedResults();
         List<SpotListDTO> dtos = new ArrayList<>();
         for (TourSpotDocument d:documents) {
            Boolean b = wishListRepository.existsByUserIdAndWishListContains(userId,d);
@@ -94,6 +93,11 @@ public class TourSpotService {
         SpotId spotId = SpotId.of(spot);
         TourSpotDocument document = tourSpotDocumentRepository.findById(spotId).orElseThrow();
         List<TourSpotDocument> documents =tourSpotDocumentRepository.similar(document.getRekorCategory()).getMappedResults();
+        return documents.stream().map(SpotListDTO::new).collect(Collectors.toList());
+    }
+
+    public List<SpotListDTO> getPureRandomSpot(){
+        List<TourSpotDocument> documents =tourSpotDocumentRepository.pureRandom().getMappedResults();
         return documents.stream().map(SpotListDTO::new).collect(Collectors.toList());
     }
 

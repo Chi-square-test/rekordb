@@ -7,7 +7,6 @@ import com.rekordb.rekordb.tourspot.Exception.SpotDetailAPIErrorException;
 import com.rekordb.rekordb.tourspot.dto.SpotListDTO;
 import com.rekordb.rekordb.tourspot.dto.DetailAndReviewDTO;
 
-import com.rekordb.rekordb.user.domain.userInfo.UserId;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -61,7 +60,7 @@ public class TourSpotController {
     public ResponseEntity<ResponseDTO<SpotListDTO>> getRandomSpot(@AuthenticationPrincipal User user){
         ResponseDTO<SpotListDTO> res = ResponseDTO.<SpotListDTO>builder()
                 .status(ApiStatus.SUCCESS)
-                .data(tourSpotService.getRandomSpot(user.getUsername()))
+                .data(tourSpotService.getRandomSpotWithHaveImage(user.getUsername()))
                 .build();
         return ResponseEntity.ok().body(res);
     }
@@ -94,6 +93,7 @@ public class TourSpotController {
         return ResponseEntity.ok().body(res);
 
     }
+
 
 
 }

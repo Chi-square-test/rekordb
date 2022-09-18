@@ -33,7 +33,7 @@ public interface TourSpotDocumentRepository extends MongoRepository<TourSpotDocu
             "{$match:{\"images.0\":{$nin:[\"\"]}}}",
             "{$sample:{size:10}}"
     })
-    AggregationResults<TourSpotDocument> random();
+    AggregationResults<TourSpotDocument> randomWithImage();
 
     List<TourSpotDocument> findAllByGooglePlaceIdIsNotNull(PageRequest pageRequest);
 
@@ -48,6 +48,9 @@ public interface TourSpotDocumentRepository extends MongoRepository<TourSpotDocu
             "{$sample:{size:6}}"
     })
     AggregationResults<TourSpotDocument> similar(RekorCategory rekorCategory);
+
+    @Aggregation(pipeline={"{$sample:{size:20}}"})
+    AggregationResults<TourSpotDocument> pureRandom();
 
 
 }

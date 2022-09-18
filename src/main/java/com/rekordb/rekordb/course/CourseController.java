@@ -4,6 +4,9 @@ import com.rekordb.rekordb.ApiStatus;
 import com.rekordb.rekordb.ResponseDTO;
 import com.rekordb.rekordb.course.dto.*;
 import com.rekordb.rekordb.course.exception.FolderException;
+import com.rekordb.rekordb.tourspot.domain.TourSpotDocument;
+import com.rekordb.rekordb.tourspot.domain.TourSpotService;
+import com.rekordb.rekordb.tourspot.dto.SpotListDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +23,16 @@ import java.util.Collections;
 @RequiredArgsConstructor
 public class CourseController {
     private final CourseService courseService;
+    private final TourSpotService tourSpotService;
+
+    @GetMapping("recommend")
+    public ResponseEntity<ResponseDTO<SpotListDTO>> getRecommendSpot(){
+        ResponseDTO<SpotListDTO> dto = ResponseDTO.<SpotListDTO>builder()
+                .status(ApiStatus.SUCCESS)
+                .data(tourSpotService.getPureRandomSpot())
+                .build();
+        return ResponseEntity.ok().body(dto);
+    }
 
     @GetMapping//목록 조회
     public ResponseEntity<ResponseDTO<CourseFolderDTO>> getFolder(@AuthenticationPrincipal User user){

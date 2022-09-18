@@ -48,7 +48,7 @@ public class TagService {
 
     public Page<Tag> findTagByName(String name, int page){
         PageRequest pageRequest = PageRequest.of(page,AMOUNT_IN_PAGE);
-        return tagRepository.findByTagNameContains(name,pageRequest);
+        return tagRepository.findByEngTagNameContains(name,pageRequest);
     }
 
     public List<Tag> getUserTag(String userId) throws NoSuchElementException{

@@ -21,7 +21,7 @@ public interface TagRepository extends MongoRepository<Tag, TagId> {
     Page<Tag> findByDefaultCategory(RekorCategory category, Pageable pageable);
     Optional<Tag> findByTagName(String name);
 
-    Page<Tag> findByTagNameContains(String name, PageRequest pageRequest);
+    Page<Tag> findByEngTagNameContains(String name, PageRequest pageRequest);
     List<Tag> findTop100ByEngTagName(String name);
     int countByEngTagName(String name);
 }

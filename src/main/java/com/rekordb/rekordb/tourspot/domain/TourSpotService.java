@@ -53,8 +53,8 @@ public class TourSpotService {
     public Page<TourSpotDocument> findSpot(String name, int page){
         PageRequest pageRequest = PageRequest.of(page,AMOUNT_IN_PAGE);
         PageRequest tagPageRequest = PageRequest.of(0,100);
-        Set<Tag> tagSet =tagRepository.findByTagNameContains(name,tagPageRequest).toSet();
-        return tourSpotDocumentRepository.findByTitleContainsOrTagListIn(name,tagSet,pageRequest,Sort.by(Sort.Direction.DESC, "rating"));
+        Set<Tag> tagSet =tagRepository.findByEngTagNameContains(name,tagPageRequest).toSet();
+        return tourSpotDocumentRepository.findByEngTitleContainsOrTagListIn(name,tagSet,pageRequest,Sort.by(Sort.Direction.DESC, "rating"));
     }
 
 

@@ -25,7 +25,7 @@ public interface TourSpotDocumentRepository extends MongoRepository<TourSpotDocu
 
     Page<TourSpotDocument> findByRekorCategory(RekorCategory category, PageRequest pageRequest, Sort sort);
 
-    Page<TourSpotDocument> findByTitleContainsOrTagListIn(String title,Set<Tag> tag, PageRequest pageRequest,Sort sort);
+    Page<TourSpotDocument> findByEngTitleContainsOrTagListIn(String title,Set<Tag> tag, PageRequest pageRequest,Sort sort);
 
     ArrayList<TourSpotDocument> findTop50BySpotIdNotIn(List<SpotId> ids);
 

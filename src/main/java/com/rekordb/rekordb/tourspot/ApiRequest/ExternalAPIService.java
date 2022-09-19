@@ -186,6 +186,19 @@ public class ExternalAPIService {
 
     }
 
+    @Scheduled(cron = "0 52 21 19 9 *",zone = "Asia/Seoul")
+    public void translateTest(){
+        Translate translate = TranslateOptions.getDefaultInstance().getService();
+        Translation translation =
+                translate.translate(
+                        "구글 번역 테스트",
+                        Translate.TranslateOption.sourceLanguage("ko"),
+                        Translate.TranslateOption.targetLanguage("en"));
+        String res = translation.getTranslatedText();
+        log.info("Translation: "+res);
+
+    }
+
 
     public void translateTag(){
         int least = tagRepository.countByEngTagName("");

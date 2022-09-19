@@ -25,7 +25,7 @@ public class TokenProvider {
     private final Key key;
     private static final String AUTHORITIES_KEY = "role";
 
-    private static final long ACCESS_EXPIRE_MINUTES = 30;
+    private static final long ACCESS_EXPIRE_MINUTES = 3600; //default 30
     private static final long REFRESH_EXPIRE_DAYS = 14;
 
     private static final long ADMIN_EXPIRE_DAYS = 30;

@@ -25,4 +25,8 @@ public class CommonItem {
             homepage = tokenizer.nextToken();
         }
     }
+
+    public boolean checkOverviewNull(){
+         return overview == null || overview.isBlank();
+    }
 }

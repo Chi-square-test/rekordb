@@ -1,5 +1,8 @@
 package com.rekordb.rekordb.tourspot.domain;
 
+import com.google.cloud.translate.Translate;
+import com.google.cloud.translate.TranslateOptions;
+import com.google.cloud.translate.Translation;
 import com.rekordb.rekordb.review.ReviewService;
 import com.rekordb.rekordb.review.dto.ReviewDTO;
 import com.rekordb.rekordb.review.query.ReviewRepository;
@@ -27,6 +30,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -72,6 +76,11 @@ public class TourSpotService {
             tourSpotDetailRepository.delete(detail);
             throw new SpotDetailAPIErrorException();
         }
+        if(detail.isDetailCommonFin()&&(!detail.isHasEngOverview())){
+            if(!detail.getCommonItem().checkOverviewNull()){
+                translateOverView(detail);
+            }
+        }
         List<ReviewDTO> reviews = reviewRepository.findBySpotId(spotId).stream()
                 .map(review -> ReviewDTO.ConvertToDTO(review,reviewService.getReviewTagList(review)))
                 .collect(Collectors.toList());
@@ -83,7 +92,19 @@ public class TourSpotService {
         boolean isReviewed = reviewRepository.existsByUserIdAndSpotId(UserId.of(uid),spotId);
         boolean isInWishList = wishListRepository.existsByUserIdAndWishListContains(UserId.of(uid),document);
         return DetailAndReviewDTO.convertToDTO(document,detail,reviews,new CheckItem(isReviewed,isInWishList));
+    }
 
+    public void translateOverView(TourSpotDetail detail){
+        Translate translate = TranslateOptions.getDefaultInstance().getService();
+        Translation translation =
+                translate.translate(
+                        detail.getCommonItem().getOverview(),
+                        Translate.TranslateOption.sourceLanguage("ko"),
+                        Translate.TranslateOption.targetLanguage("en"));
+        String res = translation.getTranslatedText();
+        log.info("Translation: "+res);
+        detail.setEngOverview(res);
+        tourSpotDetailRepository.save(detail);
     }
 
     public List<SpotListDTO> getRandomSpotWithHaveImage(String user){

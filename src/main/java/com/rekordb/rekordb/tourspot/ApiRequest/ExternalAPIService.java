@@ -186,7 +186,7 @@ public class ExternalAPIService {
 
     }
 
-    @Scheduled(cron = "0 52 21 19 9 *",zone = "Asia/Seoul")
+    //@Scheduled(cron = "0 52 21 19 9 *",zone = "Asia/Seoul")
     public void translateTest(){
         Translate translate = TranslateOptions.getDefaultInstance().getService();
         Translation translation =

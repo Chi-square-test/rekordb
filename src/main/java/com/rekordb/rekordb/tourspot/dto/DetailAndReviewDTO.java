@@ -31,6 +31,9 @@ public class DetailAndReviewDTO {
     private CheckItem checkItem;
 
     public static DetailAndReviewDTO convertToDTO(TourSpotDocument document, TourSpotDetail detail,List<ReviewDTO> reviewList, CheckItem checkItem){
+        if(detail.isHasEngOverview()){
+            detail.getCommonItem().setOverview(detail.getEngOverview());
+        }
         return DetailAndReviewDTO.builder()
                 .spotInfo(new SpotListDTO(document))
                 .spotId(detail.getSpotId())

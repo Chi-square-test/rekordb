@@ -23,19 +23,22 @@ public class TourSpotDetail {
     private List<DetailItem> detailItems; //detailInfo
     private Map<String,String> detailIntro; //detailIntro
     private List<ImageItem> imageItems;  //detailImage
+    @Setter
+    private String engOverview;
 
 
     private boolean detailCommonFin;
     private boolean detailIntroFin;
     private boolean detailInfoFin;
     private boolean detailImageFin;
+    private boolean hasEngOverview;
 
     public static String replaceTag(String s){
         return s.replaceAll("<([^>]+)>", "");
     }
 
     public static TourSpotDetail emptyDetail(SpotId spotId){
-        return new TourSpotDetail(spotId,null,null,null,null,false,false,false,false);
+        return new TourSpotDetail(spotId,null,null,null,null,null,false,false,false,false,false);
     }
 
     public void saveDetailCommon(CommonItem commonItem){
@@ -59,7 +62,6 @@ public class TourSpotDetail {
     }
 
     public boolean checkInformContain(){
-
         return detailCommonFin||detailImageFin||detailIntroFin||detailInfoFin;
     }
 

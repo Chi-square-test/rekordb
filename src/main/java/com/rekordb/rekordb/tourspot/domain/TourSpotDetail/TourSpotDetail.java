@@ -31,6 +31,7 @@ public class TourSpotDetail {
     private boolean detailIntroFin;
     private boolean detailInfoFin;
     private boolean detailImageFin;
+    @Setter
     private boolean hasEngOverview;
 
     public static String replaceTag(String s){

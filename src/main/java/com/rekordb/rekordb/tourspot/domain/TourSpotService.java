@@ -104,6 +104,7 @@ public class TourSpotService {
         String res = translation.getTranslatedText();
         log.info("Translation: "+res);
         detail.setEngOverview(res);
+        detail.setHasEngOverview(true);
         tourSpotDetailRepository.save(detail);
     }
 

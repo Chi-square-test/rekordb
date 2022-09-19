@@ -102,7 +102,7 @@ public class TourSpotService {
                         Translate.TranslateOption.sourceLanguage("ko"),
                         Translate.TranslateOption.targetLanguage("en"));
         String res = translation.getTranslatedText();
-        log.info("Translation: "+res);
+        //log.info("Translation: "+res);
         detail.setEngOverview(res);
         detail.setHasEngOverview(true);
         tourSpotDetailRepository.save(detail);

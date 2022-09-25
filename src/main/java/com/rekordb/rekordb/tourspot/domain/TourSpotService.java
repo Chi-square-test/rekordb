@@ -50,8 +50,6 @@ public class TourSpotService {
     private final TagService tagService;
 
 
-
-
     public Page<TourSpotDocument> getSpotByCategory(int category, int page, String sortBy){
         Sort sort = SortBy.getByFront(sortBy).getSort();
         RekorCategory rekorCategory = RekorCategory.valueOfIndex(category);

@@ -13,6 +13,7 @@ import lombok.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Data
@@ -37,9 +38,12 @@ public class DetailAndReviewDTO {
         return DetailAndReviewDTO.builder()
                 .spotInfo(new SpotListDTO(document))
                 .spotId(detail.getSpotId())
-                .commonInfo(detail.getCommonItem())
-                .detailList(detail.getDetailItems())
-                .plusInfo(detail.getDetailIntro())
+                .commonInfo(Optional.ofNullable(detail.getEngCommonItem())
+                                .orElseGet(detail::getCommonItem))
+                .detailList(Optional.ofNullable(detail.getEngDetailItems())
+                                .orElseGet(detail::getDetailItems))
+                .plusInfo(Optional.ofNullable(detail.getEngDetailIntro())
+                                .orElseGet(detail::getDetailIntro))
                 .imageList(detail.getImageItems())
                 .checkItem(checkItem)
                 .reviewList(reviewList)

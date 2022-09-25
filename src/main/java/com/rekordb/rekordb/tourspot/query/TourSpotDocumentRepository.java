@@ -29,6 +29,8 @@ public interface TourSpotDocumentRepository extends MongoRepository<TourSpotDocu
 
     ArrayList<TourSpotDocument> findTop50BySpotIdNotIn(List<SpotId> ids);
 
+    List<TourSpotDocument> findAllByEngSpotIDNotNull();
+
     @Aggregation(pipeline={
             "{$match:{\"images.0\":{$nin:[\"\"]}}}",
             "{$sample:{size:10}}"

@@ -23,10 +23,7 @@ import com.rekordb.rekordb.tourspot.ApiRequest.juso.JusoRes;
 import com.rekordb.rekordb.tourspot.ApiRequest.test.Example;
 import com.rekordb.rekordb.tourspot.ApiRequest.test.GoogleReview;
 import com.rekordb.rekordb.tourspot.domain.*;
-import com.rekordb.rekordb.tourspot.domain.TourSpotDetail.CommonItem;
-import com.rekordb.rekordb.tourspot.domain.TourSpotDetail.DetailItem;
-import com.rekordb.rekordb.tourspot.domain.TourSpotDetail.ImageItem;
-import com.rekordb.rekordb.tourspot.domain.TourSpotDetail.TourSpotDetail;
+import com.rekordb.rekordb.tourspot.domain.TourSpotDetail.*;
 import com.rekordb.rekordb.tourspot.query.TourSpotDetailRepository;
 import com.rekordb.rekordb.tourspot.query.TourSpotDocumentRepository;
 import com.rekordb.rekordb.tourspot.query.TourSpotRepository;
@@ -94,20 +91,20 @@ public class ExternalAPIService {
 
     private final ApiKeysProperties apiKeys;
     private static final String TOUR_URI = "https://apis.data.go.kr/B551011/KorService";
+    private static final String TOUR_ENG_URI = "https://apis.data.go.kr/B551011/EngService";
     private static final String GOOGLE_URI = "https://maps.googleapis.com/maps/api/place";
     private static final String JUSO_URI = "https://business.juso.go.kr/addrlink/addrEngApi.do";
 
     private RestTemplate restTemplate;
 
-    private UriComponentsBuilder componentsBuilder(String endPoint,String contentId,int typeId) {
-        return componentsBuilder(endPoint,contentId)
+    private UriComponentsBuilder componentsBuilder(String URI,String endPoint,String contentId,int typeId) {
+        return componentsBuilder(URI,endPoint,contentId)
                 .queryParam("contentTypeId",typeId);
-
 
     }
 
-    private UriComponentsBuilder componentsBuilder(String endPoint,String contentId) {
-        return UriComponentsBuilder.fromHttpUrl(TOUR_URI)
+    private UriComponentsBuilder componentsBuilder(String URI,String endPoint,String contentId) {
+        return UriComponentsBuilder.fromHttpUrl(URI)
                 .path(endPoint)
                 .queryParam("_type", "json")
                 .queryParam("MobileOS", "ETC")
@@ -317,12 +314,63 @@ public class ExternalAPIService {
 //        List<TourSpot> spots = dtos.stream().map(ApiItemDTO::apiConvertEntity).collect(Collectors.toList());
 //        tourSpotRepository.saveAll(spots);
     }
+
+    public void getTourEngAPIData() throws NullPointerException{
+        try {
+            restTemplate = ignoreSSL();
+        } catch (KeyStoreException | KeyManagementException | NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        List<TourSpotDocument> documents = tourSpotDocumentRepository.findAll();
+        for (TourSpotDocument d :documents) {
+            UriComponents builder = UriComponentsBuilder.fromHttpUrl(TOUR_ENG_URI)
+                    .path("/locationBasedList")
+                    .queryParam("_type","json")
+                    .queryParam("numOfRows","1")
+                    .queryParam("pageNo","1")
+                    .queryParam("MobileOS","ETC")
+                    .queryParam("MobileApp","ReKor")
+                    .queryParam("serviceKey",apiKeys.getTourKey())
+                    .queryParam("mapX",d.getAddress().getMapx())
+                    .queryParam("mapY",d.getAddress().getMapy())
+                    .queryParam("radius",0)
+                    .build();
+            String url = URLDecoder.decode(builder.toUri().toString(), StandardCharsets.UTF_8);
+            try {
+                ApiSpotResponse response = restTemplate.getForObject(java.net.URI.create(url),ApiSpotResponse.class);
+                if(response.response.body.totalCount>0){
+                    ApiItemDTO dtos = response.getItems().get(0);
+                    d.setEngSpotID(SpotId.of(dtos.getContentid()));
+                    tourSpotDocumentRepository.save(d);
+                }
+            }catch (Exception ignored){
+            }
+
+        }
+        log.info("finish");
+    }
     //@Scheduled(fixedDelay = 30000)
     public void saveDetail(){
         List<SpotId> alreadyHasDetail = tourSpotDetailRepository.findAll().stream().map(TourSpotDetail::getSpotId).collect(Collectors.toList());
         ArrayList<TourSpotDocument> documents = tourSpotDocumentRepository.findTop50BySpotIdNotIn(alreadyHasDetail);
         log.info(String.valueOf(documents.size()));
         documents.forEach(this::saveTourApiDetail);
+    }
+
+
+    public void saveEngDetail(){
+        List<TourSpotDocument> documents = tourSpotDocumentRepository.findAllByEngSpotIDNotNull();
+        log.info(String.valueOf(documents.size()));
+        documents.forEach(this::saveTourApiEngDetail);
+    }
+
+    @Scheduled(cron = "0 20 00 26 9 *",zone = "Asia/Seoul")
+    public void correctionBool(){
+        List<TourSpotDetail> details = tourSpotDetailRepository.findAll();
+        details.forEach(TourSpotDetail::correctOverview);
+        tourSpotDetailRepository.saveAll(details);
+        log.info("fin");
+
     }
 
 
@@ -344,8 +392,11 @@ public class ExternalAPIService {
         return tourSpotDetailRepository.save(detail);
     }
 
+
+
+
     private void getTourApiDetailCommon(String id, int typeId, TourSpotDetail detail) throws NullPointerException{
-        UriComponents builder = componentsBuilder("/detailCommon",id,typeId)
+        UriComponents builder = componentsBuilder(TOUR_URI,"/detailCommon",id,typeId)
                 .queryParam("defaultYN","Y")
                 .queryParam("overviewYN","Y")
                 .build();
@@ -357,7 +408,7 @@ public class ExternalAPIService {
     }
 
     private void getTourApiDetailInfo(String id, int typeId, TourSpotDetail detail) throws NullPointerException{
-        UriComponents builder = componentsBuilder("/detailInfo",id,typeId).build();
+        UriComponents builder = componentsBuilder(TOUR_URI,"/detailInfo",id,typeId).build();
         String url = URLDecoder.decode(builder.toUri().toString(), StandardCharsets.UTF_8);
         ApiInfoResponse response = restTemplate.getForObject(java.net.URI.create(url),ApiInfoResponse.class);
         List<DetailItem> detailItems = response.getItems();
@@ -366,7 +417,7 @@ public class ExternalAPIService {
     }
 
     private void getTourApiDetailIntro(String id, int typeId, TourSpotDetail detail) throws NullPointerException{
-        UriComponents builder = componentsBuilder("/detailIntro",id,typeId).build();
+        UriComponents builder = componentsBuilder(TOUR_URI,"/detailIntro",id,typeId).build();
         String url = URLDecoder.decode(builder.toUri().toString(), StandardCharsets.UTF_8);
         ApiIntroResponse response = restTemplate.getForObject(java.net.URI.create(url),ApiIntroResponse.class);
         Map<String,String>  intro = response.getItems().get(0);
@@ -375,8 +426,73 @@ public class ExternalAPIService {
         detail.saveDetailIntro(intro);
     }
 
+    public TourSpotDetail saveTourApiEngDetail(TourSpotDocument document) { //detail 없는건 이 메서드 전에 체크해야함.
+        //log.info("tour api에 정보를 요청합니다.");
+        try {
+            restTemplate = ignoreSSL();
+        } catch (KeyStoreException | KeyManagementException | NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        SpotId spotId = document.getEngSpotID();
+        TourSpotDetail detail = tourSpotDetailRepository.findById( document.getSpotId()).orElseThrow();
+        int typeId = document.getTypeId();
+        String id = spotId.getId();
+        if(typeId == 12){
+            typeId = 76;
+        }else {
+            typeId = 82;
+        }
+        int finalTypeId = typeId;
+        ignoringExc(() -> getEngTourApiDetailCommon(id,finalTypeId,detail,document));
+        ignoringExc(() ->getEngTourApiDetailInfo(id, finalTypeId,detail));
+        ignoringExc(() ->getEngTourApiDetailIntro(id,finalTypeId,detail));
+        return tourSpotDetailRepository.save(detail);
+    }
+
+
+    private void getEngTourApiDetailCommon(String id, int typeId, TourSpotDetail detail, TourSpotDocument document) throws NullPointerException{
+        UriComponents builder = componentsBuilder(TOUR_ENG_URI,"/detailCommon",id,typeId)
+                .queryParam("defaultYN","Y")
+                .queryParam("overviewYN","Y")
+                .build();
+        String url = URLDecoder.decode(builder.toUri().toString(), StandardCharsets.UTF_8);
+
+        try {
+            ApiCommonResponse response = restTemplate.getForObject(java.net.URI.create(url),ApiCommonResponse.class);
+            EngCommonItem engCommonItem  = response.getItems().get(0);
+            engCommonItem.parsingUrl();
+            document.setEngTitle(engCommonItem.getTitle());
+            tourSpotDocumentRepository.save(document);
+            log.info(engCommonItem.getTitle());
+            detail.setEngOverview(engCommonItem.getOverview());
+            detail.setEngCommonItem(engCommonItem.exceptTitle());
+        }catch (Exception e){
+            log.error(restTemplate.getForObject(java.net.URI.create(url),String.class));
+        }
+
+    }
+
+    private void getEngTourApiDetailInfo(String id, int typeId, TourSpotDetail detail) throws NullPointerException{
+        UriComponents builder = componentsBuilder(TOUR_ENG_URI,"/detailInfo",id,typeId).build();
+        String url = URLDecoder.decode(builder.toUri().toString(), StandardCharsets.UTF_8);
+        ApiInfoResponse response = restTemplate.getForObject(java.net.URI.create(url),ApiInfoResponse.class);
+        List<DetailItem> detailItems = response.getItems();
+        detailItems.forEach(DetailItem::removeTag);
+        detail.setEngDetailItems(detailItems);
+    }
+
+    private void getEngTourApiDetailIntro(String id, int typeId, TourSpotDetail detail) throws NullPointerException{
+        UriComponents builder = componentsBuilder(TOUR_ENG_URI,"/detailIntro",id,typeId).build();
+        String url = URLDecoder.decode(builder.toUri().toString(), StandardCharsets.UTF_8);
+        ApiIntroResponse response = restTemplate.getForObject(java.net.URI.create(url),ApiIntroResponse.class);
+        Map<String,String>  intro = response.getItems().get(0);
+        intro.values().removeIf(String::isBlank);
+        intro.replaceAll((k, v) -> v = TourSpotDetail.replaceTag(v));
+        detail.setEngDetailIntro(intro);
+    }
+
     private void getTourApiDetailImage(String id,  TourSpotDetail detail) throws NullPointerException{
-        UriComponents builder = componentsBuilder("/detailImage",id)
+        UriComponents builder = componentsBuilder(TOUR_URI,"/detailImage",id)
                 .queryParam("imageYN","Y")
                 .queryParam("subImageYN","Y")
                 .build();
@@ -497,7 +613,7 @@ public class ExternalAPIService {
 
 
     public static void ignoringExc(RunnableExc r) {
-        try { r.run(); } catch (Exception e) {log.error(e.getMessage()); }
+        try { r.run(); } catch (Exception e) {log.error("무시된 오류 : "+e.getMessage()); }
     }
 
     @FunctionalInterface public interface RunnableExc { void run() throws Exception; }

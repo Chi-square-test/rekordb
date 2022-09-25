@@ -13,6 +13,7 @@ public class ApiSpotResponse {
     static class response{
         public body body;
         static class body{
+            public int totalCount;
             public items items;
             static class items{
                 public ArrayList<ApiItemDTO> item;

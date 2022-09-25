@@ -2,6 +2,7 @@ package com.rekordb.rekordb.tourspot.ApiRequest;
 
 
 import com.rekordb.rekordb.tourspot.domain.TourSpotDetail.CommonItem;
+import com.rekordb.rekordb.tourspot.domain.TourSpotDetail.EngCommonItem;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,12 +20,12 @@ public class ApiCommonResponse {
         static class body{
             public items items;
             static class items{
-                public List<CommonItem> item;
+                public List<EngCommonItem> item;
             }
         }
     }
 
-    public List<CommonItem> getItems(){
+    public List<EngCommonItem> getItems(){
         return this.response.body.items.item;
     }
 

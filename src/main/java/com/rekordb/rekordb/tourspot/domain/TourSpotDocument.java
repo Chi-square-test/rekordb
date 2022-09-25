@@ -25,6 +25,9 @@ public class TourSpotDocument {
     @Id
     protected SpotId spotId;
 
+    @Setter
+    protected SpotId engSpotID;
+
     @Indexed
     @TextIndexed
     protected String title;
